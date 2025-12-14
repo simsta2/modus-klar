@@ -43,3 +43,5 @@ export function validatePasswordStrength(password) {
 
   return { valid: true, message: 'Passwort ist gültig.' };
 }
+
+
