@@ -26,3 +26,16 @@ export function isValidEmail(email) {
   return emailRegex.test(email);
 }
 
+// Passwort-Reset-Token generieren (gleiche Funktion wie Email-Verifizierung)
+export function generatePasswordResetToken() {
+  const array = new Uint8Array(32);
+  crypto.getRandomValues(array);
+  return Array.from(array, byte => byte.toString(16).padStart(2, '0')).join('');
+}
+
+// Erstelle Passwort-Reset-URL
+export function createPasswordResetUrl(token) {
+  const baseUrl = window.location.origin;
+  return `${baseUrl}/reset-password?token=${token}`;
+}
+
