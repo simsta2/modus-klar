@@ -3,12 +3,24 @@ import { supabase } from './supabaseClient';
 // Nutzer registrieren
 export async function registerUser(userData) {
   try {
+    // Prüfe ob Email bereits existiert
+    const { data: existingUser } = await supabase
+      .from('users')
+      .select('email')
+      .eq('email', userData.email)
+      .single();
+
+    if (existingUser) {
+      return { success: false, error: 'Diese Email-Adresse ist bereits registriert.' };
+    }
+
     const { data, error } = await supabase
       .from('users')
       .insert([
         {
           email: userData.email,
           name: userData.name,
+          password: userData.password, // Passwort wird im Klartext gespeichert (für Produktion sollte Hashing verwendet werden)
           insurance_number: userData.idNumber,
           notifications_enabled: userData.notificationsEnabled,
           challenge_start_date: new Date().toISOString().split('T')[0]
@@ -31,7 +43,7 @@ export async function registerUser(userData) {
 }
 
 // Nutzer Login
-export async function loginUser(email) {
+export async function loginUser(email, password) {
   try {
     const { data, error } = await supabase
       .from('users')
@@ -40,6 +52,11 @@ export async function loginUser(email) {
       .single();
 
     if (error) throw error;
+    
+    // Prüfe Passwort
+    if (!data.password || data.password !== password) {
+      return { success: false, error: 'Falsches Passwort oder Email nicht gefunden.' };
+    }
     
     // Speichere User ID im Browser
     localStorage.setItem('userId', data.id);
