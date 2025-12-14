@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { registerUser, saveVideoRecord, loadUserProgress, loginUser, uploadVideo } from './api';
+import { registerUser, saveVideoRecord, loadUserProgress, loginUser, uploadVideo, verifyEmail, resendVerificationEmail } from './api';
 import AdminDashboard from './AdminDashboard';
 // Ganz oben in App.js, nach den imports
 import { supabase } from './supabaseClient';
@@ -53,6 +53,8 @@ if (urlParams.get('simple-admin') === 'true') {
   
   // State Management
   const [currentScreen, setCurrentScreen] = useState('welcome');
+  const [verificationToken, setVerificationToken] = useState(null);
+  const [verificationStatus, setVerificationStatus] = useState(null);
   const [currentDay, setCurrentDay] = useState(1);
   const [loginEmail, setLoginEmail] = useState('');
   const [loginError, setLoginError] = useState('');
@@ -111,11 +113,28 @@ if (urlParams.get('simple-admin') === 'true') {
     }
   };
 
-  // Initial Load - Check für bestehenden User
+  // Initial Load - Check für bestehenden User und Email-Verifizierung
 useEffect(() => {
   const checkExistingUser = async () => {
     const savedUserId = localStorage.getItem('userId');
     const savedUserName = localStorage.getItem('userName');
+    
+    // Prüfe ob Verifizierungs-Token in URL ist
+    const urlParams = new URLSearchParams(window.location.search);
+    const token = urlParams.get('token');
+    
+    if (token) {
+      // Email-Verifizierung durchführen
+      setVerificationToken(token);
+      setCurrentScreen('verify-email');
+      const result = await verifyEmail(token);
+      if (result.success) {
+        setVerificationStatus('success');
+      } else {
+        setVerificationStatus('error');
+      }
+      return;
+    }
     
     if (savedUserId && savedUserName) {
       setUserId(savedUserId);
@@ -682,6 +701,11 @@ const renderLoginScreen = () => {
               value={userData.password}
               onChange={(e) => setUserData({...userData, password: e.target.value})}
             />
+            {userData.password && userData.password.length > 0 && userData.password.length < 6 && (
+              <p style={{ fontSize: '0.75rem', color: '#DC2626', marginTop: '-0.75rem', marginBottom: '1rem' }}>
+                Passwort muss mindestens 6 Zeichen lang sein.
+              </p>
+            )}
             
             <div style={{ backgroundColor: '#F3F4F6', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
               <button 
@@ -1207,6 +1231,83 @@ const renderLoginScreen = () => {
     );
   };
 
+  // Email-Verifizierungs-Screen
+  const renderVerifyEmailScreen = () => {
+    const handleResend = async () => {
+      setIsLoading(true);
+      const result = await resendVerificationEmail(loginEmail);
+      if (result.success) {
+        alert('Verifizierungs-Email wurde erneut gesendet! Prüfen Sie Ihr Postfach.');
+        console.log('Verifizierungs-URL:', result.verificationUrl);
+      } else {
+        alert('Fehler: ' + result.error);
+      }
+      setIsLoading(false);
+    };
+
+    return (
+      <div style={{ ...styles.minHeight, ...styles.gradient, padding: '1rem' }}>
+        <div style={styles.container}>
+          <div style={styles.card}>
+            {verificationStatus === 'success' ? (
+              <>
+                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                  <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>✅</div>
+                  <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+                    Email erfolgreich verifiziert!
+                  </h2>
+                  <p style={{ color: '#6B7280', marginBottom: '2rem' }}>
+                    Sie können sich jetzt anmelden.
+                  </p>
+                  <button
+                    onClick={() => {
+                      setCurrentScreen('login');
+                      setVerificationStatus(null);
+                    }}
+                    style={styles.button}
+                  >
+                    Zur Anmeldung
+                  </button>
+                </div>
+              </>
+            ) : verificationStatus === 'error' ? (
+              <>
+                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                  <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>❌</div>
+                  <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+                    Verifizierung fehlgeschlagen
+                  </h2>
+                  <p style={{ color: '#6B7280', marginBottom: '2rem' }}>
+                    Der Verifizierungs-Link ist ungültig oder abgelaufen.
+                  </p>
+                  <button
+                    onClick={handleResend}
+                    style={styles.button}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Wird gesendet...' : 'Verifizierungs-Email erneut senden'}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+                  <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>⏳</div>
+                  <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+                    Email wird verifiziert...
+                  </h2>
+                  <p style={{ color: '#6B7280' }}>
+                    Bitte warten Sie einen Moment.
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
  // Main Render
 return (
   <div style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
@@ -1216,6 +1317,7 @@ return (
     {currentScreen === 'registration' && renderRegistrationScreen()}
     {currentScreen === 'dashboard' && renderDashboard()}
     {currentScreen === 'recording' && renderRecordingScreen()}
+    {currentScreen === 'verify-email' && renderVerifyEmailScreen()}
   </div>
 );
 };
