@@ -4,7 +4,6 @@ import AdminDashboard from './AdminDashboard';
 // Ganz oben in App.js, nach den imports
 import { supabase } from './supabaseClient';
 import { initializeNotifications, requestNotificationPermission } from './notifications';
-import { initializeNotifications, requestNotificationPermission } from './notifications';
 
 // Debug: Mache supabase global verfügbar (nur für Testing!)
 window.supabase = supabase;
@@ -649,13 +648,6 @@ const renderLoginScreen = () => {
               value={userData.email}
               onChange={(e) => setUserData({...userData, email: e.target.value})}
             />
-            <input
-              type="text"
-              placeholder="Krankenkassen-Mitgliedsnummer"
-              style={styles.input}
-              value={userData.idNumber}
-              onChange={(e) => setUserData({...userData, idNumber: e.target.value})}
-            />
             
             <div style={{ backgroundColor: '#F3F4F6', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
               <button 
@@ -705,8 +697,8 @@ const renderLoginScreen = () => {
                   style={{ color: '#3B82F6', textDecoration: 'underline', cursor: 'pointer' }}
                 >
                   Teilnahmebedingungen
-                </span>{' '}
-                und bestätige, dass meine Krankenkasse die Kostenübernahme genehmigt hat.
+                </span>
+                .
               </span>
             </label>
           </div>
@@ -729,11 +721,11 @@ const renderLoginScreen = () => {
             onClick={handleRegistration}
             style={{
               ...styles.button,
-              ...(userData.agreed && userData.name && userData.email && userData.idNumber && userData.notificationsEnabled && !isLoading
+              ...(userData.agreed && userData.name && userData.email && userData.notificationsEnabled && !isLoading
                 ? {}
                 : { background: '#D1D5DB', cursor: 'not-allowed' })
             }}
-            disabled={!userData.agreed || !userData.name || !userData.email || !userData.idNumber || !userData.notificationsEnabled || isLoading}
+            disabled={!userData.agreed || !userData.name || !userData.email || !userData.notificationsEnabled || isLoading}
           >
             {isLoading ? 'Wird registriert...' : 'Challenge starten'}
           </button>
@@ -802,9 +794,9 @@ const renderLoginScreen = () => {
     </div>
   );
 
-  const renderDashboard = () => (
+  const renderDashboard = () => {
     console.log('DEBUG:', { hour: new Date().getHours(), timeWindow, todayVideos, currentDay });
- return (
+    return (
     <div style={{ ...styles.minHeight, ...styles.gradient, paddingBottom: '5rem' }}>
       <div style={{ backgroundColor: 'white', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)' }}>
         <div style={{ ...styles.container, padding: '1rem' }}>
@@ -1060,7 +1052,8 @@ const renderLoginScreen = () => {
         </div>
       </div>
     </div>
-  );
+    );
+  };
 
   const renderRecordingScreen = () => {
     
