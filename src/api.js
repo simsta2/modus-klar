@@ -1,6 +1,6 @@
 import { supabase } from './supabaseClient';
 import { hashPassword, comparePassword } from './utils/password';
-import { generateVerificationToken, createVerificationUrl, isTokenExpired } from './utils/emailVerification';
+import { generateVerificationToken, createVerificationUrl, isTokenExpired, generatePasswordResetToken, createPasswordResetUrl } from './utils/emailVerification';
 
 // Nutzer registrieren
 export async function registerUser(userData) {
@@ -521,6 +521,91 @@ export async function resendVerificationEmail(email) {
     return { success: true, verificationUrl: verificationUrl };
   } catch (error) {
     console.error('Fehler beim Senden der Verifizierungs-Email:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Passwort-Wiederherstellung anfordern
+export async function requestPasswordReset(email) {
+  try {
+    // Finde Benutzer
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .single();
+
+    if (error || !data) {
+      // Aus Sicherheitsgründen geben wir keine Details zurück
+      return { success: true, message: 'Falls diese Email registriert ist, wurde ein Reset-Link gesendet.' };
+    }
+
+    // Generiere Reset-Token
+    const resetToken = generatePasswordResetToken();
+    const resetExpires = new Date();
+    resetExpires.setHours(resetExpires.getHours() + 1); // Token gültig für 1 Stunde
+
+    // Speichere Token in Datenbank
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({
+        password_reset_token: resetToken,
+        password_reset_expires: resetExpires.toISOString()
+      })
+      .eq('id', data.id);
+
+    if (updateError) throw updateError;
+
+    const resetUrl = createPasswordResetUrl(resetToken);
+    
+    // TODO: Hier würde normalerweise eine Email gesendet werden
+    console.log('⚠️ WICHTIG: In Produktion sollte diese URL per Email gesendet werden!');
+    console.log('Passwort-Reset-URL:', resetUrl);
+
+    return { success: true, message: 'Falls diese Email registriert ist, wurde ein Reset-Link gesendet.', resetUrl: resetUrl };
+  } catch (error) {
+    console.error('Fehler beim Anfordern des Passwort-Resets:', error);
+    return { success: true, message: 'Falls diese Email registriert ist, wurde ein Reset-Link gesendet.' };
+  }
+}
+
+// Passwort zurücksetzen
+export async function resetPassword(token, newPassword) {
+  try {
+    // Finde Benutzer mit diesem Token
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('password_reset_token', token)
+      .single();
+
+    if (error || !data) {
+      return { success: false, error: 'Ungültiger oder abgelaufener Reset-Token.' };
+    }
+
+    // Prüfe ob Token abgelaufen ist
+    if (isTokenExpired(data.password_reset_expires)) {
+      return { success: false, error: 'Reset-Token ist abgelaufen. Bitte fordern Sie einen neuen an.' };
+    }
+
+    // Hashe neues Passwort
+    const hashedPassword = await hashPassword(newPassword);
+
+    // Update Passwort und lösche Token
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({
+        password: hashedPassword,
+        password_reset_token: null,
+        password_reset_expires: null
+      })
+      .eq('id', data.id);
+
+    if (updateError) throw updateError;
+
+    return { success: true, message: 'Passwort wurde erfolgreich zurückgesetzt.' };
+  } catch (error) {
+    console.error('Passwort-Reset fehlgeschlagen:', error);
     return { success: false, error: error.message };
   }
 }
