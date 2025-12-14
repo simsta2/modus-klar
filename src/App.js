@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { registerUser, saveVideoRecord, loadUserProgress, loginUser, uploadVideo, verifyEmail, resendVerificationEmail } from './api';
+import { registerUser, saveVideoRecord, loadUserProgress, loginUser, uploadVideo, verifyEmail, resendVerificationEmail, requestPasswordReset, resetPassword } from './api';
 import AdminDashboard from './AdminDashboard';
 // Ganz oben in App.js, nach den imports
 import { supabase } from './supabaseClient';
@@ -55,6 +55,10 @@ if (urlParams.get('simple-admin') === 'true') {
   const [currentScreen, setCurrentScreen] = useState('welcome');
   const [verificationToken, setVerificationToken] = useState(null);
   const [verificationStatus, setVerificationStatus] = useState(null);
+  const [resetToken, setResetToken] = useState(null);
+  const [resetPasswordValue, setResetPasswordValue] = useState('');
+  const [resetPasswordConfirm, setResetPasswordConfirm] = useState('');
+  const [resetEmail, setResetEmail] = useState('');
   const [currentDay, setCurrentDay] = useState(1);
   const [loginEmail, setLoginEmail] = useState('');
   const [loginError, setLoginError] = useState('');
@@ -119,11 +123,19 @@ useEffect(() => {
     const savedUserId = localStorage.getItem('userId');
     const savedUserName = localStorage.getItem('userName');
     
-    // Prüfe ob Verifizierungs-Token in URL ist
+    // Prüfe ob Verifizierungs-Token oder Reset-Token in URL ist
     const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
+    const isResetPassword = window.location.pathname.includes('reset-password') || window.location.href.includes('reset-password');
     
-    if (token) {
+    if (token && isResetPassword) {
+      // Passwort-Reset
+      setResetToken(token);
+      setCurrentScreen('reset-password');
+      return;
+    }
+    
+    if (token && !isResetPassword) {
       // Email-Verifizierung durchführen
       setVerificationToken(token);
       setCurrentScreen('verify-email');
@@ -565,11 +577,28 @@ const renderLoginScreen = () => {
                 fontWeight: '600',
                 border: 'none',
                 cursor: loginEmail && loginPassword && !isLoading ? 'pointer' : 'not-allowed',
-                width: '100%'
+                width: '100%',
+                marginBottom: '1rem'
               }}
               disabled={!loginEmail || !loginPassword || isLoading}
             >
               {isLoading ? 'Wird angemeldet...' : 'Anmelden'}
+            </button>
+            
+            <button
+              onClick={() => setCurrentScreen('forgot-password')}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: '#3B82F6',
+                textDecoration: 'underline',
+                cursor: 'pointer',
+                fontSize: '0.875rem',
+                width: '100%',
+                padding: '0.5rem'
+              }}
+            >
+              Passwort vergessen?
             </button>
           </div>
         </div>
@@ -1227,6 +1256,201 @@ const renderLoginScreen = () => {
             100% { opacity: 1; }
           }
         `}</style>
+      </div>
+    );
+  };
+
+  // Passwort vergessen Screen
+  const renderForgotPasswordScreen = () => {
+    const handleRequestReset = async () => {
+      setIsLoading(true);
+      setLoginError('');
+      
+      if (!resetEmail) {
+        setLoginError('Bitte geben Sie Ihre Email-Adresse ein.');
+        setIsLoading(false);
+        return;
+      }
+      
+      const result = await requestPasswordReset(resetEmail);
+      
+      if (result.success) {
+        alert('Falls diese Email registriert ist, wurde ein Passwort-Reset-Link gesendet. Prüfen Sie Ihr Postfach.\n\nFür Testing: Die Reset-URL wurde in der Konsole ausgegeben.');
+        console.log('Passwort-Reset-URL:', result.resetUrl);
+        setCurrentScreen('login');
+      } else {
+        setLoginError(result.error || 'Ein Fehler ist aufgetreten.');
+      }
+      
+      setIsLoading(false);
+    };
+
+    return (
+      <div style={{ ...styles.minHeight, ...styles.gradient, padding: '1rem' }}>
+        <div style={styles.container}>
+          <div style={styles.card}>
+            <button 
+              onClick={() => setCurrentScreen('login')}
+              style={{ 
+                background: 'none', 
+                border: 'none', 
+                fontSize: '1.5rem', 
+                cursor: 'pointer',
+                marginBottom: '1rem'
+              }}
+            >
+              ←
+            </button>
+            
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>Passwort zurücksetzen</h2>
+            
+            {loginError && (
+              <div style={{ 
+                backgroundColor: '#FEE2E2', 
+                color: '#DC2626', 
+                padding: '0.75rem', 
+                borderRadius: '0.5rem', 
+                marginBottom: '1rem',
+                fontSize: '0.875rem'
+              }}>
+                {loginError}
+              </div>
+            )}
+            
+            <p style={{ color: '#6B7280', marginBottom: '1.5rem', fontSize: '0.875rem' }}>
+              Geben Sie Ihre Email-Adresse ein. Wir senden Ihnen einen Link zum Zurücksetzen Ihres Passworts.
+            </p>
+            
+            <input
+              type="email"
+              placeholder="Ihre Email-Adresse"
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: '1px solid #D1D5DB',
+                borderRadius: '0.5rem',
+                marginBottom: '1rem',
+                fontSize: '16px'
+              }}
+              value={resetEmail}
+              onChange={(e) => setResetEmail(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleRequestReset()}
+            />
+            
+            <button
+              onClick={handleRequestReset}
+              style={{
+                background: resetEmail && !isLoading ? 'linear-gradient(to right, #3B82F6, #9333EA)' : '#D1D5DB',
+                color: 'white',
+                padding: '0.75rem',
+                borderRadius: '0.5rem',
+                fontWeight: '600',
+                border: 'none',
+                cursor: resetEmail && !isLoading ? 'pointer' : 'not-allowed',
+                width: '100%'
+              }}
+              disabled={!resetEmail || isLoading}
+            >
+              {isLoading ? 'Wird gesendet...' : 'Reset-Link senden'}
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Passwort zurücksetzen Screen
+  const renderResetPasswordScreen = () => {
+    const handleResetPassword = async () => {
+      setIsLoading(true);
+      setLoginError('');
+      
+      if (!resetPasswordValue || resetPasswordValue.length < 6) {
+        setLoginError('Passwort muss mindestens 6 Zeichen lang sein.');
+        setIsLoading(false);
+        return;
+      }
+      
+      if (resetPasswordValue !== resetPasswordConfirm) {
+        setLoginError('Passwörter stimmen nicht überein.');
+        setIsLoading(false);
+        return;
+      }
+      
+      const result = await resetPassword(resetToken, resetPasswordValue);
+      
+      if (result.success) {
+        alert('Passwort wurde erfolgreich zurückgesetzt! Sie können sich jetzt anmelden.');
+        setResetToken(null);
+        setResetPasswordValue('');
+        setResetPasswordConfirm('');
+        setCurrentScreen('login');
+      } else {
+        setLoginError(result.error);
+      }
+      
+      setIsLoading(false);
+    };
+
+    return (
+      <div style={{ ...styles.minHeight, ...styles.gradient, padding: '1rem' }}>
+        <div style={styles.container}>
+          <div style={styles.card}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>Neues Passwort setzen</h2>
+            
+            {loginError && (
+              <div style={{ 
+                backgroundColor: '#FEE2E2', 
+                color: '#DC2626', 
+                padding: '0.75rem', 
+                borderRadius: '0.5rem', 
+                marginBottom: '1rem',
+                fontSize: '0.875rem'
+              }}>
+                {loginError}
+              </div>
+            )}
+            
+            <input
+              type="password"
+              placeholder="Neues Passwort (mindestens 6 Zeichen)"
+              style={styles.input}
+              value={resetPasswordValue}
+              onChange={(e) => setResetPasswordValue(e.target.value)}
+            />
+            {resetPasswordValue && resetPasswordValue.length > 0 && resetPasswordValue.length < 6 && (
+              <p style={{ fontSize: '0.75rem', color: '#DC2626', marginTop: '-0.75rem', marginBottom: '1rem' }}>
+                Passwort muss mindestens 6 Zeichen lang sein.
+              </p>
+            )}
+            
+            <input
+              type="password"
+              placeholder="Passwort bestätigen"
+              style={styles.input}
+              value={resetPasswordConfirm}
+              onChange={(e) => setResetPasswordConfirm(e.target.value)}
+            />
+            {resetPasswordConfirm && resetPasswordValue !== resetPasswordConfirm && (
+              <p style={{ fontSize: '0.75rem', color: '#DC2626', marginTop: '-0.75rem', marginBottom: '1rem' }}>
+                Passwörter stimmen nicht überein.
+              </p>
+            )}
+            
+            <button
+              onClick={handleResetPassword}
+              style={{
+                ...styles.button,
+                ...(resetPasswordValue && resetPasswordValue.length >= 6 && resetPasswordValue === resetPasswordConfirm && !isLoading
+                  ? {}
+                  : { background: '#D1D5DB', cursor: 'not-allowed' })
+              }}
+              disabled={!resetPasswordValue || resetPasswordValue.length < 6 || resetPasswordValue !== resetPasswordConfirm || isLoading}
+            >
+              {isLoading ? 'Wird zurückgesetzt...' : 'Passwort zurücksetzen'}
+            </button>
+          </div>
+        </div>
       </div>
     );
   };
