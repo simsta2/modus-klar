@@ -1,4 +1,6 @@
 import { supabase } from './supabaseClient';
+import { hashPassword, comparePassword } from './utils/password';
+import { generateVerificationToken, createVerificationUrl, isTokenExpired } from './utils/emailVerification';
 
 // Nutzer registrieren
 export async function registerUser(userData) {
@@ -14,14 +16,25 @@ export async function registerUser(userData) {
       return { success: false, error: 'Diese Email-Adresse ist bereits registriert.' };
     }
 
+    // Passwort hashen vor dem Speichern
+    const hashedPassword = await hashPassword(userData.password);
+    
+    // Generiere Verifizierungs-Token
+    const verificationToken = generateVerificationToken();
+    const verificationExpires = new Date();
+    verificationExpires.setHours(verificationExpires.getHours() + 24); // Token gültig für 24 Stunden
+
     const { data, error } = await supabase
       .from('users')
       .insert([
         {
           email: userData.email,
           name: userData.name,
-          password: userData.password, // Passwort wird im Klartext gespeichert (für Produktion sollte Hashing verwendet werden)
+          password: hashedPassword, // Gehashtes Passwort wird gespeichert
           insurance_number: userData.idNumber,
+          email_verified: false, // Email ist noch nicht verifiziert
+          email_verification_token: verificationToken,
+          email_verification_expires: verificationExpires.toISOString(),
           notifications_enabled: userData.notificationsEnabled,
           challenge_start_date: new Date().toISOString().split('T')[0]
         }
@@ -35,7 +48,19 @@ export async function registerUser(userData) {
     localStorage.setItem('userId', data.id);
     localStorage.setItem('userName', data.name);
     
-    return { success: true, user: data };
+    // Erstelle Verifizierungs-URL (wird später per Email gesendet)
+    const verificationUrl = createVerificationUrl(verificationToken);
+    
+    // TODO: Hier würde normalerweise eine Email gesendet werden
+    // Für jetzt loggen wir die URL (in Produktion: Email-Service verwenden)
+    console.log('Verifizierungs-URL:', verificationUrl);
+    console.log('⚠️ In Produktion: Diese URL sollte per Email gesendet werden!');
+    
+    return { 
+      success: true, 
+      user: data,
+      verificationUrl: verificationUrl // Für Testing
+    };
   } catch (error) {
     console.error('Registrierung fehlgeschlagen:', error);
     return { success: false, error: error.message };
@@ -53,9 +78,24 @@ export async function loginUser(email, password) {
 
     if (error) throw error;
     
-    // Prüfe Passwort
-    if (!data.password || data.password !== password) {
+    // Prüfe Passwort mit bcrypt
+    if (!data.password) {
       return { success: false, error: 'Falsches Passwort oder Email nicht gefunden.' };
+    }
+    
+    const isPasswordValid = await comparePassword(password, data.password);
+    if (!isPasswordValid) {
+      return { success: false, error: 'Falsches Passwort oder Email nicht gefunden.' };
+    }
+    
+    // Prüfe ob Email verifiziert ist
+    if (!data.email_verified) {
+      return { 
+        success: false, 
+        error: 'Bitte verifizieren Sie zuerst Ihre Email-Adresse. Prüfen Sie Ihr Postfach.',
+        needsVerification: true,
+        user: data
+      };
     }
     
     // Speichere User ID im Browser
@@ -397,6 +437,90 @@ export async function getUserStats(userId) {
     };
   } catch (error) {
     console.error('Fehler beim Laden der Statistiken:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Email-Verifizierung
+export async function verifyEmail(token) {
+  try {
+    // Finde Benutzer mit diesem Token
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email_verification_token', token)
+      .single();
+
+    if (error || !data) {
+      return { success: false, error: 'Ungültiger oder abgelaufener Verifizierungs-Token.' };
+    }
+
+    // Prüfe ob Token abgelaufen ist
+    if (isTokenExpired(data.email_verification_expires)) {
+      return { success: false, error: 'Verifizierungs-Token ist abgelaufen. Bitte registrieren Sie sich erneut.' };
+    }
+
+    // Verifiziere Email
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({
+        email_verified: true,
+        email_verification_token: null,
+        email_verification_expires: null
+      })
+      .eq('id', data.id);
+
+    if (updateError) throw updateError;
+
+    return { success: true, user: data };
+  } catch (error) {
+    console.error('Email-Verifizierung fehlgeschlagen:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+// Verifizierungs-Email erneut senden
+export async function resendVerificationEmail(email) {
+  try {
+    const { data, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .single();
+
+    if (error || !data) {
+      return { success: false, error: 'Email nicht gefunden.' };
+    }
+
+    if (data.email_verified) {
+      return { success: false, error: 'Email ist bereits verifiziert.' };
+    }
+
+    // Generiere neuen Token
+    const verificationToken = generateVerificationToken();
+    const verificationExpires = new Date();
+    verificationExpires.setHours(verificationExpires.getHours() + 24);
+
+    // Update Token
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({
+        email_verification_token: verificationToken,
+        email_verification_expires: verificationExpires.toISOString()
+      })
+      .eq('id', data.id);
+
+    if (updateError) throw updateError;
+
+    const verificationUrl = createVerificationUrl(verificationToken);
+    
+    // TODO: Hier würde normalerweise eine Email gesendet werden
+    console.log('Neue Verifizierungs-URL:', verificationUrl);
+    console.log('⚠️ In Produktion: Diese URL sollte per Email gesendet werden!');
+
+    return { success: true, verificationUrl: verificationUrl };
+  } catch (error) {
+    console.error('Fehler beim Senden der Verifizierungs-Email:', error);
     return { success: false, error: error.message };
   }
 }
