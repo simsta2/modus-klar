@@ -4,6 +4,7 @@ import AdminDashboard from './AdminDashboard';
 // Ganz oben in App.js, nach den imports
 import { supabase } from './supabaseClient';
 import { initializeNotifications, requestNotificationPermission } from './notifications';
+import InstallPrompt from './components/InstallPrompt';
 
 // Debug: Mache supabase global verfügbar (nur für Testing!)
 window.supabase = supabase;
@@ -95,8 +96,21 @@ if (urlParams.get('simple-admin') === 'true') {
   const styles = {
     minHeight: { minHeight: '100vh' },
     gradient: { background: 'linear-gradient(to bottom right, #EBF8FF, #E9D8FD)' },
-    container: { maxWidth: '28rem', margin: '0 auto', padding: '1rem' },
-    card: { backgroundColor: 'white', borderRadius: '1rem', boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)', padding: '2rem' },
+    container: { 
+      maxWidth: '28rem', 
+      margin: '0 auto', 
+      padding: '1rem',
+      width: '100%',
+      boxSizing: 'border-box'
+    },
+    card: { 
+      backgroundColor: 'white', 
+      borderRadius: '1rem', 
+      boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)', 
+      padding: '2rem',
+      width: '100%',
+      boxSizing: 'border-box'
+    },
     button: { 
       background: 'linear-gradient(to right, #3B82F6, #9333EA)', 
       color: 'white', 
@@ -105,7 +119,9 @@ if (urlParams.get('simple-admin') === 'true') {
       fontWeight: '600',
       border: 'none',
       cursor: 'pointer',
-      width: '100%'
+      width: '100%',
+      boxSizing: 'border-box',
+      touchAction: 'manipulation' // Bessere Touch-Performance
     },
     input: {
       width: '100%',
@@ -113,7 +129,10 @@ if (urlParams.get('simple-admin') === 'true') {
       border: '1px solid #D1D5DB',
       borderRadius: '0.5rem',
       marginBottom: '1rem',
-      fontSize: '16px' // Verhindert Zoom auf iOS
+      fontSize: '16px', // Verhindert Zoom auf iOS
+      boxSizing: 'border-box',
+      WebkitAppearance: 'none', // Entfernt iOS-Stil
+      appearance: 'none'
     }
   };
 
@@ -884,7 +903,7 @@ const renderLoginScreen = () => {
   const renderDashboard = () => {
     console.log('DEBUG:', { hour: new Date().getHours(), timeWindow, todayVideos, currentDay });
     return (
-    <div style={{ ...styles.minHeight, ...styles.gradient, paddingBottom: '5rem' }}>
+    <div style={{ ...styles.minHeight, ...styles.gradient, paddingBottom: '2rem', paddingTop: 'env(safe-area-inset-top, 0px)' }}>
       <div style={{ backgroundColor: 'white', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)' }}>
         <div style={{ ...styles.container, padding: '1rem' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -1542,6 +1561,11 @@ return (
     {currentScreen === 'dashboard' && renderDashboard()}
     {currentScreen === 'recording' && renderRecordingScreen()}
     {currentScreen === 'verify-email' && renderVerifyEmailScreen()}
+    {currentScreen === 'forgot-password' && renderForgotPasswordScreen()}
+    {currentScreen === 'reset-password' && renderResetPasswordScreen()}
+    
+    {/* Install Prompt für PWA */}
+    {currentScreen === 'dashboard' && <InstallPrompt />}
   </div>
 );
 };
