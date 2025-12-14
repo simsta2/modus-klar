@@ -9,7 +9,13 @@ CREATE TABLE IF NOT EXISTS users (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   email TEXT UNIQUE NOT NULL,
   name TEXT NOT NULL,
+  password TEXT NOT NULL,
   insurance_number TEXT,
+  email_verified BOOLEAN DEFAULT false,
+  email_verification_token TEXT,
+  email_verification_expires TIMESTAMP WITH TIME ZONE,
+  password_reset_token TEXT,
+  password_reset_expires TIMESTAMP WITH TIME ZONE,
   notifications_enabled BOOLEAN DEFAULT false,
   challenge_start_date DATE,
   current_day INTEGER DEFAULT 1,
@@ -128,5 +134,7 @@ CREATE POLICY "Anyone can read admins" ON admins
 INSERT INTO admins (email, name) 
 VALUES ('admin@example.com', 'Admin')
 ON CONFLICT (email) DO NOTHING;
+
+
 
 
