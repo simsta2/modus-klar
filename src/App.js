@@ -69,12 +69,14 @@ if (urlParams.get('simple-admin') === 'true') {
   const [userData, setUserData] = useState({ 
     name: '', 
     email: '', 
+    password: '',
     idNumber: '',
     idVerified: false,
     agreed: false,
     challengeStartDate: null,
     notificationsEnabled: false
   });
+  const [loginPassword, setLoginPassword] = useState('');
   const [timeWindow, setTimeWindow] = useState({ morning: false, evening: false });
   
   // Refs
@@ -236,12 +238,14 @@ const loadProgress = async (userId) => {
     setUserData({ 
       name: '', 
       email: '', 
+      password: '',
       idNumber: '',
       idVerified: false,
       agreed: false,
       challengeStartDate: null,
       notificationsEnabled: false
     });
+    setLoginPassword('');
     setCurrentDay(1);
     setTodayVideos({ morning: null, evening: null });
     setCurrentScreen('welcome');
@@ -441,13 +445,20 @@ const renderLoginScreen = () => {
       setIsLoading(true);
       setLoginError('');
       
-      const result = await loginUser(loginEmail);
+      if (!loginPassword) {
+        setLoginError('Bitte geben Sie Ihr Passwort ein.');
+        setIsLoading(false);
+        return;
+      }
+      
+      const result = await loginUser(loginEmail, loginPassword);
       
       if (result.success) {
         setUserId(result.user.id);
         setUserData(result.user);
         setCurrentScreen('dashboard');
         loadProgress(result.user.id);
+        setLoginPassword(''); // Passwort-Feld leeren
         
         // Benachrichtigungen initialisieren wenn aktiviert
         if (result.user.notifications_enabled) {
@@ -456,6 +467,7 @@ const renderLoginScreen = () => {
         }
       } else {
         setLoginError(result.error);
+        setLoginPassword(''); // Passwort-Feld leeren bei Fehler
       }
       
       setIsLoading(false);
@@ -508,20 +520,35 @@ const renderLoginScreen = () => {
               onChange={(e) => setLoginEmail(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
             />
+            <input
+              type="password"
+              placeholder="Ihr Passwort"
+              style={{
+                width: '100%',
+                padding: '0.75rem',
+                border: '1px solid #D1D5DB',
+                borderRadius: '0.5rem',
+                marginBottom: '1rem',
+                fontSize: '16px'
+              }}
+              value={loginPassword}
+              onChange={(e) => setLoginPassword(e.target.value)}
+              onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+            />
             
             <button
               onClick={handleLogin}
               style={{
-                background: loginEmail && !isLoading ? 'linear-gradient(to right, #3B82F6, #9333EA)' : '#D1D5DB',
+                background: loginEmail && loginPassword && !isLoading ? 'linear-gradient(to right, #3B82F6, #9333EA)' : '#D1D5DB',
                 color: 'white',
                 padding: '0.75rem',
                 borderRadius: '0.5rem',
                 fontWeight: '600',
                 border: 'none',
-                cursor: loginEmail && !isLoading ? 'pointer' : 'not-allowed',
+                cursor: loginEmail && loginPassword && !isLoading ? 'pointer' : 'not-allowed',
                 width: '100%'
               }}
-              disabled={!loginEmail || isLoading}
+              disabled={!loginEmail || !loginPassword || isLoading}
             >
               {isLoading ? 'Wird angemeldet...' : 'Anmelden'}
             </button>
@@ -648,6 +675,13 @@ const renderLoginScreen = () => {
               value={userData.email}
               onChange={(e) => setUserData({...userData, email: e.target.value})}
             />
+            <input
+              type="password"
+              placeholder="Passwort (mindestens 6 Zeichen)"
+              style={styles.input}
+              value={userData.password}
+              onChange={(e) => setUserData({...userData, password: e.target.value})}
+            />
             
             <div style={{ backgroundColor: '#F3F4F6', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
               <button 
@@ -721,11 +755,11 @@ const renderLoginScreen = () => {
             onClick={handleRegistration}
             style={{
               ...styles.button,
-              ...(userData.agreed && userData.name && userData.email && userData.notificationsEnabled && !isLoading
+              ...(userData.agreed && userData.name && userData.email && userData.password && userData.password.length >= 6 && userData.notificationsEnabled && !isLoading
                 ? {}
                 : { background: '#D1D5DB', cursor: 'not-allowed' })
             }}
-            disabled={!userData.agreed || !userData.name || !userData.email || !userData.notificationsEnabled || isLoading}
+            disabled={!userData.agreed || !userData.name || !userData.email || !userData.password || userData.password.length < 6 || !userData.notificationsEnabled || isLoading}
           >
             {isLoading ? 'Wird registriert...' : 'Challenge starten'}
           </button>
@@ -1025,32 +1059,6 @@ const renderLoginScreen = () => {
         )}
       </div>
       
-      <div style={{
-        position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: 'white',
-        boxShadow: '0 -10px 15px -3px rgba(0, 0, 0, 0.1)',
-        padding: '0.5rem'
-      }}>
-        <div style={{ ...styles.container, padding: 0 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-            <button style={{ padding: '0.75rem', background: 'none', border: 'none', color: '#3B82F6', fontSize: '1.5rem', cursor: 'pointer' }}>
-              <Home />
-            </button>
-            <button style={{ padding: '0.75rem', background: 'none', border: 'none', color: '#9CA3AF', fontSize: '1.5rem', cursor: 'pointer' }}>
-              <Calendar />
-            </button>
-            <button style={{ padding: '0.75rem', background: 'none', border: 'none', color: '#9CA3AF', fontSize: '1.5rem', cursor: 'pointer' }}>
-              <FileText />
-            </button>
-            <button style={{ padding: '0.75rem', background: 'none', border: 'none', color: '#9CA3AF', fontSize: '1.5rem', cursor: 'pointer' }}>
-              <HelpCircle />
-            </button>
-          </div>
-        </div>
-      </div>
     </div>
     );
   };
