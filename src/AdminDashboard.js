@@ -34,6 +34,7 @@ const AdminDashboard = () => {
   const [rejectionReason, setRejectionReason] = useState('');
   const [showRejectionModal, setShowRejectionModal] = useState(null);
   const [selectedVideo, setSelectedVideo] = useState(null);
+  const [videoFilter, setVideoFilter] = useState('pending'); // 'pending' oder 'all'
 
   // Check if already logged in
   useEffect(() => {
@@ -388,21 +389,25 @@ const AdminDashboard = () => {
             {/* Filter Buttons */}
             <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
               <button
+                onClick={() => setVideoFilter('pending')}
                 style={{
                   ...styles.button,
-                  backgroundColor: '#fbbf24',
-                  color: '#78350f',
-                  fontSize: '0.875rem'
+                  backgroundColor: videoFilter === 'pending' ? '#fbbf24' : '#e5e7eb',
+                  color: videoFilter === 'pending' ? '#78350f' : '#6b7280',
+                  fontSize: '0.875rem',
+                  cursor: 'pointer'
                 }}
               >
                 Ausstehend ({videos.filter(v => v.status === 'pending').length})
               </button>
               <button
+                onClick={() => setVideoFilter('all')}
                 style={{
                   ...styles.button,
-                  backgroundColor: '#e5e7eb',
-                  color: '#6b7280',
-                  fontSize: '0.875rem'
+                  backgroundColor: videoFilter === 'all' ? '#3b82f6' : '#e5e7eb',
+                  color: videoFilter === 'all' ? 'white' : '#6b7280',
+                  fontSize: '0.875rem',
+                  cursor: 'pointer'
                 }}
               >
                 Alle ({videos.length})
@@ -423,7 +428,7 @@ const AdminDashboard = () => {
                 </thead>
                 <tbody>
                   {videos
-                    .filter(v => v.status === 'pending')
+                    .filter(v => videoFilter === 'all' ? true : v.status === 'pending')
                     .map(video => (
                       <tr key={video.id}>
                         <td style={styles.td}>
@@ -476,30 +481,34 @@ const AdminDashboard = () => {
                             >
                               <Eye /> Video
                             </button>
-                            {video.status === 'pending' && (
+                            {(video.status === 'pending' || videoFilter === 'all') && (
                               <>
-                                <button
-                                  onClick={() => handleVideoAction(video.id, 'approve')}
-                                  style={{
-                                    ...styles.button,
-                                    backgroundColor: '#10b981',
-                                    color: 'white',
-                                    fontSize: '0.875rem'
-                                  }}
-                                >
-                                  <CheckCircle />
-                                </button>
-                                <button
-                                  onClick={() => handleVideoAction(video.id, 'reject')}
-                                  style={{
-                                    ...styles.button,
-                                    backgroundColor: '#ef4444',
-                                    color: 'white',
-                                    fontSize: '0.875rem'
-                                  }}
-                                >
-                                  <XCircle />
-                                </button>
+                                {video.status !== 'verified' && (
+                                  <button
+                                    onClick={() => handleVideoAction(video.id, 'approve')}
+                                    style={{
+                                      ...styles.button,
+                                      backgroundColor: '#10b981',
+                                      color: 'white',
+                                      fontSize: '0.875rem'
+                                    }}
+                                  >
+                                    <CheckCircle />
+                                  </button>
+                                )}
+                                {video.status !== 'rejected' && (
+                                  <button
+                                    onClick={() => handleVideoAction(video.id, 'reject')}
+                                    style={{
+                                      ...styles.button,
+                                      backgroundColor: '#ef4444',
+                                      color: 'white',
+                                      fontSize: '0.875rem'
+                                    }}
+                                  >
+                                    <XCircle />
+                                  </button>
+                                )}
                               </>
                             )}
                           </div>
@@ -510,10 +519,15 @@ const AdminDashboard = () => {
               </table>
             </div>
 
-            {videos.filter(v => v.status === 'pending').length === 0 && (
+            {videoFilter === 'pending' && videos.filter(v => v.status === 'pending').length === 0 && (
               <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
                 <CheckCircle style={{ fontSize: '3rem', marginBottom: '1rem' }} />
                 <p>Keine ausstehenden Videos zur Verifikation</p>
+              </div>
+            )}
+            {videoFilter === 'all' && videos.length === 0 && (
+              <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+                <p>Keine Videos vorhanden</p>
               </div>
             )}
           </div>
@@ -547,7 +561,9 @@ const AdminDashboard = () => {
               
               <div style={{ marginBottom: '1rem' }}>
                 <p><strong>Email:</strong> {selectedUser.email}</p>
-                <p><strong>Versicherungsnummer:</strong> {selectedUser.insurance_number}</p>
+                {selectedUser.insurance_number && (
+                  <p><strong>Versicherungsnummer:</strong> {selectedUser.insurance_number}</p>
+                )}
                 <p><strong>Registriert:</strong> {formatDate(selectedUser.created_at)}</p>
                 <p><strong>Challenge Start:</strong> {formatDate(selectedUser.challenge_start_date)}</p>
               </div>
@@ -714,37 +730,37 @@ const AdminDashboard = () => {
               )}
               
               <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem' }}>
-                {selectedVideo.status === 'pending' && (
-                  <>
-                    <button
-                      onClick={() => {
-                        handleVideoAction(selectedVideo.id, 'approve');
-                        setSelectedVideo(null);
-                      }}
-                      style={{
-                        ...styles.button,
-                        backgroundColor: '#10b981',
-                        color: 'white',
-                        flex: 1
-                      }}
-                    >
-                      <CheckCircle /> Akzeptieren
-                    </button>
-                    <button
-                      onClick={() => {
-                        setShowRejectionModal(selectedVideo.id);
-                        setSelectedVideo(null);
-                      }}
-                      style={{
-                        ...styles.button,
-                        backgroundColor: '#ef4444',
-                        color: 'white',
-                        flex: 1
-                      }}
-                    >
-                      <XCircle /> Ablehnen
-                    </button>
-                  </>
+                {selectedVideo.status !== 'verified' && (
+                  <button
+                    onClick={async () => {
+                      await handleVideoAction(selectedVideo.id, 'approve');
+                      setSelectedVideo(null);
+                    }}
+                    style={{
+                      ...styles.button,
+                      backgroundColor: '#10b981',
+                      color: 'white',
+                      flex: 1
+                    }}
+                  >
+                    <CheckCircle /> {selectedVideo.status === 'pending' ? 'Akzeptieren' : 'Zu Akzeptiert ändern'}
+                  </button>
+                )}
+                {selectedVideo.status !== 'rejected' && (
+                  <button
+                    onClick={() => {
+                      setShowRejectionModal(selectedVideo.id);
+                      setSelectedVideo(null);
+                    }}
+                    style={{
+                      ...styles.button,
+                      backgroundColor: '#ef4444',
+                      color: 'white',
+                      flex: 1
+                    }}
+                  >
+                    <XCircle /> {selectedVideo.status === 'pending' ? 'Ablehnen' : 'Zu Abgelehnt ändern'}
+                  </button>
                 )}
               </div>
             </div>
