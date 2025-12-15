@@ -1,10 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { registerUser, saveVideoRecord, loadUserProgress, loginUser, uploadVideo, verifyEmail, resendVerificationEmail, requestPasswordReset, resetPassword } from './api';
 import AdminDashboard from './AdminDashboard';
 // Ganz oben in App.js, nach den imports
 import { supabase } from './supabaseClient';
 import { initializeNotifications, requestNotificationPermission } from './notifications';
 import InstallPrompt from './components/InstallPrompt';
+import { ToastContext } from './components/Toast';
+import LoadingSpinner from './components/LoadingSpinner';
 
 // Debug: Mache supabase global verfügbar (nur für Testing!)
 window.supabase = supabase;
@@ -34,6 +36,9 @@ const CreditCard = (props) => <Icon {...props}>💳</Icon>;
 
 // Haupt-App Komponente
 const ModusKlarApp = () => {
+  // Toast Context für Benachrichtigungen
+  const toast = useContext(ToastContext);
+  
   // Prüfe ob Admin-Modus über URL-Parameter
   const urlParams = new URLSearchParams(window.location.search);
   const isAdminMode = urlParams.get('admin') === 'true';
@@ -61,6 +66,8 @@ if (urlParams.get('simple-admin') === 'true') {
   const [resetPasswordConfirm, setResetPasswordConfirm] = useState('');
   const [resetEmail, setResetEmail] = useState('');
   const [currentDay, setCurrentDay] = useState(1);
+  const [currentStreak, setCurrentStreak] = useState(0);
+  const [successfulDays, setSuccessfulDays] = useState(0);
   const [loginEmail, setLoginEmail] = useState('');
   const [loginError, setLoginError] = useState('');
   const [loginLoading, setLoginLoading] = useState(false);
@@ -234,6 +241,13 @@ const loadProgress = async (userId) => {
     if (result.success) {
       // Verwende die berechnete Streak und aktuellen Tag
       setCurrentDay(result.currentDay || 1);
+      setCurrentStreak(result.currentStreak || 0);
+      
+      // Berechne erfolgreiche Tage
+      const successful = result.progress.filter(p => 
+        p.morning_status === 'verified' && p.evening_status === 'verified'
+      ).length;
+      setSuccessfulDays(successful);
       
       // Finde den Status für heute
       const todayProgress = result.progress.find(p => p.day_number === result.currentDay);
@@ -256,14 +270,42 @@ const loadProgress = async (userId) => {
     setIsLoading(true);
     setErrorMessage('');
     
+    // Validierung
+    if (!userData.name || userData.name.trim().length < 2) {
+      const errorMsg = 'Bitte geben Sie einen gültigen Namen ein (mindestens 2 Zeichen).';
+      setErrorMessage(errorMsg);
+      if (toast) toast.error(errorMsg);
+      setIsLoading(false);
+      return;
+    }
+    
+    if (!userData.email || !userData.email.includes('@')) {
+      const errorMsg = 'Bitte geben Sie eine gültige Email-Adresse ein.';
+      setErrorMessage(errorMsg);
+      if (toast) toast.error(errorMsg);
+      setIsLoading(false);
+      return;
+    }
+    
+    if (!userData.password || userData.password.length < 6) {
+      const errorMsg = 'Passwort muss mindestens 6 Zeichen lang sein.';
+      setErrorMessage(errorMsg);
+      if (toast) toast.error(errorMsg);
+      setIsLoading(false);
+      return;
+    }
+    
     try {
       const result = await registerUser(userData);
       
       if (result.success) {
+        if (toast) {
+          toast.success('Registrierung erfolgreich! Bitte verifizieren Sie Ihre Email.');
+        }
         setUserId(result.user.id);
         localStorage.setItem('userId', result.user.id);
         localStorage.setItem('userName', result.user.name);
-        setCurrentScreen('dashboard');
+        setCurrentScreen('verify-email-pending');
         
         // Benachrichtigungen initialisieren wenn aktiviert
         if (userData.notificationsEnabled) {
@@ -271,10 +313,14 @@ const loadProgress = async (userId) => {
           await initializeNotifications(result.user.id);
         }
       } else {
-        setErrorMessage('Registrierung fehlgeschlagen: ' + result.error);
+        const errorMsg = 'Registrierung fehlgeschlagen: ' + result.error;
+        setErrorMessage(errorMsg);
+        if (toast) toast.error(errorMsg);
       }
     } catch (error) {
-      setErrorMessage('Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.');
+      const errorMsg = 'Ein Fehler ist aufgetreten. Bitte versuchen Sie es später erneut.';
+      setErrorMessage(errorMsg);
+      if (toast) toast.error(errorMsg);
     }
     
     setIsLoading(false);
@@ -314,7 +360,11 @@ const loadProgress = async (userId) => {
       streamRef.current = stream;
     } catch (err) {
       console.error('Kamera-Zugriff verweigert:', err);
-      alert('Bitte erlauben Sie den Kamera-Zugriff für diese App.');
+      if (toast) {
+        toast.error('Bitte erlauben Sie den Kamera-Zugriff für diese App.');
+      } else {
+        alert('Bitte erlauben Sie den Kamera-Zugriff für diese App.');
+      }
       setCurrentScreen('dashboard');
     }
   };
@@ -370,10 +420,18 @@ const loadProgress = async (userId) => {
         ...prev,
         [currentVideoType]: 'pending'
       }));
-      alert('Video erfolgreich hochgeladen! Es wird nun geprüft.');
+      if (toast) {
+        toast.success('Video erfolgreich hochgeladen! Es wird nun geprüft.');
+      } else {
+        alert('Video erfolgreich hochgeladen! Es wird nun geprüft.');
+      }
       await loadProgress(userId);
     } else {
-      alert('Upload fehlgeschlagen: ' + uploadResult.error);
+      if (toast) {
+        toast.error('Upload fehlgeschlagen: ' + uploadResult.error);
+      } else {
+        alert('Upload fehlgeschlagen: ' + uploadResult.error);
+      }
       console.error('8. Upload Error:', uploadResult.error);
       setTodayVideos(prev => ({
         ...prev,
@@ -382,7 +440,11 @@ const loadProgress = async (userId) => {
     }
   } else {
     console.log('9. Upload blocked - userId:', userId, 'blob.size:', blob.size);
-    alert('Kein Video zum Hochladen oder kein User eingeloggt');
+    if (toast) {
+      toast.error('Kein Video zum Hochladen oder kein User eingeloggt');
+    } else {
+      alert('Kein Video zum Hochladen oder kein User eingeloggt');
+    }
   }
 };
       
@@ -400,7 +462,11 @@ const loadProgress = async (userId) => {
       }, 1000);
     } catch (error) {
       console.error('Fehler beim Starten der Aufnahme:', error);
-      alert('Fehler beim Starten der Aufnahme. Bitte versuchen Sie es erneut.');
+      if (toast) {
+        toast.error('Fehler beim Starten der Aufnahme. Bitte versuchen Sie es erneut.');
+      } else {
+        alert('Fehler beim Starten der Aufnahme. Bitte versuchen Sie es erneut.');
+      }
       setIsRecording(false);
     }
   };
@@ -728,32 +794,68 @@ const renderLoginScreen = () => {
           )}
           
           <div>
-            <input
-              type="text"
-              placeholder="Vollständiger Name (wie auf Ausweis)"
-              style={styles.input}
-              value={userData.name}
-              onChange={(e) => setUserData({...userData, name: e.target.value})}
-            />
-            <input
-              type="email"
-              placeholder="E-Mail-Adresse"
-              style={styles.input}
-              value={userData.email}
-              onChange={(e) => setUserData({...userData, email: e.target.value})}
-            />
-            <input
-              type="password"
-              placeholder="Passwort (mindestens 6 Zeichen)"
-              style={styles.input}
-              value={userData.password}
-              onChange={(e) => setUserData({...userData, password: e.target.value})}
-            />
-            {userData.password && userData.password.length > 0 && userData.password.length < 6 && (
-              <p style={{ fontSize: '0.75rem', color: '#DC2626', marginTop: '-0.75rem', marginBottom: '1rem' }}>
-                Passwort muss mindestens 6 Zeichen lang sein.
-              </p>
-            )}
+            <div>
+              <input
+                type="text"
+                placeholder="Vollständiger Name (wie auf Ausweis)"
+                style={{
+                  ...styles.input,
+                  borderColor: userData.name && userData.name.trim().length < 2 ? '#DC2626' : styles.input.border,
+                  marginBottom: userData.name && userData.name.trim().length > 0 && userData.name.trim().length < 2 ? '0.25rem' : '1rem'
+                }}
+                value={userData.name}
+                onChange={(e) => setUserData({...userData, name: e.target.value})}
+                aria-invalid={userData.name && userData.name.trim().length < 2}
+                aria-describedby={userData.name && userData.name.trim().length < 2 ? 'name-error' : undefined}
+              />
+              {userData.name && userData.name.trim().length > 0 && userData.name.trim().length < 2 && (
+                <p id="name-error" style={{ fontSize: '0.75rem', color: '#DC2626', marginTop: '-0.75rem', marginBottom: '1rem' }}>
+                  Name muss mindestens 2 Zeichen lang sein.
+                </p>
+              )}
+            </div>
+            
+            <div>
+              <input
+                type="email"
+                placeholder="E-Mail-Adresse"
+                style={{
+                  ...styles.input,
+                  borderColor: userData.email && !userData.email.includes('@') ? '#DC2626' : styles.input.border,
+                  marginBottom: userData.email && !userData.email.includes('@') ? '0.25rem' : '1rem'
+                }}
+                value={userData.email}
+                onChange={(e) => setUserData({...userData, email: e.target.value})}
+                aria-invalid={userData.email && !userData.email.includes('@')}
+                aria-describedby={userData.email && !userData.email.includes('@') ? 'email-error' : undefined}
+              />
+              {userData.email && !userData.email.includes('@') && (
+                <p id="email-error" style={{ fontSize: '0.75rem', color: '#DC2626', marginTop: '-0.75rem', marginBottom: '1rem' }}>
+                  Bitte geben Sie eine gültige Email-Adresse ein.
+                </p>
+              )}
+            </div>
+            
+            <div>
+              <input
+                type="password"
+                placeholder="Passwort (mindestens 6 Zeichen)"
+                style={{
+                  ...styles.input,
+                  borderColor: userData.password && userData.password.length > 0 && userData.password.length < 6 ? '#DC2626' : styles.input.border,
+                  marginBottom: userData.password && userData.password.length > 0 && userData.password.length < 6 ? '0.25rem' : '1rem'
+                }}
+                value={userData.password}
+                onChange={(e) => setUserData({...userData, password: e.target.value})}
+                aria-invalid={userData.password && userData.password.length > 0 && userData.password.length < 6}
+                aria-describedby={userData.password && userData.password.length > 0 && userData.password.length < 6 ? 'password-error' : undefined}
+              />
+              {userData.password && userData.password.length > 0 && userData.password.length < 6 && (
+                <p id="password-error" style={{ fontSize: '0.75rem', color: '#DC2626', marginTop: '-0.75rem', marginBottom: '1rem' }}>
+                  Passwort muss mindestens 6 Zeichen lang sein.
+                </p>
+              )}
+            </div>
             
             <div style={{ backgroundColor: '#F3F4F6', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
               <button 
@@ -833,7 +935,14 @@ const renderLoginScreen = () => {
             }}
             disabled={!userData.agreed || !userData.name || !userData.email || !userData.password || userData.password.length < 6 || !userData.notificationsEnabled || isLoading}
           >
-            {isLoading ? 'Wird registriert...' : 'Challenge starten'}
+            {isLoading ? (
+              <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                <LoadingSpinner size="small" text="" />
+                Wird registriert...
+              </span>
+            ) : (
+              'Challenge starten'
+            )}
           </button>
         </div>
         
@@ -901,7 +1010,6 @@ const renderLoginScreen = () => {
   );
 
   const renderDashboard = () => {
-    console.log('DEBUG:', { hour: new Date().getHours(), timeWindow, todayVideos, currentDay });
     return (
     <div style={{ ...styles.minHeight, ...styles.gradient, paddingBottom: '2rem', paddingTop: 'env(safe-area-inset-top, 0px)' }}>
       <div style={{ backgroundColor: 'white', boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)' }}>
@@ -975,8 +1083,16 @@ const renderLoginScreen = () => {
                   <CheckCircle />
                   <span style={{ fontSize: '0.75rem', color: '#059669' }}>Verifiziert</span>
                 </div>
+              ) : todayVideos.morning === 'uploading' ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <LoadingSpinner size="small" text="" />
+                  <span style={{ fontSize: '0.75rem', color: '#3B82F6' }}>Wird hochgeladen...</span>
+                </div>
               ) : todayVideos.morning === 'pending' ? (
-                <div style={{ fontSize: '0.75rem', color: '#F59E0B' }}>Wird geprüft...</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <div style={{ width: '0.5rem', height: '0.5rem', borderRadius: '50%', backgroundColor: '#F59E0B', animation: 'pulse 2s ease-in-out infinite' }} />
+                  <span style={{ fontSize: '0.75rem', color: '#F59E0B' }}>Wird geprüft...</span>
+                </div>
               ) : (
                 <button
                   onClick={() => {
@@ -1022,8 +1138,16 @@ const renderLoginScreen = () => {
                   <CheckCircle />
                   <span style={{ fontSize: '0.75rem', color: '#059669' }}>Verifiziert</span>
                 </div>
+              ) : todayVideos.evening === 'uploading' ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <LoadingSpinner size="small" text="" />
+                  <span style={{ fontSize: '0.75rem', color: '#3B82F6' }}>Wird hochgeladen...</span>
+                </div>
               ) : todayVideos.evening === 'pending' ? (
-                <div style={{ fontSize: '0.75rem', color: '#F59E0B' }}>Wird geprüft...</div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <div style={{ width: '0.5rem', height: '0.5rem', borderRadius: '50%', backgroundColor: '#F59E0B', animation: 'pulse 2s ease-in-out infinite' }} />
+                  <span style={{ fontSize: '0.75rem', color: '#F59E0B' }}>Wird geprüft...</span>
+                </div>
               ) : (
                 <button
                   onClick={() => {
@@ -1046,6 +1170,58 @@ const renderLoginScreen = () => {
                   {timeWindow.evening ? 'Jetzt messen' : 'Zeitfenster geschlossen'}
                 </button>
               )}
+            </div>
+          </div>
+        </div>
+        
+        {/* Statistiken */}
+        <div style={{ ...styles.card, marginBottom: '1rem' }}>
+          <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '1rem' }}>
+            Ihre Statistiken
+          </h3>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '0.75rem'
+          }}>
+            <div style={{
+              padding: '1rem',
+              backgroundColor: '#DBEAFE',
+              borderRadius: '0.5rem',
+              textAlign: 'center'
+            }}>
+              <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1E40AF', margin: 0 }}>
+                {currentStreak}
+              </p>
+              <p style={{ fontSize: '0.75rem', color: '#6B7280', margin: '0.25rem 0 0 0' }}>
+                Tage Streak
+              </p>
+            </div>
+            <div style={{
+              padding: '1rem',
+              backgroundColor: '#D1FAE5',
+              borderRadius: '0.5rem',
+              textAlign: 'center'
+            }}>
+              <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#065F46', margin: 0 }}>
+                {successfulDays}
+              </p>
+              <p style={{ fontSize: '0.75rem', color: '#6B7280', margin: '0.25rem 0 0 0' }}>
+                Erfolgreiche Tage
+              </p>
+            </div>
+            <div style={{
+              padding: '1rem',
+              backgroundColor: '#FEF3C7',
+              borderRadius: '0.5rem',
+              textAlign: 'center'
+            }}>
+              <p style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#92400E', margin: 0 }}>
+                {30 - currentDay + 1}
+              </p>
+              <p style={{ fontSize: '0.75rem', color: '#6B7280', margin: '0.25rem 0 0 0' }}>
+                Tage verbleibend
+              </p>
             </div>
           </div>
         </div>
@@ -1087,12 +1263,36 @@ const renderLoginScreen = () => {
                       ? 'white'
                       : '#6B7280'
                 }}
+                title={
+                  day.morning === 'verified' && day.evening === 'verified'
+                    ? `Tag ${day.day}: Beide Messungen verifiziert`
+                    : day.day === currentDay
+                    ? `Tag ${day.day}: Aktueller Tag`
+                    : day.day < currentDay
+                    ? `Tag ${day.day}: Nicht vollständig`
+                    : `Tag ${day.day}: Noch nicht erreicht`
+                }
               >
                 {day.day}
               </div>
             ))}
           </div>
           <div style={{ marginTop: '1rem', textAlign: 'center' }}>
+            <div style={{
+              width: '100%',
+              height: '0.5rem',
+              backgroundColor: '#E5E7EB',
+              borderRadius: '9999px',
+              overflow: 'hidden',
+              marginBottom: '0.5rem'
+            }}>
+              <div style={{
+                width: `${Math.round((currentDay / 30) * 100)}%`,
+                height: '100%',
+                background: 'linear-gradient(to right, #3B82F6, #9333EA)',
+                transition: 'width 0.3s ease'
+              }} />
+            </div>
             <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>
               {Math.round((currentDay / 30) * 100)}% abgeschlossen
             </p>
@@ -1275,6 +1475,13 @@ const renderLoginScreen = () => {
             100% { opacity: 1; }
           }
         `}</style>
+        <style>{`
+          @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+          }
+        `}</style>
       </div>
     );
   };
@@ -1294,7 +1501,11 @@ const renderLoginScreen = () => {
       const result = await requestPasswordReset(resetEmail);
       
       if (result.success) {
-        alert('Falls diese Email registriert ist, wurde ein Passwort-Reset-Link gesendet. Prüfen Sie Ihr Postfach.\n\nFür Testing: Die Reset-URL wurde in der Konsole ausgegeben.');
+        if (toast) {
+          toast.success('Falls diese Email registriert ist, wurde ein Passwort-Reset-Link gesendet. Prüfen Sie Ihr Postfach.');
+        } else {
+          alert('Falls diese Email registriert ist, wurde ein Passwort-Reset-Link gesendet. Prüfen Sie Ihr Postfach.\n\nFür Testing: Die Reset-URL wurde in der Konsole ausgegeben.');
+        }
         console.log('Passwort-Reset-URL:', result.resetUrl);
         setCurrentScreen('login');
       } else {
@@ -1399,7 +1610,11 @@ const renderLoginScreen = () => {
       const result = await resetPassword(resetToken, resetPasswordValue);
       
       if (result.success) {
-        alert('Passwort wurde erfolgreich zurückgesetzt! Sie können sich jetzt anmelden.');
+        if (toast) {
+          toast.success('Passwort wurde erfolgreich zurückgesetzt! Sie können sich jetzt anmelden.');
+        } else {
+          alert('Passwort wurde erfolgreich zurückgesetzt! Sie können sich jetzt anmelden.');
+        }
         setResetToken(null);
         setResetPasswordValue('');
         setResetPasswordConfirm('');
@@ -1466,8 +1681,76 @@ const renderLoginScreen = () => {
               }}
               disabled={!resetPasswordValue || resetPasswordValue.length < 6 || resetPasswordValue !== resetPasswordConfirm || isLoading}
             >
-              {isLoading ? 'Wird zurückgesetzt...' : 'Passwort zurücksetzen'}
+              {isLoading ? (
+                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                  <LoadingSpinner size="small" text="" />
+                  Wird zurückgesetzt...
+                </span>
+              ) : (
+                'Passwort zurücksetzen'
+              )}
             </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Email-Verifizierung ausstehend Screen
+  const renderVerifyEmailPendingScreen = () => {
+    const handleResend = async () => {
+      setIsLoading(true);
+      const result = await resendVerificationEmail(userData.email);
+      if (result.success) {
+        if (toast) {
+          toast.success('Verifizierungs-Email wurde erneut gesendet! Prüfen Sie Ihr Postfach.');
+        } else {
+          alert('Verifizierungs-Email wurde erneut gesendet! Prüfen Sie Ihr Postfach.');
+        }
+        console.log('Verifizierungs-URL:', result.verificationUrl);
+      } else {
+        if (toast) {
+          toast.error('Fehler: ' + result.error);
+        } else {
+          alert('Fehler: ' + result.error);
+        }
+      }
+      setIsLoading(false);
+    };
+
+    return (
+      <div style={{ ...styles.minHeight, ...styles.gradient, padding: '1rem' }}>
+        <div style={styles.container}>
+          <div style={styles.card}>
+            <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+              <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>📧</div>
+              <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+                Email-Verifizierung ausstehend
+              </h2>
+              <p style={{ color: '#6B7280', marginBottom: '2rem' }}>
+                Wir haben eine Verifizierungs-Email an <strong>{userData.email}</strong> gesendet.
+                Bitte prüfen Sie Ihr Postfach und klicken Sie auf den Link in der Email.
+              </p>
+              <div style={{ backgroundColor: '#DBEAFE', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem', fontSize: '0.875rem', color: '#1E40AF' }}>
+                <p style={{ margin: 0 }}>
+                  <strong>Hinweis:</strong> Für Testing wurde die Verifizierungs-URL in der Browser-Konsole ausgegeben.
+                </p>
+              </div>
+              <button
+                onClick={handleResend}
+                style={styles.button}
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+                    <LoadingSpinner size="small" text="" />
+                    Wird gesendet...
+                  </span>
+                ) : (
+                  'Email erneut senden'
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -1480,10 +1763,18 @@ const renderLoginScreen = () => {
       setIsLoading(true);
       const result = await resendVerificationEmail(loginEmail);
       if (result.success) {
-        alert('Verifizierungs-Email wurde erneut gesendet! Prüfen Sie Ihr Postfach.');
+        if (toast) {
+          toast.success('Verifizierungs-Email wurde erneut gesendet! Prüfen Sie Ihr Postfach.');
+        } else {
+          alert('Verifizierungs-Email wurde erneut gesendet! Prüfen Sie Ihr Postfach.');
+        }
         console.log('Verifizierungs-URL:', result.verificationUrl);
       } else {
-        alert('Fehler: ' + result.error);
+        if (toast) {
+          toast.error('Fehler: ' + result.error);
+        } else {
+          alert('Fehler: ' + result.error);
+        }
       }
       setIsLoading(false);
     };
@@ -1561,6 +1852,7 @@ return (
     {currentScreen === 'dashboard' && renderDashboard()}
     {currentScreen === 'recording' && renderRecordingScreen()}
     {currentScreen === 'verify-email' && renderVerifyEmailScreen()}
+    {currentScreen === 'verify-email-pending' && renderVerifyEmailPendingScreen()}
     {currentScreen === 'forgot-password' && renderForgotPasswordScreen()}
     {currentScreen === 'reset-password' && renderResetPasswordScreen()}
     
