@@ -165,11 +165,27 @@ useEffect(() => {
       // Email-Verifizierung durchführen
       setVerificationToken(token);
       setCurrentScreen('verify-email');
-      const result = await verifyEmail(token);
-      if (result.success) {
-        setVerificationStatus('success');
-      } else {
+      setIsLoading(true);
+      try {
+        const result = await verifyEmail(token);
+        if (result.success) {
+          setVerificationStatus('success');
+          if (toast) {
+            toast.success('Email erfolgreich verifiziert! Sie können sich jetzt anmelden.');
+          }
+        } else {
+          setVerificationStatus('error');
+          if (toast) {
+            toast.error(result.error || 'Verifizierung fehlgeschlagen.');
+          }
+        }
+      } catch (error) {
         setVerificationStatus('error');
+        if (toast) {
+          toast.error('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
+        }
+      } finally {
+        setIsLoading(false);
       }
       return;
     }
@@ -221,6 +237,23 @@ useEffect(() => {
   setMonthProgress(progress);
 }, [currentDay, todayVideos]);
 
+// Auto-Refresh Statistik alle 30 Sekunden wenn auf Dashboard
+useEffect(() => {
+  if (currentScreen === 'dashboard' && userId) {
+    // Lade sofort beim Dashboard-Öffnen
+    loadProgress(userId);
+    
+    // Dann alle 30 Sekunden aktualisieren
+    const interval = setInterval(() => {
+      if (userId) {
+        loadProgress(userId);
+      }
+    }, 30000); // 30 Sekunden
+    
+    return () => clearInterval(interval);
+  }
+}, [currentScreen, userId]);
+
 // Recording Screen Effect
 useEffect(() => {
   if (currentScreen === 'recording') {
@@ -236,6 +269,7 @@ useEffect(() => {
 
 // Lade Nutzer-Fortschritt aus Datenbank - NUR EINMAL DEFINIERT!
 const loadProgress = async (userId) => {
+  if (!userId) return;
   try {
     const result = await loadUserProgress(userId);
     if (result.success) {
