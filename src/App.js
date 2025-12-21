@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import { registerUser, saveVideoRecord, loadUserProgress, loginUser, uploadVideo, verifyEmail, resendVerificationEmail, requestPasswordReset, resetPassword } from './api';
+import { registerUser, saveVideoRecord, loadUserProgress, loginUser, uploadVideo, requestPasswordReset, resetPassword } from './api';
 import AdminDashboard from './AdminDashboard';
 // Ganz oben in App.js, nach den imports
 import { supabase } from './supabaseClient';
@@ -59,8 +59,6 @@ if (urlParams.get('simple-admin') === 'true') {
   
   // State Management
   const [currentScreen, setCurrentScreen] = useState('welcome');
-  const [verificationToken, setVerificationToken] = useState(null);
-  const [verificationStatus, setVerificationStatus] = useState(null);
   const [resetToken, setResetToken] = useState(null);
   const [resetPasswordValue, setResetPasswordValue] = useState('');
   const [resetPasswordConfirm, setResetPasswordConfirm] = useState('');
@@ -84,8 +82,7 @@ if (urlParams.get('simple-admin') === 'true') {
     name: '', 
     email: '', 
     password: '',
-    idNumber: '',
-    idVerified: false,
+    idNumber: '', // Optional, nicht mehr benötigt
     agreed: false,
     challengeStartDate: null,
     notificationsEnabled: false
@@ -161,34 +158,7 @@ useEffect(() => {
       return;
     }
     
-    if (token && !isResetPassword) {
-      // Email-Verifizierung durchführen
-      setVerificationToken(token);
-      setCurrentScreen('verify-email');
-      setIsLoading(true);
-      try {
-        const result = await verifyEmail(token);
-        if (result.success) {
-          setVerificationStatus('success');
-          if (toast) {
-            toast.success('Email erfolgreich verifiziert! Sie können sich jetzt anmelden.');
-          }
-        } else {
-          setVerificationStatus('error');
-          if (toast) {
-            toast.error(result.error || 'Verifizierung fehlgeschlagen.');
-          }
-        }
-      } catch (error) {
-        setVerificationStatus('error');
-        if (toast) {
-          toast.error('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
-        }
-      } finally {
-        setIsLoading(false);
-      }
-      return;
-    }
+    // Email-Verifizierung entfernt - nicht mehr nötig
     
     if (savedUserId && savedUserName) {
       setUserId(savedUserId);
@@ -334,12 +304,15 @@ const loadProgress = async (userId) => {
       
       if (result.success) {
         if (toast) {
-          toast.success('Registrierung erfolgreich! Bitte verifizieren Sie Ihre Email.');
+          toast.success('Registrierung erfolgreich! Sie werden zum Dashboard weitergeleitet.');
         }
         setUserId(result.user.id);
         localStorage.setItem('userId', result.user.id);
         localStorage.setItem('userName', result.user.name);
-        setCurrentScreen('verify-email-pending');
+        setCurrentScreen('dashboard');
+        
+        // Lade Fortschritt
+        await loadProgress(result.user.id);
         
         // Benachrichtigungen initialisieren wenn aktiviert
         if (userData.notificationsEnabled) {
@@ -757,18 +730,6 @@ const renderLoginScreen = () => {
               </div>
             </div>
             
-            <div style={{ backgroundColor: '#DBEAFE', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
-              <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem' }}>
-                <CreditCard />
-                <div>
-                  <p style={{ fontWeight: '600', marginBottom: '0.25rem' }}>Ausweisverifizierung</p>
-                  <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>
-                    Zur Teilnahme ist eine einmalige Identitätsprüfung per Personalausweis erforderlich.
-                  </p>
-                </div>
-              </div>
-            </div>
-            
             <div style={{ backgroundColor: '#D1FAE5', padding: '1rem', borderRadius: '0.5rem' }}>
               <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem' }}>
                 <Bell />
@@ -831,7 +792,7 @@ const renderLoginScreen = () => {
             <div>
               <input
                 type="text"
-                placeholder="Vollständiger Name (wie auf Ausweis)"
+                placeholder="Vollständiger Name"
                 style={{
                   ...styles.input,
                   borderColor: userData.name && userData.name.trim().length < 2 ? '#DC2626' : styles.input.border,
@@ -891,26 +852,6 @@ const renderLoginScreen = () => {
               )}
             </div>
             
-            <div style={{ backgroundColor: '#F3F4F6', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
-              <button 
-                type="button"
-                style={{ 
-                  ...styles.button, 
-                  background: 'white', 
-                  color: '#374151', 
-                  border: '1px solid #D1D5DB',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between'
-                }}
-              >
-                <span>Ausweis verifizieren</span>
-                <CreditCard />
-              </button>
-              <p style={{ fontSize: '0.75rem', color: '#6B7280', marginTop: '0.5rem' }}>
-                Sie werden zur sicheren Identifikation weitergeleitet
-              </p>
-            </div>
           </div>
           
           <div style={{ backgroundColor: '#DBEAFE', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
@@ -1730,151 +1671,7 @@ const renderLoginScreen = () => {
     );
   };
 
-  // Email-Verifizierung ausstehend Screen
-  const renderVerifyEmailPendingScreen = () => {
-    const handleResend = async () => {
-      setIsLoading(true);
-      const result = await resendVerificationEmail(userData.email);
-      if (result.success) {
-        if (toast) {
-          toast.success('Verifizierungs-Email wurde erneut gesendet! Prüfen Sie Ihr Postfach.');
-        } else {
-          alert('Verifizierungs-Email wurde erneut gesendet! Prüfen Sie Ihr Postfach.');
-        }
-        console.log('Verifizierungs-URL:', result.verificationUrl);
-      } else {
-        if (toast) {
-          toast.error('Fehler: ' + result.error);
-        } else {
-          alert('Fehler: ' + result.error);
-        }
-      }
-      setIsLoading(false);
-    };
-
-    return (
-      <div style={{ ...styles.minHeight, ...styles.gradient, padding: '1rem' }}>
-        <div style={styles.container}>
-          <div style={styles.card}>
-            <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-              <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>📧</div>
-              <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-                Email-Verifizierung ausstehend
-              </h2>
-              <p style={{ color: '#6B7280', marginBottom: '2rem' }}>
-                Wir haben eine Verifizierungs-Email an <strong>{userData.email}</strong> gesendet.
-                Bitte prüfen Sie Ihr Postfach und klicken Sie auf den Link in der Email.
-              </p>
-              <div style={{ backgroundColor: '#DBEAFE', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem', fontSize: '0.875rem', color: '#1E40AF' }}>
-                <p style={{ margin: 0 }}>
-                  <strong>Hinweis:</strong> Für Testing wurde die Verifizierungs-URL in der Browser-Konsole ausgegeben.
-                </p>
-              </div>
-              <button
-                onClick={handleResend}
-                style={styles.button}
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
-                    <LoadingSpinner size="small" text="" />
-                    Wird gesendet...
-                  </span>
-                ) : (
-                  'Email erneut senden'
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
-  // Email-Verifizierungs-Screen
-  const renderVerifyEmailScreen = () => {
-    const handleResend = async () => {
-      setIsLoading(true);
-      const result = await resendVerificationEmail(loginEmail);
-      if (result.success) {
-        if (toast) {
-          toast.success('Verifizierungs-Email wurde erneut gesendet! Prüfen Sie Ihr Postfach.');
-        } else {
-          alert('Verifizierungs-Email wurde erneut gesendet! Prüfen Sie Ihr Postfach.');
-        }
-        console.log('Verifizierungs-URL:', result.verificationUrl);
-      } else {
-        if (toast) {
-          toast.error('Fehler: ' + result.error);
-        } else {
-          alert('Fehler: ' + result.error);
-        }
-      }
-      setIsLoading(false);
-    };
-
-    return (
-      <div style={{ ...styles.minHeight, ...styles.gradient, padding: '1rem' }}>
-        <div style={styles.container}>
-          <div style={styles.card}>
-            {verificationStatus === 'success' ? (
-              <>
-                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                  <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>✅</div>
-                  <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-                    Email erfolgreich verifiziert!
-                  </h2>
-                  <p style={{ color: '#6B7280', marginBottom: '2rem' }}>
-                    Sie können sich jetzt anmelden.
-                  </p>
-                  <button
-                    onClick={() => {
-                      setCurrentScreen('login');
-                      setVerificationStatus(null);
-                    }}
-                    style={styles.button}
-                  >
-                    Zur Anmeldung
-                  </button>
-                </div>
-              </>
-            ) : verificationStatus === 'error' ? (
-              <>
-                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                  <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>❌</div>
-                  <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-                    Verifizierung fehlgeschlagen
-                  </h2>
-                  <p style={{ color: '#6B7280', marginBottom: '2rem' }}>
-                    Der Verifizierungs-Link ist ungültig oder abgelaufen.
-                  </p>
-                  <button
-                    onClick={handleResend}
-                    style={styles.button}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? 'Wird gesendet...' : 'Verifizierungs-Email erneut senden'}
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-                  <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>⏳</div>
-                  <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-                    Email wird verifiziert...
-                  </h2>
-                  <p style={{ color: '#6B7280' }}>
-                    Bitte warten Sie einen Moment.
-                  </p>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  };
+  // Email-Verifizierung Screens entfernt - nicht mehr nötig
 
  // Main Render
 return (
@@ -1885,8 +1682,6 @@ return (
     {currentScreen === 'registration' && renderRegistrationScreen()}
     {currentScreen === 'dashboard' && renderDashboard()}
     {currentScreen === 'recording' && renderRecordingScreen()}
-    {currentScreen === 'verify-email' && renderVerifyEmailScreen()}
-    {currentScreen === 'verify-email-pending' && renderVerifyEmailPendingScreen()}
     {currentScreen === 'forgot-password' && renderForgotPasswordScreen()}
     {currentScreen === 'reset-password' && renderResetPasswordScreen()}
     
