@@ -561,9 +561,6 @@ const AdminDashboard = () => {
               
               <div style={{ marginBottom: '1rem' }}>
                 <p><strong>Email:</strong> {selectedUser.email}</p>
-                {selectedUser.insurance_number && (
-                  <p><strong>Versicherungsnummer:</strong> {selectedUser.insurance_number}</p>
-                )}
                 <p><strong>Registriert:</strong> {formatDate(selectedUser.created_at)}</p>
                 <p><strong>Challenge Start:</strong> {formatDate(selectedUser.challenge_start_date)}</p>
               </div>
