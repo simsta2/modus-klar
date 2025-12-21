@@ -1,6 +1,6 @@
 import { supabase } from './supabaseClient';
 import { hashPassword, comparePassword } from './utils/password';
-import { generateVerificationToken, createVerificationUrl, isTokenExpired, generatePasswordResetToken, createPasswordResetUrl } from './utils/emailVerification';
+import { generatePasswordResetToken, createPasswordResetUrl } from './utils/emailVerification';
 
 // Nutzer registrieren
 export async function registerUser(userData) {
@@ -18,11 +18,6 @@ export async function registerUser(userData) {
 
     // Passwort hashen vor dem Speichern
     const hashedPassword = await hashPassword(userData.password);
-    
-    // Generiere Verifizierungs-Token
-    const verificationToken = generateVerificationToken();
-    const verificationExpires = new Date();
-    verificationExpires.setHours(verificationExpires.getHours() + 24); // Token gültig für 24 Stunden
 
     const { data, error } = await supabase
       .from('users')
@@ -31,10 +26,8 @@ export async function registerUser(userData) {
           email: userData.email,
           name: userData.name,
           password: hashedPassword, // Gehashtes Passwort wird gespeichert
-          insurance_number: userData.idNumber,
-          email_verified: false, // Email ist noch nicht verifiziert
-          email_verification_token: verificationToken,
-          email_verification_expires: verificationExpires.toISOString(),
+          insurance_number: userData.idNumber || null, // Optional
+          email_verified: true, // Email-Verifizierung nicht mehr nötig
           notifications_enabled: userData.notificationsEnabled,
           challenge_start_date: new Date().toISOString().split('T')[0]
         }
@@ -48,18 +41,9 @@ export async function registerUser(userData) {
     localStorage.setItem('userId', data.id);
     localStorage.setItem('userName', data.name);
     
-    // Erstelle Verifizierungs-URL (wird später per Email gesendet)
-    const verificationUrl = createVerificationUrl(verificationToken);
-    
-    // TODO: Hier würde normalerweise eine Email gesendet werden
-    // Für jetzt loggen wir die URL (in Produktion: Email-Service verwenden)
-    console.log('Verifizierungs-URL:', verificationUrl);
-    console.log('⚠️ In Produktion: Diese URL sollte per Email gesendet werden!');
-    
     return { 
       success: true, 
-      user: data,
-      verificationUrl: verificationUrl // Für Testing
+      user: data
     };
   } catch (error) {
     console.error('Registrierung fehlgeschlagen:', error);
@@ -86,16 +70,6 @@ export async function loginUser(email, password) {
     const isPasswordValid = await comparePassword(password, data.password);
     if (!isPasswordValid) {
       return { success: false, error: 'Falsches Passwort oder Email nicht gefunden.' };
-    }
-    
-    // Prüfe ob Email verifiziert ist
-    if (!data.email_verified) {
-      return { 
-        success: false, 
-        error: 'Bitte verifizieren Sie zuerst Ihre Email-Adresse. Prüfen Sie Ihr Postfach.',
-        needsVerification: true,
-        user: data
-      };
     }
     
     // Speichere User ID im Browser
