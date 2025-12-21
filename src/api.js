@@ -26,8 +26,6 @@ export async function registerUser(userData) {
           email: userData.email,
           name: userData.name,
           password: hashedPassword, // Gehashtes Passwort wird gespeichert
-          insurance_number: userData.idNumber || null, // Optional
-          email_verified: true, // Email-Verifizierung nicht mehr nötig
           notifications_enabled: userData.notificationsEnabled,
           challenge_start_date: new Date().toISOString().split('T')[0]
         }
