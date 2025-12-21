@@ -82,7 +82,6 @@ if (urlParams.get('simple-admin') === 'true') {
     name: '', 
     email: '', 
     password: '',
-    idNumber: '', // Optional, nicht mehr benötigt
     agreed: false,
     challengeStartDate: null,
     notificationsEnabled: false
@@ -342,8 +341,6 @@ const loadProgress = async (userId) => {
       name: '', 
       email: '', 
       password: '',
-      idNumber: '',
-      idVerified: false,
       agreed: false,
       challengeStartDate: null,
       notificationsEnabled: false
