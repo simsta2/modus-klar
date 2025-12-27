@@ -204,9 +204,18 @@ export async function updateDailyProgress(userId, dayNumber, videoType, status) 
   }
 }
 
-// Nutzer-Fortschritt laden mit korrekter Streak-Berechnung
+// Nutzer-Fortschritt laden mit korrekter Streak-Berechnung und Verpasste-Tage-Prüfung
 export async function loadUserProgress(userId) {
   try {
+    // Lade User-Daten für challenge_start_date
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('challenge_start_date')
+      .eq('id', userId)
+      .single();
+
+    if (userError) throw userError;
+
     const { data, error } = await supabase
       .from('daily_progress')
       .select('*')
@@ -218,24 +227,142 @@ export async function loadUserProgress(userId) {
     // Berechne die aktuelle Streak
     let currentStreak = 0;
     let currentDay = 1;
+    let needsReset = false;
+    let shouldRestart = false;
     
     if (data && data.length > 0) {
       // Finde den höchsten vollständig verifizierten Tag
+      let lastVerifiedDay = 0;
+      
       for (const day of data) {
         if (day.morning_status === 'verified' && day.evening_status === 'verified') {
           currentStreak = day.day_number;
+          lastVerifiedDay = day.day_number;
+          
+          // Prüfe auf Lücken: Wenn Tag X verifiziert ist, aber Tag X-1 fehlt → Reset
+          if (day.day_number > 1) {
+            const previousDay = data.find(d => d.day_number === day.day_number - 1);
+            if (!previousDay || 
+                previousDay.morning_status !== 'verified' || 
+                previousDay.evening_status !== 'verified') {
+              // Lücke gefunden → Reset
+              needsReset = true;
+              break;
+            }
+          }
         } else if (day.morning_status === 'rejected' || day.evening_status === 'rejected') {
-          // Bei Ablehnung ist Streak = 0
+          // Bei Ablehnung → Reset
+          needsReset = true;
           currentStreak = 0;
           break;
         } else {
-          // Bei pending oder null stoppen wir
+          // Bei pending oder null: Prüfe ob Tag verpasst wurde
+          // Wenn ein Tag pending ist, aber der vorherige Tag nicht vollständig verifiziert ist → Reset
+          if (day.day_number > 1) {
+            const previousDay = data.find(d => d.day_number === day.day_number - 1);
+            if (!previousDay || 
+                previousDay.morning_status !== 'verified' || 
+                previousDay.evening_status !== 'verified') {
+              needsReset = true;
+              break;
+            }
+          }
+          // Stoppe bei pending, aber prüfe weiter auf Lücken
           break;
         }
       }
       
+      // Prüfe ob Tag 30 erfolgreich abgeschlossen wurde → Neustart
+      if (currentStreak === 30 && !needsReset) {
+        shouldRestart = true;
+      }
+      
       // Der aktuelle Tag ist der nächste nach der Streak
       currentDay = currentStreak + 1;
+      
+      // Prüfe auf verpasste Tage basierend auf challenge_start_date
+      if (userData && userData.challenge_start_date && !needsReset) {
+        const startDate = new Date(userData.challenge_start_date);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        startDate.setHours(0, 0, 0, 0);
+        
+        const daysSinceStart = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
+        
+        // Wenn mehr Tage vergangen sind als verifiziert wurden, und es gibt keine pending Einträge → möglicherweise verpasst
+        if (daysSinceStart > currentStreak + 1) {
+          // Prüfe ob es einen pending Eintrag für den aktuellen Tag gibt
+          const hasPendingForCurrentDay = data.some(d => 
+            d.day_number === currentDay && 
+            (d.morning_status === 'pending' || d.evening_status === 'pending')
+          );
+          
+          // Wenn kein pending Eintrag existiert und der Tag schon vorbei ist → verpasst
+          if (!hasPendingForCurrentDay && daysSinceStart >= currentDay) {
+            needsReset = true;
+          }
+        }
+      }
+    }
+    
+    // Reset durchführen wenn nötig
+    if (needsReset) {
+      await supabase
+        .from('daily_progress')
+        .delete()
+        .eq('user_id', userId);
+      
+      await supabase
+        .from('videos')
+        .delete()
+        .eq('user_id', userId)
+        .in('status', ['pending', 'rejected']);
+      
+      await supabase
+        .from('users')
+        .update({ 
+          challenge_start_date: new Date().toISOString().split('T')[0],
+          current_day: 1
+        })
+        .eq('id', userId);
+      
+      return { 
+        success: true, 
+        progress: [],
+        currentStreak: 0,
+        currentDay: 1,
+        wasReset: true
+      };
+    }
+    
+    // Neustart nach 30 Tagen
+    if (shouldRestart) {
+      await supabase
+        .from('daily_progress')
+        .delete()
+        .eq('user_id', userId);
+      
+      await supabase
+        .from('videos')
+        .delete()
+        .eq('user_id', userId)
+        .in('status', ['pending']);
+      
+      await supabase
+        .from('users')
+        .update({ 
+          challenge_start_date: new Date().toISOString().split('T')[0],
+          current_day: 1
+        })
+        .eq('id', userId);
+      
+      return { 
+        success: true, 
+        progress: [],
+        currentStreak: 0,
+        currentDay: 1,
+        wasRestarted: true
+      };
     }
     
     return { 
@@ -338,18 +465,71 @@ export async function updateVideoStatus(videoId, status, rejectionReason = null)
           .delete()
           .eq('user_id', data.user_id);
         
+        // Lösche alle Videos (pending und rejected)
+        await supabase
+          .from('videos')
+          .delete()
+          .eq('user_id', data.user_id)
+          .in('status', ['pending', 'rejected']);
+        
         // Reset User auf Tag 1
         await supabase
           .from('users')
           .update({ 
-            challenge_start_date: new Date().toISOString(),
+            challenge_start_date: new Date().toISOString().split('T')[0],
             current_day: 1
           })
           .eq('id', data.user_id);
           
-        console.log('Streak reset for user:', data.user_id);
+        console.log('Challenge reset for user:', data.user_id, '- Reason: Video rejected');
+      } else if (status === 'verified') {
+        // Normales Update für verified
+        await supabase
+          .from('daily_progress')
+          .update({
+            [`${data.video_type}_status`]: status
+          })
+          .eq('user_id', data.user_id)
+          .eq('day_number', data.day_number);
+        
+        // Prüfe ob Tag 30 vollständig abgeschlossen wurde
+        const { data: dayProgress } = await supabase
+          .from('daily_progress')
+          .select('*')
+          .eq('user_id', data.user_id)
+          .eq('day_number', data.day_number)
+          .single();
+        
+        // Wenn beide Videos verifiziert sind und es Tag 30 ist → Neustart
+        if (dayProgress && 
+            dayProgress.morning_status === 'verified' && 
+            dayProgress.evening_status === 'verified' &&
+            data.day_number === 30) {
+          
+          // Lösche alle Fortschritte und starte neu
+          await supabase
+            .from('daily_progress')
+            .delete()
+            .eq('user_id', data.user_id);
+          
+          await supabase
+            .from('videos')
+            .delete()
+            .eq('user_id', data.user_id)
+            .in('status', ['pending']);
+          
+          await supabase
+            .from('users')
+            .update({ 
+              challenge_start_date: new Date().toISOString().split('T')[0],
+              current_day: 1
+            })
+            .eq('id', data.user_id);
+          
+          console.log('Challenge completed and restarted for user:', data.user_id);
+        }
       } else {
-        // Normales Update für verified/pending
+        // Normales Update für pending
         await supabase
           .from('daily_progress')
           .update({
