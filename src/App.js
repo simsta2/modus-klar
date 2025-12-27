@@ -8,8 +8,7 @@ import InstallPrompt from './components/InstallPrompt';
 import { ToastContext } from './components/Toast';
 import LoadingSpinner from './components/LoadingSpinner';
 
-// Debug: Mache supabase global verfügbar (nur für Testing!)
-window.supabase = supabase;
+// Debug-Code entfernt für Production
 
 // Einfache Icon-Komponenten mit Emojis
 const Icon = ({ children, className, onClick }) => (
@@ -88,6 +87,7 @@ if (urlParams.get('simple-admin') === 'true') {
   });
   const [loginPassword, setLoginPassword] = useState('');
   const [timeWindow, setTimeWindow] = useState({ morning: false, evening: false });
+  const [isOnline, setIsOnline] = useState(navigator.onLine);
   
   // Refs
   const videoRef = useRef(null);
@@ -138,6 +138,44 @@ if (urlParams.get('simple-admin') === 'true') {
       appearance: 'none'
     }
   };
+
+  // Offline-Erkennung
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => {
+      setIsOnline(false);
+      if (toast) {
+        toast.warning('Keine Internetverbindung. Bitte überprüfen Sie Ihre Verbindung.');
+      }
+    };
+    
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, [toast]);
+
+  // Offline-Erkennung
+  useEffect(() => {
+    const handleOnline = () => setIsOnline(true);
+    const handleOffline = () => {
+      setIsOnline(false);
+      if (toast) {
+        toast.warning('Keine Internetverbindung. Bitte überprüfen Sie Ihre Verbindung.');
+      }
+    };
+    
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
+    
+    return () => {
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
+    };
+  }, [toast]);
 
   // Initial Load - Check für bestehenden User und Email-Verifizierung
 useEffect(() => {
@@ -275,7 +313,7 @@ const loadProgress = async (userId) => {
       }
     }
   } catch (error) {
-    console.error('Fehler beim Laden des Fortschritts:', error);
+      // Fehler beim Laden des Fortschritts - wird stillschweigend behandelt
   }
 };
 
@@ -374,11 +412,8 @@ const loadProgress = async (userId) => {
       }
       streamRef.current = stream;
     } catch (err) {
-      console.error('Kamera-Zugriff verweigert:', err);
       if (toast) {
-        toast.error('Bitte erlauben Sie den Kamera-Zugriff für diese App.');
-      } else {
-        alert('Bitte erlauben Sie den Kamera-Zugriff für diese App.');
+        toast.error('Kamera-Zugriff wurde verweigert. Bitte erlauben Sie den Zugriff in den Einstellungen.');
       }
       setCurrentScreen('dashboard');
     }
@@ -411,54 +446,46 @@ const loadProgress = async (userId) => {
       
    mediaRecorderRef.current.onstop = async () => {
   const blob = new Blob(chunks, { type: 'video/webm' });
-  console.log('1. Aufnahme beendet, Blob-Größe:', blob.size);
-  console.log('2. User ID:', userId);
-  console.log('3. Video Type:', currentVideoType);
-  console.log('4. Current Day:', currentDay);
   
   if (userId && blob.size > 0) {
-    setTodayVideos(prev => {
-      console.log('5. Setting upload status for:', currentVideoType);
-      return {
-        ...prev,
-        [currentVideoType]: 'uploading'
-      };
-    });
+    setTodayVideos(prev => ({
+      ...prev,
+      [currentVideoType]: 'uploading'
+    }));
     
-    console.log('6. Calling uploadVideo function...');
-    const uploadResult = await uploadVideo(blob, userId, currentVideoType, currentDay);
-    
-    console.log('7. Upload Result:', uploadResult);
-    
-    if (uploadResult.success) {
-      setTodayVideos(prev => ({
-        ...prev,
-        [currentVideoType]: 'pending'
-      }));
-      if (toast) {
-        toast.success('Video erfolgreich hochgeladen! Es wird nun geprüft.');
+    try {
+      const uploadResult = await uploadVideo(blob, userId, currentVideoType, currentDay);
+      
+      if (uploadResult.success) {
+        setTodayVideos(prev => ({
+          ...prev,
+          [currentVideoType]: 'pending'
+        }));
+        if (toast) {
+          toast.success('Video erfolgreich hochgeladen! Es wird nun geprüft.');
+        }
+        await loadProgress(userId);
       } else {
-        alert('Video erfolgreich hochgeladen! Es wird nun geprüft.');
+        if (toast) {
+          toast.error('Upload fehlgeschlagen: ' + (uploadResult.error || 'Unbekannter Fehler'));
+        }
+        setTodayVideos(prev => ({
+          ...prev,
+          [currentVideoType]: null
+        }));
       }
-      await loadProgress(userId);
-    } else {
+    } catch (error) {
       if (toast) {
-        toast.error('Upload fehlgeschlagen: ' + uploadResult.error);
-      } else {
-        alert('Upload fehlgeschlagen: ' + uploadResult.error);
+        toast.error('Fehler beim Hochladen. Bitte überprüfen Sie Ihre Internetverbindung.');
       }
-      console.error('8. Upload Error:', uploadResult.error);
       setTodayVideos(prev => ({
         ...prev,
         [currentVideoType]: null
       }));
     }
   } else {
-    console.log('9. Upload blocked - userId:', userId, 'blob.size:', blob.size);
     if (toast) {
-      toast.error('Kein Video zum Hochladen oder kein User eingeloggt');
-    } else {
-      alert('Kein Video zum Hochladen oder kein User eingeloggt');
+      toast.error('Upload konnte nicht durchgeführt werden. Bitte versuchen Sie es erneut.');
     }
   }
 };
@@ -476,11 +503,8 @@ const loadProgress = async (userId) => {
         });
       }, 1000);
     } catch (error) {
-      console.error('Fehler beim Starten der Aufnahme:', error);
       if (toast) {
         toast.error('Fehler beim Starten der Aufnahme. Bitte versuchen Sie es erneut.');
-      } else {
-        alert('Fehler beim Starten der Aufnahme. Bitte versuchen Sie es erneut.');
       }
       setIsRecording(false);
     }
@@ -553,19 +577,21 @@ const loadProgress = async (userId) => {
           <button
             onClick={() => setCurrentScreen('requirements')}
             style={styles.button}
+            aria-label="Neue Registrierung starten"
           >
             Neue Registrierung starten
           </button>
-              <button
-  onClick={() => setCurrentScreen('login')}
-  style={{
-    ...styles.button,
-    marginTop: '1rem',
-    background: '#6B7280'
-  }}
->
-  Bereits registriert? Anmelden
-</button>
+          <button
+            onClick={() => setCurrentScreen('login')}
+            style={{
+              ...styles.button,
+              marginTop: '1rem',
+              background: '#6B7280'
+            }}
+            aria-label="Bereits registriert? Anmelden"
+          >
+            Bereits registriert? Anmelden
+          </button>
         </div>
       </div>
     </div>
@@ -639,32 +665,25 @@ const renderLoginScreen = () => {
             <input
               type="email"
               placeholder="Ihre Email-Adresse"
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #D1D5DB',
-                borderRadius: '0.5rem',
-                marginBottom: '1rem',
-                fontSize: '16px'
-              }}
+              style={styles.input}
               value={loginEmail}
               onChange={(e) => setLoginEmail(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+              onKeyPress={(e) => e.key === 'Enter' && !loginLoading && handleLogin()}
+              aria-label="Email-Adresse für Anmeldung"
+              autoComplete="email"
+              autoCapitalize="none"
+              disabled={loginLoading}
             />
             <input
               type="password"
               placeholder="Ihr Passwort"
-              style={{
-                width: '100%',
-                padding: '0.75rem',
-                border: '1px solid #D1D5DB',
-                borderRadius: '0.5rem',
-                marginBottom: '1rem',
-                fontSize: '16px'
-              }}
+              style={styles.input}
               value={loginPassword}
               onChange={(e) => setLoginPassword(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+              onKeyPress={(e) => e.key === 'Enter' && !loginLoading && handleLogin()}
+              aria-label="Passwort für Anmeldung"
+              autoComplete="current-password"
+              disabled={loginLoading}
             />
             
             <button
@@ -1022,6 +1041,23 @@ const renderLoginScreen = () => {
       </div>
       
       <div style={styles.container}>
+        {!isOnline && (
+          <div style={{
+            backgroundColor: '#FEE2E2',
+            border: '1px solid #FCA5A5',
+            borderRadius: '0.5rem',
+            padding: '1rem',
+            marginBottom: '1rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.75rem'
+          }}>
+            <AlertCircle />
+            <p style={{ fontSize: '0.875rem', fontWeight: '500', color: '#DC2626' }}>
+              Keine Internetverbindung. Bitte überprüfen Sie Ihre Verbindung.
+            </p>
+          </div>
+        )}
         {(timeWindow.morning || timeWindow.evening) && (
           <div style={{
             backgroundColor: '#FEF3C7',
@@ -1085,15 +1121,18 @@ const renderLoginScreen = () => {
                     }
                   }}
                   style={{
-                    padding: '0.5rem 1rem',
+                    padding: '0.75rem 1.25rem',
                     borderRadius: '0.5rem',
                     fontSize: '0.875rem',
                     border: 'none',
                     cursor: timeWindow.morning ? 'pointer' : 'not-allowed',
                     backgroundColor: timeWindow.morning ? '#3B82F6' : '#D1D5DB',
-                    color: timeWindow.morning ? 'white' : '#9CA3AF'
+                    color: timeWindow.morning ? 'white' : '#9CA3AF',
+                    minHeight: '44px', // Mindest-Touch-Target für Mobile
+                    touchAction: 'manipulation'
                   }}
                   disabled={!timeWindow.morning}
+                  aria-label={timeWindow.morning ? 'Morgen-Messung jetzt durchführen' : 'Morgen-Messung - Zeitfenster geschlossen'}
                 >
                   {timeWindow.morning ? 'Jetzt messen' : 'Zeitfenster geschlossen'}
                 </button>
@@ -1140,15 +1179,18 @@ const renderLoginScreen = () => {
                     }
                   }}
                   style={{
-                    padding: '0.5rem 1rem',
+                    padding: '0.75rem 1.25rem',
                     borderRadius: '0.5rem',
                     fontSize: '0.875rem',
                     border: 'none',
                     cursor: timeWindow.evening ? 'pointer' : 'not-allowed',
                     backgroundColor: timeWindow.evening ? '#9333EA' : '#D1D5DB',
-                    color: timeWindow.evening ? 'white' : '#9CA3AF'
+                    color: timeWindow.evening ? 'white' : '#9CA3AF',
+                    minHeight: '44px', // Mindest-Touch-Target für Mobile
+                    touchAction: 'manipulation'
                   }}
                   disabled={!timeWindow.evening}
+                  aria-label={timeWindow.evening ? 'Abend-Messung jetzt durchführen' : 'Abend-Messung - Zeitfenster geschlossen'}
                 >
                   {timeWindow.evening ? 'Jetzt messen' : 'Zeitfenster geschlossen'}
                 </button>
@@ -1427,8 +1469,12 @@ const renderLoginScreen = () => {
                   backgroundColor: isRecording ? '#DC2626' : 'white',
                   border: 'none',
                   cursor: 'pointer',
-                  position: 'relative'
+                  position: 'relative',
+                  touchAction: 'manipulation',
+                  minWidth: '44px',
+                  minHeight: '44px'
                 }}
+                aria-label={isRecording ? 'Aufnahme stoppen' : 'Aufnahme starten'}
               >
                 {isRecording ? (
                   <Square style={{ fontSize: '2rem', color: 'white' }} />
@@ -1458,9 +1504,12 @@ const renderLoginScreen = () => {
                   border: 'none',
                   cursor: 'pointer',
                   fontSize: '1rem',
-                  padding: '0.5rem 1rem',
-                  borderRadius: '0.5rem'
+                  padding: '0.75rem 1.25rem',
+                  borderRadius: '0.5rem',
+                  minHeight: '44px',
+                  touchAction: 'manipulation'
                 }}
+                aria-label="Aufnahme abbrechen und zurück zum Dashboard"
               >
                 ← Abbrechen
               </button>
@@ -1503,10 +1552,7 @@ const renderLoginScreen = () => {
       if (result.success) {
         if (toast) {
           toast.success('Falls diese Email registriert ist, wurde ein Passwort-Reset-Link gesendet. Prüfen Sie Ihr Postfach.');
-        } else {
-          alert('Falls diese Email registriert ist, wurde ein Passwort-Reset-Link gesendet. Prüfen Sie Ihr Postfach.\n\nFür Testing: Die Reset-URL wurde in der Konsole ausgegeben.');
         }
-        console.log('Passwort-Reset-URL:', result.resetUrl);
         setCurrentScreen('login');
       } else {
         setLoginError(result.error || 'Ein Fehler ist aufgetreten.');
