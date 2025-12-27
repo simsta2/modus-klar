@@ -242,6 +242,17 @@ const loadProgress = async (userId) => {
   try {
     const result = await loadUserProgress(userId);
     if (result.success) {
+      // Wenn Reset oder Neustart durchgeführt wurde, zeige Toast
+      if (result.wasReset) {
+        if (toast) {
+          toast.warning('Challenge wurde zurückgesetzt. Ein Tag wurde verpasst oder ein Video abgelehnt.');
+        }
+      } else if (result.wasRestarted) {
+        if (toast) {
+          toast.success('Herzlichen Glückwunsch! 30 Tage erfolgreich abgeschlossen. Challenge startet neu!');
+        }
+      }
+      
       // Verwende die berechnete Streak und aktuellen Tag
       setCurrentDay(result.currentDay || 1);
       setCurrentStreak(result.currentStreak || 0);
@@ -1259,14 +1270,14 @@ const renderLoginScreen = () => {
               marginBottom: '0.5rem'
             }}>
               <div style={{
-                width: `${Math.round((currentDay / 30) * 100)}%`,
+                width: `${Math.round((successfulDays / 30) * 100)}%`,
                 height: '100%',
                 background: 'linear-gradient(to right, #3B82F6, #9333EA)',
                 transition: 'width 0.3s ease'
               }} />
             </div>
-            <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>
-              {Math.round((currentDay / 30) * 100)}% abgeschlossen
+            <p style={{ fontSize: '0.875rem', color: '#6B7280', fontWeight: '500' }}>
+              {successfulDays} von 30 Tagen erfolgreich ({Math.round((successfulDays / 30) * 100)}%)
             </p>
           </div>
         </div>
@@ -1278,9 +1289,8 @@ const renderLoginScreen = () => {
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div>
-              <p style={{ fontSize: '0.875rem', opacity: 0.9 }}>Ihre Prämie bei Erfolg</p>
-              <p style={{ fontSize: '1.875rem', fontWeight: 'bold' }}>Krankenkassen-Bonus</p>
-              <p style={{ fontSize: '0.875rem', marginTop: '0.25rem', opacity: 0.9 }}>+ Gesundheitsvorsorge</p>
+              <p style={{ fontSize: '1.875rem', fontWeight: 'bold' }}>Einen Bonus für Sie</p>
+              <p style={{ fontSize: '0.875rem', marginTop: '0.25rem', opacity: 0.9 }}>und Gesundheitsvorsorge</p>
             </div>
             <div style={{ fontSize: '3rem', opacity: 0.5 }}>
               <Shield />
