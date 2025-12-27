@@ -1285,14 +1285,30 @@ const renderLoginScreen = () => {
         <div style={{
           ...styles.card,
           background: 'linear-gradient(to right, #10B981, #059669)',
-          color: 'white'
+          color: 'white',
+          padding: '1.5rem'
         }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <div>
-              <p style={{ fontSize: '1.875rem', fontWeight: 'bold' }}>Einen Bonus für Sie</p>
-              <p style={{ fontSize: '0.875rem', marginTop: '0.25rem', opacity: 0.9 }}>und Gesundheitsvorsorge</p>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+            <div style={{ flex: 1 }}>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem' }}>Ihre Vorteile bei erfolgreicher Teilnahme</h3>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                  <span style={{ fontSize: '1.25rem', marginTop: '0.125rem' }}>💰</span>
+                  <div>
+                    <p style={{ fontSize: '1rem', fontWeight: '600', margin: 0 }}>Krankenkassen-Bonus</p>
+                    <p style={{ fontSize: '0.875rem', opacity: 0.95, margin: '0.25rem 0 0 0' }}>Prämie gemäß Vereinbarung mit Ihrer Krankenkasse</p>
+                  </div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
+                  <span style={{ fontSize: '1.25rem', marginTop: '0.125rem' }}>🏥</span>
+                  <div>
+                    <p style={{ fontSize: '1rem', fontWeight: '600', margin: 0 }}>Gesundheitsvorsorge</p>
+                    <p style={{ fontSize: '0.875rem', opacity: 0.95, margin: '0.25rem 0 0 0' }}>Langfristige Verbesserung Ihrer Gesundheit</p>
+                  </div>
+                </div>
+              </div>
             </div>
-            <div style={{ fontSize: '3rem', opacity: 0.5 }}>
+            <div style={{ fontSize: '3rem', opacity: 0.3, marginLeft: '1rem' }}>
               <Shield />
             </div>
           </div>
@@ -1313,6 +1329,8 @@ const renderLoginScreen = () => {
         )}
       </div>
       
+      {/* Footer */}
+      <Footer setCurrentScreen={setCurrentScreen} />
     </div>
     );
   };
@@ -1680,6 +1698,396 @@ const renderLoginScreen = () => {
 
   // Email-Verifizierung Screens entfernt - nicht mehr nötig
 
+  // Footer-Komponente
+  const Footer = ({ setCurrentScreen }) => (
+    <div style={{
+      marginTop: '2rem',
+      padding: '1.5rem 1rem',
+      borderTop: '1px solid rgba(0,0,0,0.1)',
+      backgroundColor: 'rgba(255,255,255,0.5)'
+    }}>
+      <div style={styles.container}>
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+          gap: '1rem',
+          fontSize: '0.875rem',
+          color: '#6B7280'
+        }}>
+          <button
+            onClick={() => setCurrentScreen('app-info')}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#3B82F6',
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              fontSize: '0.875rem',
+              padding: 0
+            }}
+          >
+            Über die App
+          </button>
+          <span>•</span>
+          <button
+            onClick={() => setCurrentScreen('impressum')}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#3B82F6',
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              fontSize: '0.875rem',
+              padding: 0
+            }}
+          >
+            Impressum
+          </button>
+          <span>•</span>
+          <button
+            onClick={() => setCurrentScreen('datenschutz')}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: '#3B82F6',
+              cursor: 'pointer',
+              textDecoration: 'underline',
+              fontSize: '0.875rem',
+              padding: 0
+            }}
+          >
+            Datenschutz
+          </button>
+        </div>
+        <p style={{
+          textAlign: 'center',
+          fontSize: '0.75rem',
+          color: '#9CA3AF',
+          marginTop: '0.75rem',
+          marginBottom: 0
+        }}>
+          © {new Date().getFullYear()} Modus-Klar. Alle Rechte vorbehalten.
+        </p>
+      </div>
+    </div>
+  );
+
+  // Impressum-Seite
+  const renderImpressumScreen = () => (
+    <div style={{ ...styles.minHeight, ...styles.gradient, padding: '1rem' }}>
+      <div style={styles.container}>
+        <div style={styles.card}>
+          <button 
+            onClick={() => setCurrentScreen(userId ? 'dashboard' : 'welcome')}
+            style={{ 
+              background: 'none', 
+              border: 'none', 
+              fontSize: '1.5rem', 
+              cursor: 'pointer',
+              marginBottom: '1rem'
+            }}
+          >
+            ← Zurück
+          </button>
+          
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>Impressum</h2>
+          
+          <div style={{ fontSize: '0.875rem', color: '#4B5563', lineHeight: '1.6' }}>
+            <p style={{ marginBottom: '1rem' }}>
+              <strong>Angaben gemäß § 5 TMG:</strong>
+            </p>
+            
+            <p style={{ marginBottom: '1rem' }}>
+              <strong>Verantwortlich für den Inhalt:</strong><br />
+              Simon Stahl<br />
+              Engelhardstr. 14<br />
+              30173 Hannover
+            </p>
+            
+            <p style={{ marginBottom: '1rem' }}>
+              <strong>Kontakt:</strong><br />
+              E-Mail: simonstahl379@gmail.com<br />
+              Telefon: 05111694659
+            </p>
+            
+            <p style={{ marginBottom: '1rem' }}>
+              <strong>Haftungsausschluss:</strong>
+            </p>
+            
+            <p style={{ marginBottom: '0.75rem' }}>
+              <strong>Haftung für Inhalte:</strong><br />
+              Die Inhalte unserer Seiten wurden mit größter Sorgfalt erstellt. Für die Richtigkeit, Vollständigkeit und Aktualität der Inhalte können wir jedoch keine Gewähr übernehmen.
+            </p>
+            
+            <p style={{ marginBottom: '0.75rem' }}>
+              <strong>Haftung für Links:</strong><br />
+              Unser Angebot enthält Links zu externen Webseiten Dritter, auf deren Inhalte wir keinen Einfluss haben. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich.
+            </p>
+            
+            <p style={{ marginBottom: '0.75rem' }}>
+              <strong>Urheberrecht:</strong><br />
+              Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers.
+            </p>
+          </div>
+          
+          <Footer setCurrentScreen={setCurrentScreen} />
+        </div>
+      </div>
+    </div>
+  );
+
+  // Datenschutz-Seite
+  const renderDatenschutzScreen = () => (
+    <div style={{ ...styles.minHeight, ...styles.gradient, padding: '1rem' }}>
+      <div style={styles.container}>
+        <div style={styles.card}>
+          <button 
+            onClick={() => setCurrentScreen(userId ? 'dashboard' : 'welcome')}
+            style={{ 
+              background: 'none', 
+              border: 'none', 
+              fontSize: '1.5rem', 
+              cursor: 'pointer',
+              marginBottom: '1rem'
+            }}
+          >
+            ← Zurück
+          </button>
+          
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>Datenschutzerklärung</h2>
+          
+          <div style={{ fontSize: '0.875rem', color: '#4B5563', lineHeight: '1.6' }}>
+            <p style={{ marginBottom: '1rem' }}>
+              <strong>1. Datenschutz auf einen Blick</strong>
+            </p>
+            
+            <p style={{ marginBottom: '0.75rem' }}>
+              <strong>Allgemeine Hinweise:</strong><br />
+              Die folgenden Hinweise geben einen einfachen Überblick darüber, was mit Ihren personenbezogenen Daten passiert, wenn Sie diese App nutzen. Personenbezogene Daten sind alle Daten, mit denen Sie persönlich identifiziert werden können.
+            </p>
+            
+            <p style={{ marginBottom: '1rem' }}>
+              <strong>2. Datenerfassung in dieser App</strong>
+            </p>
+            
+            <p style={{ marginBottom: '0.75rem' }}>
+              <strong>Wer ist verantwortlich für die Datenerfassung?</strong><br />
+              Die Datenverarbeitung in dieser App erfolgt durch den App-Betreiber. Dessen Kontaktdaten können Sie dem Impressum dieser App entnehmen.
+            </p>
+            
+            <p style={{ marginBottom: '0.75rem' }}>
+              <strong>Wie erfassen wir Ihre Daten?</strong><br />
+              Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen. Hierbei kann es sich z.B. um Daten handeln, die Sie in ein Registrierungsformular eingeben.
+            </p>
+            
+            <p style={{ marginBottom: '0.75rem' }}>
+              <strong>Welche Daten erfassen wir?</strong><br />
+              Wir erfassen folgende Daten:
+            </p>
+            <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
+              <li>Name und E-Mail-Adresse (bei Registrierung)</li>
+              <li>Videodateien (zur Verifikation der Messungen)</li>
+              <li>Messdaten und Fortschrittsdaten</li>
+              <li>Geräteinformationen (für Push-Benachrichtigungen)</li>
+            </ul>
+            
+            <p style={{ marginBottom: '1rem' }}>
+              <strong>3. Speicherung und Verarbeitung</strong>
+            </p>
+            
+            <p style={{ marginBottom: '0.75rem' }}>
+              <strong>Wo werden Ihre Daten gespeichert?</strong><br />
+              Ihre Daten werden auf Servern von Supabase (einem Anbieter für Datenbank- und Speicherdienste) gespeichert. Die Datenübertragung erfolgt verschlüsselt.
+            </p>
+            
+            <p style={{ marginBottom: '0.75rem' }}>
+              <strong>Wie lange werden Ihre Daten gespeichert?</strong><br />
+              Ihre personenbezogenen Daten werden gelöscht, sobald der Zweck der Speicherung entfällt. Die Videodateien werden nach erfolgreichem Abschluss der Challenge gelöscht.
+            </p>
+            
+            <p style={{ marginBottom: '1rem' }}>
+              <strong>4. Ihre Rechte</strong>
+            </p>
+            
+            <p style={{ marginBottom: '0.75rem' }}>
+              Sie haben jederzeit das Recht:
+            </p>
+            <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
+              <li>Auskunft über Ihre bei uns gespeicherten personenbezogenen Daten zu erhalten</li>
+              <li>Berichtigung unrichtiger Daten zu verlangen</li>
+              <li>Löschung Ihrer bei uns gespeicherten Daten zu verlangen</li>
+              <li>Einschränkung der Datenverarbeitung zu verlangen</li>
+              <li>Widerspruch gegen die Verarbeitung Ihrer Daten einzulegen</li>
+            </ul>
+            
+            <p style={{ marginBottom: '1rem' }}>
+              <strong>5. Kontakt</strong>
+            </p>
+            
+            <p>
+              Bei Fragen zum Datenschutz können Sie sich jederzeit an uns wenden. Die Kontaktdaten finden Sie im Impressum.
+            </p>
+          </div>
+          
+          <Footer setCurrentScreen={setCurrentScreen} />
+        </div>
+      </div>
+    </div>
+  );
+
+  // App-Info-Seite
+  const renderAppInfoScreen = () => (
+    <div style={{ ...styles.minHeight, ...styles.gradient, padding: '1rem' }}>
+      <div style={styles.container}>
+        <div style={styles.card}>
+          <button 
+            onClick={() => setCurrentScreen(userId ? 'dashboard' : 'welcome')}
+            style={{ 
+              background: 'none', 
+              border: 'none', 
+              fontSize: '1.5rem', 
+              cursor: 'pointer',
+              marginBottom: '1rem'
+            }}
+          >
+            ← Zurück
+          </button>
+          
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>Über die App</h2>
+          
+          <div style={{ fontSize: '0.875rem', color: '#4B5563', lineHeight: '1.6' }}>
+            <p style={{ marginBottom: '1rem', fontSize: '1rem', fontWeight: '600' }}>
+              Modus-Klar ist eine innovative Gesundheits-App, die Sie dabei unterstützt, 30 Tage lang alkoholfrei zu bleiben.
+            </p>
+            
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.75rem', color: '#1F2937' }}>
+                📱 Wie funktioniert die App?
+              </h3>
+              <p style={{ marginBottom: '0.75rem' }}>
+                Die App begleitet Sie durch eine 30-tägige Challenge, in der Sie täglich zwei Alkoholmessungen durchführen müssen:
+              </p>
+              <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
+                <li><strong>Morgens:</strong> Zwischen 9:00 und 12:00 Uhr</li>
+                <li><strong>Abends:</strong> Zwischen 20:00 und 23:00 Uhr</li>
+              </ul>
+              <p>
+                Sie erhalten Push-Benachrichtigungen, wenn es Zeit für eine Messung ist. Innerhalb von 60 Minuten nach der Benachrichtigung müssen Sie ein Video Ihrer Messung hochladen.
+              </p>
+            </div>
+            
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.75rem', color: '#1F2937' }}>
+                🎯 Die Challenge
+              </h3>
+              <p style={{ marginBottom: '0.75rem' }}>
+                <strong>Dauer:</strong> 30 aufeinanderfolgende Tage
+              </p>
+              <p style={{ marginBottom: '0.75rem' }}>
+                <strong>Anforderungen:</strong>
+              </p>
+              <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
+                <li>2 Videos täglich in den vorgegebenen Zeitfenstern</li>
+                <li>Messung innerhalb von 60 Minuten nach Benachrichtigung</li>
+                <li>Ergebnis muss 0,0 Promille zeigen</li>
+                <li>Eigenes, geprüftes Alkoholmessgerät verwenden</li>
+              </ul>
+              <p>
+                <strong>Wichtig:</strong> Verpasste Messungen oder abgelehnte Videos führen zu einem Neustart der Challenge ab Tag 1.
+              </p>
+            </div>
+            
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.75rem', color: '#1F2937' }}>
+                ✅ Video-Verifikation
+              </h3>
+              <p style={{ marginBottom: '0.75rem' }}>
+                Jedes hochgeladene Video wird von unserem Team überprüft. Das Video muss folgende Anforderungen erfüllen:
+              </p>
+              <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
+                <li>Das Messgerät muss deutlich sichtbar sein (Marke/Modell erkennbar)</li>
+                <li>Die Messung muss vollständig durchgeführt werden</li>
+                <li>Das Ergebnis (0,0 Promille) muss mindestens 5 Sekunden sichtbar sein</li>
+                <li>Gesamtdauer des Videos: ca. 30 Sekunden</li>
+              </ul>
+            </div>
+            
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.75rem', color: '#1F2937' }}>
+                📊 Fortschritts-Tracking
+              </h3>
+              <p style={{ marginBottom: '0.75rem' }}>
+                Die App zeigt Ihnen jederzeit:
+              </p>
+              <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
+                <li>Aktuellen Tag der Challenge</li>
+                <li>Erfolgreiche Tage (beide Messungen verifiziert)</li>
+                <li>Ihren aktuellen Streak</li>
+                <li>Verbleibende Tage bis zum Ziel</li>
+                <li>Visuellen Fortschrittskalender</li>
+              </ul>
+            </div>
+            
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.75rem', color: '#1F2937' }}>
+                🔔 Benachrichtigungen
+              </h3>
+              <p style={{ marginBottom: '0.75rem' }}>
+                Die App sendet Ihnen Push-Benachrichtigungen:
+              </p>
+              <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
+                <li>Wenn es Zeit für eine Messung ist</li>
+                <li>Erinnerungen, falls Sie eine Messung noch nicht durchgeführt haben</li>
+                <li>Status-Updates zu Ihren Videos (verifiziert/abgelehnt)</li>
+              </ul>
+            </div>
+            
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.75rem', color: '#1F2937' }}>
+                🏆 Belohnungen
+              </h3>
+              <p style={{ marginBottom: '0.75rem' }}>
+                Bei erfolgreichem Abschluss der 30-tägigen Challenge erhalten Sie:
+              </p>
+              <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
+                <li><strong>Krankenkassen-Bonus:</strong> Prämie gemäß Vereinbarung mit Ihrer Krankenkasse</li>
+                <li><strong>Gesundheitsvorsorge:</strong> Langfristige Verbesserung Ihrer Gesundheit und Lebensqualität</li>
+              </ul>
+            </div>
+            
+            <div style={{ marginBottom: '1.5rem' }}>
+              <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.75rem', color: '#1F2937' }}>
+                🔄 Neustart-Mechanismus
+              </h3>
+              <p style={{ marginBottom: '0.75rem' }}>
+                Die Challenge startet automatisch neu, wenn:
+              </p>
+              <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
+                <li>Ein Video abgelehnt wird (z.B. Promille &gt; 0,0 oder undeutliche Aufnahme)</li>
+                <li>Eine Messung verpasst wird</li>
+                <li>30 erfolgreiche Tage abgeschlossen wurden (automatischer Neustart für weitere 30 Tage)</li>
+              </ul>
+            </div>
+            
+            <div style={{ 
+              backgroundColor: '#DBEAFE', 
+              padding: '1rem', 
+              borderRadius: '0.5rem', 
+              marginTop: '1.5rem' 
+            }}>
+              <p style={{ margin: 0, fontWeight: '600', color: '#1E40AF' }}>
+                💡 Tipp: Installieren Sie die App als Progressive Web App (PWA) für eine noch bessere Erfahrung!
+              </p>
+            </div>
+          </div>
+          
+          <Footer setCurrentScreen={setCurrentScreen} />
+        </div>
+      </div>
+    </div>
+  );
+
  // Main Render
 return (
   <div style={{ fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif' }}>
@@ -1691,6 +2099,9 @@ return (
     {currentScreen === 'recording' && renderRecordingScreen()}
     {currentScreen === 'forgot-password' && renderForgotPasswordScreen()}
     {currentScreen === 'reset-password' && renderResetPasswordScreen()}
+    {currentScreen === 'impressum' && renderImpressumScreen()}
+    {currentScreen === 'datenschutz' && renderDatenschutzScreen()}
+    {currentScreen === 'app-info' && renderAppInfoScreen()}
     
     {/* Install Prompt für PWA */}
     {currentScreen === 'dashboard' && <InstallPrompt />}
