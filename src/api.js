@@ -681,6 +681,63 @@ export async function resetPassword(token, newPassword) {
 }
 
 // Video-Metadaten speichern (ALTE VERSION - nur für Backward Compatibility)
+// Nutzerkonto löschen (inkl. aller Daten)
+export async function deleteUserAccount(userId) {
+  try {
+    // 1. Lade alle Videos des Nutzers
+    const { data: videos, error: videosError } = await supabase
+      .from('videos')
+      .select('video_url')
+      .eq('user_id', userId);
+
+    if (videosError) throw videosError;
+
+    // 2. Lösche alle Videos aus dem Storage
+    if (videos && videos.length > 0) {
+      const videoPaths = videos
+        .map(v => v.video_url)
+        .filter(url => url) // Nur URLs die existieren
+        .map(url => {
+          // Extrahiere den Dateinamen aus der URL
+          // URL Format: https://xxx.supabase.co/storage/v1/object/public/videos/filename.webm
+          // Oder: https://xxx.supabase.co/storage/v1/object/sign/videos/filename.webm?...
+          const match = url.match(/\/videos\/([^\/\?]+)/);
+          return match ? match[1] : null;
+        })
+        .filter(path => path); // Entferne null Werte
+
+      if (videoPaths.length > 0) {
+        const { error: storageError } = await supabase.storage
+          .from('videos')
+          .remove(videoPaths);
+
+        // Storage-Fehler werden ignoriert (Videos könnten bereits gelöscht sein)
+        if (storageError) {
+          console.warn('Einige Videos konnten nicht aus dem Storage gelöscht werden:', storageError);
+        }
+      }
+    }
+
+    // 3. Lösche alle Daten des Nutzers
+    // Videos und daily_progress werden durch CASCADE automatisch gelöscht
+    const { error: deleteError } = await supabase
+      .from('users')
+      .delete()
+      .eq('id', userId);
+
+    if (deleteError) throw deleteError;
+
+    // 4. Lösche lokale Daten
+    localStorage.removeItem('userId');
+    localStorage.removeItem('userName');
+
+    return { success: true };
+  } catch (error) {
+    console.error('Konto-Löschung fehlgeschlagen:', error);
+    return { success: false, error: error.message };
+  }
+}
+
 export async function saveVideoRecord(userId, videoType, dayNumber) {
   try {
     const { data, error } = await supabase
