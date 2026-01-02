@@ -57,7 +57,10 @@ if (urlParams.get('simple-admin') === 'true') {
 }
   
   // State Management
-  const [currentScreen, setCurrentScreen] = useState('welcome');
+  // Prüfe URL-Parameter für direkten Zugriff auf Seiten (z.B. Datenschutz)
+  const screenParam = urlParams.get('screen');
+  const initialScreen = screenParam || 'welcome';
+  const [currentScreen, setCurrentScreen] = useState(initialScreen);
   const [resetToken, setResetToken] = useState(null);
   const [resetPasswordValue, setResetPasswordValue] = useState('');
   const [resetPasswordConfirm, setResetPasswordConfirm] = useState('');
@@ -88,6 +91,8 @@ if (urlParams.get('simple-admin') === 'true') {
   const [loginPassword, setLoginPassword] = useState('');
   const [timeWindow, setTimeWindow] = useState({ morning: false, evening: false });
   const [isOnline, setIsOnline] = useState(navigator.onLine);
+  const [adWatched, setAdWatched] = useState(false);
+  const [adContainerId] = useState(`ad-container-${Date.now()}`);
   
   // Refs
   const videoRef = useRef(null);
@@ -180,11 +185,20 @@ if (urlParams.get('simple-admin') === 'true') {
   // Initial Load - Check für bestehenden User und Email-Verifizierung
 useEffect(() => {
   const checkExistingUser = async () => {
+    // Prüfe URL-Parameter für direkten Zugriff auf Seiten (z.B. Datenschutz, Impressum)
+    const urlParams = new URLSearchParams(window.location.search);
+    const screenParam = urlParams.get('screen');
+    
+    // Wenn screen-Parameter gesetzt ist (z.B. ?screen=datenschutz), zeige diese Seite direkt an
+    if (screenParam && ['datenschutz', 'impressum', 'app-info'].includes(screenParam)) {
+      setCurrentScreen(screenParam);
+      return; // Früh beenden, damit Login-Check übersprungen wird
+    }
+    
     const savedUserId = localStorage.getItem('userId');
     const savedUserName = localStorage.getItem('userName');
     
     // Prüfe ob Verifizierungs-Token oder Reset-Token in URL ist
-    const urlParams = new URLSearchParams(window.location.search);
     const token = urlParams.get('token');
     const isResetPassword = window.location.pathname.includes('reset-password') || window.location.href.includes('reset-password');
     
@@ -1117,7 +1131,8 @@ const renderLoginScreen = () => {
                   onClick={() => {
                     if (timeWindow.morning) {
                       setCurrentVideoType('morning');
-                      setCurrentScreen('recording');
+                      setAdWatched(false);
+                      setCurrentScreen('ad');
                     }
                   }}
                   style={{
@@ -1175,7 +1190,8 @@ const renderLoginScreen = () => {
                   onClick={() => {
                     if (timeWindow.evening) {
                       setCurrentVideoType('evening');
-                      setCurrentScreen('recording');
+                      setAdWatched(false);
+                      setCurrentScreen('ad');
                     }
                   }}
                   style={{
@@ -1376,6 +1392,227 @@ const renderLoginScreen = () => {
     </div>
     );
   };
+
+  // AdSense Script laden (einmalig)
+  useEffect(() => {
+    if (currentScreen === 'ad' && !window.adsbygoogle) {
+      const script = document.createElement('script');
+      script.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-YOUR_PUBLISHER_ID';
+      script.async = true;
+      script.crossOrigin = 'anonymous';
+      document.head.appendChild(script);
+    }
+  }, [currentScreen]);
+
+  // Werbe-Screen vor Videoaufnahme
+  const renderAdScreen = () => {
+    const adContainerRef = useRef(null);
+    
+    useEffect(() => {
+      // Initialisiere Ad nach kurzer Verzögerung
+      const timer = setTimeout(() => {
+        try {
+          if (window.adsbygoogle && adContainerRef.current) {
+            (window.adsbygoogle = window.adsbygoogle || []).push({});
+          }
+        } catch (e) {
+          // AdSense Error - stillschweigend behandeln
+        }
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }, []);
+    
+    const handleSkipAd = () => {
+      setAdWatched(true);
+      setCurrentScreen('recording');
+    };
+    
+    return (
+      <div style={{ ...styles.minHeight, ...styles.gradient, padding: '1rem' }}>
+        <div style={styles.container}>
+          <div style={styles.card}>
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+              📺 Werbung
+            </h2>
+            
+            <div style={{
+              backgroundColor: '#F3F4F6',
+              padding: '1rem',
+              borderRadius: '0.5rem',
+              marginBottom: '1.5rem',
+              fontSize: '0.875rem',
+              color: '#4B5563',
+              lineHeight: '1.6'
+            }}>
+              <p style={{ marginBottom: '0.75rem' }}>
+                <strong>Warum Werbung?</strong>
+              </p>
+              <p style={{ marginBottom: '0.75rem' }}>
+                Die Modus-Klar App ist für Sie kostenlos. Um die Kosten für Server, Video-Speicher und Verifikation zu decken, zeigen wir vor jeder Videoaufnahme eine kurze Werbung.
+              </p>
+              <p style={{ marginBottom: '0.75rem' }}>
+                <strong>Ihre Vorteile:</strong>
+              </p>
+              <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
+                <li>✅ Kostenlose Nutzung der App</li>
+                <li>✅ Keine versteckten Kosten</li>
+                <li>✅ Unterstützung der Gesundheitsvorsorge</li>
+              </ul>
+              <p style={{ margin: 0 }}>
+                <span 
+                  onClick={() => setCurrentScreen('why-ads')} 
+                  style={{ 
+                    color: '#3B82F6', 
+                    textDecoration: 'underline', 
+                    cursor: 'pointer' 
+                  }}
+                >
+                  Mehr erfahren
+                </span>
+              </p>
+            </div>
+            
+            {/* AdSense Container */}
+            <div 
+              ref={adContainerRef}
+              id={adContainerId}
+              style={{
+                minHeight: '250px',
+                width: '100%',
+                marginBottom: '1.5rem',
+                backgroundColor: '#F9FAFB',
+                borderRadius: '0.5rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                border: '1px dashed #D1D5DB',
+                position: 'relative'
+              }}
+            >
+              <ins
+                className="adsbygoogle"
+                style={{ display: 'block', width: '100%', height: '250px' }}
+                data-ad-client="ca-pub-YOUR_PUBLISHER_ID"
+                data-ad-slot="YOUR_AD_SLOT_ID"
+                data-ad-format="auto"
+                data-full-width-responsive="true"
+              />
+              {/* Placeholder während Ad lädt */}
+              <div style={{ 
+                position: 'absolute', 
+                color: '#9CA3AF', 
+                fontSize: '0.875rem',
+                pointerEvents: 'none'
+              }}>
+                Werbung wird geladen...
+              </div>
+            </div>
+            
+            <div style={{ display: 'flex', gap: '1rem' }}>
+              <button
+                onClick={() => setCurrentScreen('dashboard')}
+                style={{
+                  flex: 1,
+                  padding: '0.75rem',
+                  borderRadius: '0.5rem',
+                  border: '1px solid #D1D5DB',
+                  background: 'white',
+                  color: '#4B5563',
+                  fontWeight: '600',
+                  cursor: 'pointer',
+                  touchAction: 'manipulation'
+                }}
+              >
+                Abbrechen
+              </button>
+              <button
+                onClick={handleSkipAd}
+                style={{
+                  flex: 2,
+                  ...styles.button,
+                  touchAction: 'manipulation'
+                }}
+              >
+                Weiter zur Aufnahme
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  // Erklärungsseite für Werbung
+  const renderWhyAdsScreen = () => (
+    <div style={{ ...styles.minHeight, ...styles.gradient, padding: '1rem' }}>
+      <div style={styles.container}>
+        <div style={styles.card}>
+          <button
+            onClick={() => setCurrentScreen('ad')}
+            style={{
+              background: 'none',
+              border: 'none',
+              fontSize: '1.5rem',
+              cursor: 'pointer',
+              marginBottom: '1rem'
+            }}
+          >
+            ←
+          </button>
+
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1.5rem' }}>
+            Warum Werbung?
+          </h2>
+
+          <div style={{ fontSize: '0.875rem', color: '#4B5563', lineHeight: '1.6' }}>
+            <p style={{ marginBottom: '1rem' }}>
+              Die Modus-Klar App ist für Sie vollständig kostenlos. Um diese kostenlose Nutzung zu ermöglichen, finanzieren wir die App durch Werbung.
+            </p>
+
+            <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.75rem', color: '#1F2937' }}>
+              💰 Was kostet die App?
+            </h3>
+            <p style={{ marginBottom: '1rem' }}>
+              Die App selbst kostet Sie nichts. Wir zeigen lediglich vor jeder Videoaufnahme (2x täglich) eine kurze Werbung.
+            </p>
+
+            <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.75rem', color: '#1F2937' }}>
+              🎯 Warum ist Werbung nötig?
+            </h3>
+            <p style={{ marginBottom: '0.75rem' }}>
+              Um die App kostenlos anbieten zu können, müssen wir folgende Kosten decken:
+            </p>
+            <ul style={{ paddingLeft: '1.5rem', marginBottom: '1rem' }}>
+              <li>Server- und Hosting-Kosten für die App</li>
+              <li>Video-Speicherplatz (jedes Video wird sicher gespeichert)</li>
+              <li>Verifikation durch geschultes Personal</li>
+              <li>Entwicklung und Wartung der App</li>
+              <li>Support und Kundenservice</li>
+            </ul>
+
+            <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.75rem', color: '#1F2937' }}>
+              🚀 Zukünftige Optionen
+            </h3>
+            <p style={{ marginBottom: '1rem' }}>
+              In Zukunft planen wir eine Premium-Version ohne Werbung. Premium-Nutzer können dann eine Einzahlung tätigen und erhalten ihr Geld bei erfolgreichem Abschluss zurück - plus einen Bonus!
+            </p>
+
+            <div style={{
+              backgroundColor: '#DBEAFE',
+              padding: '1rem',
+              borderRadius: '0.5rem',
+              marginTop: '1.5rem'
+            }}>
+              <p style={{ margin: 0, fontWeight: '600', color: '#1E40AF' }}>
+                💡 Ihre Daten bleiben geschützt: Wir verwenden nur vertrauenswürdige Werbenetzwerke, die Ihre Privatsphäre respektieren.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 
   const renderRecordingScreen = () => {
     
@@ -2148,6 +2385,8 @@ return (
     {currentScreen === 'impressum' && renderImpressumScreen()}
     {currentScreen === 'datenschutz' && renderDatenschutzScreen()}
     {currentScreen === 'app-info' && renderAppInfoScreen()}
+    {currentScreen === 'ad' && renderAdScreen()}
+    {currentScreen === 'why-ads' && renderWhyAdsScreen()}
     
     {/* Install Prompt für PWA */}
     {currentScreen === 'dashboard' && <InstallPrompt />}
