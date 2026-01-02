@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useContext } from 'react';
-import { registerUser, saveVideoRecord, loadUserProgress, loginUser, uploadVideo, requestPasswordReset, resetPassword } from './api';
+import { registerUser, saveVideoRecord, loadUserProgress, loginUser, uploadVideo, requestPasswordReset, resetPassword, deleteUserAccount } from './api';
 import AdminDashboard from './AdminDashboard';
 // Ganz oben in App.js, nach den imports
 import { supabase } from './supabaseClient';
@@ -190,8 +190,20 @@ useEffect(() => {
     const screenParam = urlParams.get('screen');
     
     // Wenn screen-Parameter gesetzt ist (z.B. ?screen=datenschutz), zeige diese Seite direkt an
-    if (screenParam && ['datenschutz', 'impressum', 'app-info'].includes(screenParam)) {
+    if (screenParam && ['datenschutz', 'impressum', 'app-info', 'delete-account'].includes(screenParam)) {
       setCurrentScreen(screenParam);
+      // Für delete-account muss der Nutzer angemeldet sein
+      if (screenParam === 'delete-account') {
+        const savedUserId = localStorage.getItem('userId');
+        if (!savedUserId) {
+          setCurrentScreen('welcome');
+          if (toast) {
+            toast.error('Bitte melden Sie sich an, um Ihr Konto zu löschen.');
+          }
+          return;
+        }
+        setUserId(savedUserId);
+      }
       return; // Früh beenden, damit Login-Check übersprungen wird
     }
     
@@ -1044,10 +1056,26 @@ const renderLoginScreen = () => {
                   border: 'none',
                   cursor: 'pointer',
                   textDecoration: 'underline',
-                  padding: 0
+                  padding: 0,
+                  marginRight: '0.5rem'
                 }}
               >
                 Abmelden
+              </button>
+              <button
+                onClick={() => setCurrentScreen('delete-account')}
+                style={{ 
+                  fontSize: '0.75rem', 
+                  color: '#DC2626', 
+                  background: 'none', 
+                  border: 'none',
+                  cursor: 'pointer',
+                  textDecoration: 'underline',
+                  padding: 0
+                }}
+                aria-label="Konto löschen"
+              >
+                Konto löschen
               </button>
             </div>
           </div>
@@ -2042,6 +2070,25 @@ const renderLoginScreen = () => {
           >
             Datenschutz
           </button>
+          {userId && (
+            <>
+              <span>•</span>
+              <button
+                onClick={() => setCurrentScreen('delete-account')}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#DC2626',
+                  cursor: 'pointer',
+                  textDecoration: 'underline',
+                  fontSize: '0.875rem',
+                  padding: 0
+                }}
+              >
+                Konto löschen
+              </button>
+            </>
+          )}
         </div>
         <p style={{
           textAlign: 'center',
@@ -2219,6 +2266,154 @@ const renderLoginScreen = () => {
     </div>
   );
 
+  // Konto löschen Seite
+  const renderDeleteAccountScreen = () => {
+    const [confirmText, setConfirmText] = useState('');
+    const [isDeleting, setIsDeleting] = useState(false);
+    const [deleteError, setDeleteError] = useState('');
+
+    const handleDeleteAccount = async () => {
+      if (confirmText.toLowerCase() !== 'löschen') {
+        setDeleteError('Bitte geben Sie "LÖSCHEN" ein, um zu bestätigen.');
+        return;
+      }
+
+      if (!userId) {
+        setDeleteError('Sie sind nicht angemeldet.');
+        return;
+      }
+
+      setIsDeleting(true);
+      setDeleteError('');
+
+      try {
+        const result = await deleteUserAccount(userId);
+        
+        if (result.success) {
+          // Logout und zur Welcome-Seite
+          setUserId(null);
+          setUserData({ name: '', email: '', password: '', agreed: false, challengeStartDate: null, notificationsEnabled: false });
+          localStorage.removeItem('userId');
+          localStorage.removeItem('userName');
+          setCurrentScreen('welcome');
+          
+          if (toast) {
+            toast.success('Ihr Konto wurde erfolgreich gelöscht.');
+          }
+        } else {
+          setDeleteError(result.error || 'Fehler beim Löschen des Kontos. Bitte versuchen Sie es erneut.');
+          setIsDeleting(false);
+        }
+      } catch (error) {
+        setDeleteError('Ein Fehler ist aufgetreten. Bitte versuchen Sie es erneut.');
+        setIsDeleting(false);
+      }
+    };
+
+    return (
+      <div style={{ ...styles.minHeight, ...styles.gradient, padding: '1rem' }}>
+        <div style={styles.container}>
+          <div style={styles.card}>
+            <button 
+              onClick={() => setCurrentScreen('dashboard')}
+              style={{ 
+                background: 'none', 
+                border: 'none', 
+                fontSize: '1.5rem', 
+                cursor: 'pointer',
+                marginBottom: '1rem'
+              }}
+            >
+              ← Zurück
+            </button>
+            
+            <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', marginBottom: '1rem', color: '#DC2626' }}>
+              Konto löschen
+            </h2>
+            
+            <div style={{ backgroundColor: '#FEE2E2', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
+              <p style={{ fontSize: '0.875rem', color: '#991B1B', marginBottom: '0.5rem' }}>
+                <strong>⚠️ WICHTIG:</strong> Diese Aktion kann nicht rückgängig gemacht werden!
+              </p>
+              <p style={{ fontSize: '0.875rem', color: '#991B1B' }}>
+                Wenn Sie Ihr Konto löschen, werden alle Ihre Daten unwiderruflich gelöscht:
+              </p>
+              <ul style={{ fontSize: '0.875rem', color: '#991B1B', paddingLeft: '1.5rem', marginTop: '0.5rem' }}>
+                <li>Ihr Benutzerkonto</li>
+                <li>Alle hochgeladenen Videos</li>
+                <li>Ihr gesamter Fortschritt</li>
+                <li>Alle gespeicherten Daten</li>
+              </ul>
+            </div>
+
+            {deleteError && (
+              <div style={{
+                backgroundColor: '#FEE2E2',
+                color: '#DC2626',
+                padding: '0.75rem',
+                borderRadius: '0.5rem',
+                marginBottom: '1rem',
+                fontSize: '0.875rem'
+              }}>
+                {deleteError}
+              </div>
+            )}
+
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', marginBottom: '0.5rem' }}>
+                Geben Sie <strong>"LÖSCHEN"</strong> ein, um zu bestätigen:
+              </label>
+              <input
+                type="text"
+                value={confirmText}
+                onChange={(e) => setConfirmText(e.target.value)}
+                placeholder="LÖSCHEN"
+                style={{
+                  width: '100%',
+                  padding: '0.75rem',
+                  border: '1px solid #D1D5DB',
+                  borderRadius: '0.5rem',
+                  fontSize: '16px'
+                }}
+                disabled={isDeleting}
+                aria-label="Bestätigungstext eingeben"
+              />
+            </div>
+
+            <button
+              onClick={handleDeleteAccount}
+              disabled={confirmText.toLowerCase() !== 'löschen' || isDeleting}
+              style={{
+                ...styles.button,
+                backgroundColor: confirmText.toLowerCase() === 'löschen' && !isDeleting ? '#DC2626' : '#D1D5DB',
+                color: 'white',
+                width: '100%',
+                cursor: confirmText.toLowerCase() === 'löschen' && !isDeleting ? 'pointer' : 'not-allowed',
+                marginBottom: '1rem'
+              }}
+              aria-label="Konto endgültig löschen"
+            >
+              {isDeleting ? 'Wird gelöscht...' : 'Konto endgültig löschen'}
+            </button>
+
+            <button
+              onClick={() => setCurrentScreen('dashboard')}
+              style={{
+                ...styles.button,
+                backgroundColor: '#6B7280',
+                color: 'white',
+                width: '100%'
+              }}
+              disabled={isDeleting}
+            >
+              Abbrechen
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
   // App-Info-Seite
   const renderAppInfoScreen = () => (
     <div style={{ ...styles.minHeight, ...styles.gradient, padding: '1rem' }}>
@@ -2385,6 +2580,7 @@ return (
     {currentScreen === 'impressum' && renderImpressumScreen()}
     {currentScreen === 'datenschutz' && renderDatenschutzScreen()}
     {currentScreen === 'app-info' && renderAppInfoScreen()}
+    {currentScreen === 'delete-account' && renderDeleteAccountScreen()}
     {currentScreen === 'ad' && renderAdScreen()}
     {currentScreen === 'why-ads' && renderWhyAdsScreen()}
     
