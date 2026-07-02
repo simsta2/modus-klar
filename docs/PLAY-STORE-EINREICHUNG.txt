@@ -1,0 +1,39 @@
+MODUS-KLAR – PLAY STORE EINREICHUNG (Weg 2: Lifestyle)
+========================================================
+
+DEINE SCHRITTE IN DER PLAY CONSOLE (copy-paste):
+
+1) KATEGORIE
+   App-Inhalte → Store-Eintrag → Kategorie: "Gesundheit & Fitness"
+   (Alternativ: Lifestyle, falls verfügbar)
+
+2) HEALTH APPS FORMULAR (App-Inhalte → Health apps)
+   → "Bietet deine App Gesundheitsfunktionen?" 
+   → NEIN (keine medizinischen Funktionen)
+   ODER nur: Fitness / Wellness / Lifestyle – NICHT:
+   - Krankheitsprävention
+   - Gesundheitsdienstleistungen
+   - Krankheitsmanagement
+
+3) KURZBESCHREIBUNG (max 80 Zeichen)
+   Persönliche 4-Wochen-Challenge mit Video-Dokumentation deines Fortschritts.
+
+4) VOLLSTÄNDIGE BESCHREIBUNG (erster Absatz = Disclaimer!)
+
+Diese App ist kein Medizinprodukt und dient nicht der Diagnose, Behandlung oder Vorbeugung von Krankheiten.
+
+Modus-Klar ist eine freiwillige Lifestyle-Challenge: 28 Tage strukturiert an einem persönlichen Ziel arbeiten. Du dokumentierst deinen Fortschritt zweimal täglich per Video und behältst deine Serie im Blick.
+
+Funktionen:
+• Registrierung und persönliches Dashboard
+• Tägliche Erinnerungen in festen Zeitfenstern
+• Video-Upload zur Dokumentation
+• Fortschrittsanzeige über 28 Tage
+
+Modus-Klar ersetzt keine medizinische Beratung. Nutze die App freiwillig und verantwortungsvoll.
+
+5) SCREENSHOTS PRÜFEN
+   Keine Texte mit: Krankenkasse, Prävention, § 20 SGB V, Krankheitsprävention
+
+6) NEUES RELEASE
+   app-release.aab hochladen (Version 4 / 1.1.0)

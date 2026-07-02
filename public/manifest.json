@@ -1,7 +1,7 @@
 {
   "short_name": "Modus-Klar",
-  "name": "Modus-Klar - Alkoholfreie Challenge",
-  "description": "30 Tage alkoholfrei mit objektiver Kontrolle und Belohnung",
+  "name": "Modus-Klar – Lifestyle Challenge",
+  "description": "Persönliche 30-Tage-Challenge mit täglicher Video-Dokumentation",
   "icons": [
     {
       "src": "/favicon.ico",
@@ -27,7 +27,7 @@
   "orientation": "portrait",
   "theme_color": "#3B82F6",
   "background_color": "#ffffff",
-  "categories": ["health", "lifestyle"],
+  "categories": ["lifestyle"],
   "lang": "de",
   "dir": "ltr",
   "prefer_related_applications": false

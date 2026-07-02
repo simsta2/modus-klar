@@ -131,8 +131,8 @@ export function scheduleNotification(time, type, userId) {
   const timeoutId = setTimeout(() => {
     const title = type === 'morning' ? '🌅 Morgen-Messung' : '🌙 Abend-Messung';
     const body = type === 'morning' 
-      ? 'Zeit für Ihre morgendliche Alkoholmessung! Öffnen Sie die App für die Videoaufnahme.'
-      : 'Zeit für Ihre abendliche Alkoholmessung! Öffnen Sie die App für die Videoaufnahme.';
+      ? 'Zeit für deinen morgendlichen Check-in! Öffne die App für die Videoaufnahme.'
+      : 'Zeit für deinen abendlichen Check-in! Öffne die App für die Videoaufnahme.';
     
     // Prüfe ob Benutzer noch eingeloggt ist
     const savedUserId = localStorage.getItem('userId');

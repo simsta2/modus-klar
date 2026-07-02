@@ -571,32 +571,38 @@ const loadProgress = async (userId) => {
             <Shield />
           </div>
           <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>Modus-Klar</h1>
-          <p style={{ color: '#6B7280', marginBottom: '2rem' }}>
-            30 Tage alkoholfrei - Ein Präventionsprogramm unterstützt von Krankenkassen
+          <p style={{ color: '#6B7280', marginBottom: '1rem' }}>
+            30 Tage bewusst alkoholfrei – deine persönliche Lifestyle-Challenge
           </p>
+
+          <div style={{ backgroundColor: '#F3F4F6', padding: '0.75rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
+            <p style={{ fontSize: '0.7rem', color: '#6B7280', lineHeight: 1.4 }}>
+              Hinweis: Diese App ist kein Medizinprodukt und dient nicht der Diagnose, Behandlung oder Vorbeugung von Krankheiten. Modus-Klar unterstützt freiwillige persönliche Ziele.
+            </p>
+          </div>
           
           <div style={{ textAlign: 'left', marginBottom: '2rem' }}>
             <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', marginBottom: '1rem' }}>
               <CheckCircle />
-              <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>Eigenes Alkoholmessgerät erforderlich</p>
+              <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>Eigenes Atemtest-Gerät für die Dokumentation</p>
             </div>
             <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', marginBottom: '1rem' }}>
               <CheckCircle />
-              <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>2x täglich Messung per Video dokumentieren</p>
+              <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>2x täglich Fortschritt per Video festhalten</p>
             </div>
             <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', marginBottom: '1rem' }}>
               <CheckCircle />
-              <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>Verifizierung durch geschultes Personal</p>
+              <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>Manuelle Prüfung der eingereichten Videos</p>
             </div>
             <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem' }}>
               <CheckCircle />
-              <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>Prämie nach erfolgreicher Teilnahme</p>
+              <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>Bestätigung bei erfolgreichem Abschluss der Challenge</p>
             </div>
           </div>
           
           <div style={{ backgroundColor: '#DBEAFE', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
             <p style={{ fontSize: '0.75rem', color: '#6B7280' }}>
-              Gefördert durch die gesetzlichen Krankenkassen als Präventionsmaßnahme nach § 20 SGB V
+              Modus-Klar hilft dir, ein persönliches Ziel strukturiert umzusetzen – freiwillig und in deinem Tempo.
             </p>
           </div>
           
@@ -774,10 +780,10 @@ const renderLoginScreen = () => {
               <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem' }}>
                 <AlertCircle />
                 <div>
-                  <p style={{ fontWeight: '600', marginBottom: '0.25rem' }}>Alkoholmessgerät erforderlich</p>
+                  <p style={{ fontWeight: '600', marginBottom: '0.25rem' }}>Atemtest-Gerät empfohlen</p>
                   <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>
-                    Sie benötigen ein eigenes, geprüftes Alkoholmessgerät. 
-                    Empfohlene Modelle finden Sie in der App.
+                    Für die Video-Dokumentation empfiehlt sich ein persönliches Atemtest-Gerät.
+                    Empfohlene Modelle findest du in der App.
                   </p>
                 </div>
               </div>
@@ -913,7 +919,7 @@ const renderLoginScreen = () => {
                 <li>30 Tage tägliche Messungen</li>
                 <li>2 Videos täglich in den Zeitfenstern</li>
                 <li>Messung innerhalb 1 Stunde nach Benachrichtigung</li>
-                <li>0,0 Promille bei allen Messungen</li>
+                <li>Zielwert 0,0 bei allen Tests</li>
                 <li>Verpasste/abgelehnte Videos = Neustart</li>
               </ul>
           </div>
@@ -1005,20 +1011,20 @@ const renderLoginScreen = () => {
                 </ul>
                 <p style={{ marginBottom: '0.75rem' }}><strong>3. Anforderungen:</strong></p>
                 <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                  <li>Eigenes, geprüftes Alkoholmessgerät</li>
-                  <li>Deutlich sichtbare Messung im Video</li>
-                  <li>Ergebnis: 0,0 Promille</li>
+                  <li>Eigenes Atemtest-Gerät für die Dokumentation</li>
+                  <li>Deutlich sichtbare Durchführung im Video</li>
+                  <li>Zielwert: 0,0</li>
                 </ul>
                 <p style={{ marginBottom: '0.75rem' }}><strong>4. Ablehnung erfolgt bei:</strong></p>
                 <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                  <li>Promille über 0,0</li>
+                  <li>Wert über 0,0</li>
                   <li>Undeutlicher Aufnahme</li>
                   <li>Manipulation</li>
                   <li>Verpasster Messung</li>
                 </ul>
                 <p style={{ marginBottom: '0.75rem' }}><strong>5. Neustart:</strong> Bei Ablehnung oder verpasster Messung startet das Programm von Tag 1</p>
                 <p style={{ marginBottom: '0.75rem' }}><strong>6. Datenschutz:</strong> Videos werden nur zur Verifikation verwendet und nach Programmende gelöscht</p>
-                <p style={{ marginBottom: '0.75rem' }}><strong>7. Prämie:</strong> Nach erfolgreicher Teilnahme gemäß Vereinbarung mit Ihrer Krankenkasse</p>
+                <p style={{ marginBottom: '0.75rem' }}><strong>7. Abschluss:</strong> Nach erfolgreichem Abschluss der Challenge erhältst du eine Bestätigung deiner Teilnahme</p>
               </div>
               <button
                 onClick={() => setShowTerms(false)}
@@ -1376,20 +1382,20 @@ const renderLoginScreen = () => {
         }}>
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
             <div style={{ flex: 1 }}>
-              <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem' }}>Ihre Vorteile bei erfolgreicher Teilnahme</h3>
+              <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem' }}>Dein Ziel bei Erfolg</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
-                  <span style={{ fontSize: '1.25rem', marginTop: '0.125rem' }}>💰</span>
+                  <span style={{ fontSize: '1.25rem', marginTop: '0.125rem' }}>🏆</span>
                   <div>
-                    <p style={{ fontSize: '1rem', fontWeight: '600', margin: 0 }}>Krankenkassen-Bonus</p>
-                    <p style={{ fontSize: '0.875rem', opacity: 0.95, margin: '0.25rem 0 0 0' }}>Prämie gemäß Vereinbarung mit Ihrer Krankenkasse</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600', margin: 0 }}>Challenge geschafft!</p>
+                    <p style={{ fontSize: '0.875rem', opacity: 0.95, margin: '0.25rem 0 0 0' }}>30 Tage durchgehalten</p>
                   </div>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.5rem' }}>
-                  <span style={{ fontSize: '1.25rem', marginTop: '0.125rem' }}>🏥</span>
+                  <span style={{ fontSize: '1.25rem', marginTop: '0.125rem' }}>✨</span>
                   <div>
-                    <p style={{ fontSize: '1rem', fontWeight: '600', margin: 0 }}>Gesundheitsvorsorge</p>
-                    <p style={{ fontSize: '0.875rem', opacity: 0.95, margin: '0.25rem 0 0 0' }}>Langfristige Verbesserung Ihrer Gesundheit</p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600', margin: 0 }}>Persönlicher Erfolg</p>
+                    <p style={{ fontSize: '0.875rem', opacity: 0.95, margin: '0.25rem 0 0 0' }}>Du hast dein Ziel erreicht</p>
                   </div>
                 </div>
               </div>
@@ -1485,7 +1491,7 @@ const renderLoginScreen = () => {
               <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
                 <li>✅ Kostenlose Nutzung der App</li>
                 <li>✅ Keine versteckten Kosten</li>
-                <li>✅ Unterstützung der Gesundheitsvorsorge</li>
+                <li>✅ Unterstützung eines freiwilligen persönlichen Ziels</li>
               </ul>
               <p style={{ margin: 0 }}>
                 <span 
@@ -2436,7 +2442,10 @@ const renderLoginScreen = () => {
           
           <div style={{ fontSize: '0.875rem', color: '#4B5563', lineHeight: '1.6' }}>
             <p style={{ marginBottom: '1rem', fontSize: '1rem', fontWeight: '600' }}>
-              Modus-Klar ist eine innovative Gesundheits-App, die Sie dabei unterstützt, 30 Tage lang alkoholfrei zu bleiben.
+              Modus-Klar ist eine Lifestyle-App, die dich bei einer freiwilligen 30-Tage-Challenge unterstützt.
+            </p>
+            <p style={{ marginBottom: '1rem', fontSize: '0.75rem', color: '#6B7280' }}>
+              Diese App ist kein Medizinprodukt und dient nicht der Diagnose, Behandlung oder Vorbeugung von Krankheiten.
             </p>
             
             <div style={{ marginBottom: '1.5rem' }}>
@@ -2444,7 +2453,7 @@ const renderLoginScreen = () => {
                 📱 Wie funktioniert die App?
               </h3>
               <p style={{ marginBottom: '0.75rem' }}>
-                Die App begleitet Sie durch eine 30-tägige Challenge, in der Sie täglich zwei Alkoholmessungen durchführen müssen:
+                Die App begleitet dich durch eine 30-tägige Challenge mit zwei täglichen Video-Check-ins:
               </p>
               <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
                 <li><strong>Morgens:</strong> Zwischen 9:00 und 12:00 Uhr</li>
@@ -2468,8 +2477,8 @@ const renderLoginScreen = () => {
               <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
                 <li>2 Videos täglich in den vorgegebenen Zeitfenstern</li>
                 <li>Messung innerhalb von 60 Minuten nach Benachrichtigung</li>
-                <li>Ergebnis muss 0,0 Promille zeigen</li>
-                <li>Eigenes, geprüftes Alkoholmessgerät verwenden</li>
+                <li>Zielwert muss 0,0 zeigen</li>
+                <li>Eigenes Atemtest-Gerät für die Dokumentation</li>
               </ul>
               <p>
                 <strong>Wichtig:</strong> Verpasste Messungen oder abgelehnte Videos führen zu einem Neustart der Challenge ab Tag 1.
@@ -2486,7 +2495,7 @@ const renderLoginScreen = () => {
               <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
                 <li>Das Messgerät muss deutlich sichtbar sein (Marke/Modell erkennbar)</li>
                 <li>Die Messung muss vollständig durchgeführt werden</li>
-                <li>Das Ergebnis (0,0 Promille) muss mindestens 5 Sekunden sichtbar sein</li>
+                <li>Das Ergebnis (0,0) muss mindestens 5 Sekunden sichtbar sein</li>
                 <li>Gesamtdauer des Videos: ca. 30 Sekunden</li>
               </ul>
             </div>
@@ -2529,8 +2538,8 @@ const renderLoginScreen = () => {
                 Bei erfolgreichem Abschluss der 30-tägigen Challenge erhalten Sie:
               </p>
               <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                <li><strong>Krankenkassen-Bonus:</strong> Prämie gemäß Vereinbarung mit Ihrer Krankenkasse</li>
-                <li><strong>Gesundheitsvorsorge:</strong> Langfristige Verbesserung Ihrer Gesundheit und Lebensqualität</li>
+                <li><strong>Challenge geschafft:</strong> Bestätigung deiner erfolgreichen Teilnahme</li>
+                <li><strong>Persönlicher Erfolg:</strong> Du hast dein freiwilliges Ziel erreicht</li>
               </ul>
             </div>
             
@@ -2542,7 +2551,7 @@ const renderLoginScreen = () => {
                 Die Challenge startet automatisch neu, wenn:
               </p>
               <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                <li>Ein Video abgelehnt wird (z.B. Promille &gt; 0,0 oder undeutliche Aufnahme)</li>
+                <li>Ein Video abgelehnt wird (z.B. Wert &gt; 0,0 oder undeutliche Aufnahme)</li>
                 <li>Eine Messung verpasst wird</li>
                 <li>30 erfolgreiche Tage abgeschlossen wurden (automatischer Neustart für weitere 30 Tage)</li>
               </ul>
