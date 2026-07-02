@@ -129,7 +129,7 @@ export function scheduleNotification(time, type, userId) {
   const delay = notificationTime.getTime() - now.getTime();
   
   const timeoutId = setTimeout(() => {
-    const title = type === 'morning' ? '🌅 Morgen-Messung' : '🌙 Abend-Messung';
+    const title = type === 'morning' ? '🌅 Morgen-Check-in' : '🌙 Abend-Check-in';
     const body = type === 'morning' 
       ? 'Zeit für deinen morgendlichen Check-in! Öffne die App für die Videoaufnahme.'
       : 'Zeit für deinen abendlichen Check-in! Öffne die App für die Videoaufnahme.';

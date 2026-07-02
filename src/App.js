@@ -572,19 +572,19 @@ const loadProgress = async (userId) => {
           </div>
           <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>Modus-Klar</h1>
           <p style={{ color: '#6B7280', marginBottom: '1rem' }}>
-            30 Tage bewusst alkoholfrei – deine persönliche Lifestyle-Challenge
+            30 Tage persönliche Challenge – bleib am Ball
           </p>
 
           <div style={{ backgroundColor: '#F3F4F6', padding: '0.75rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
             <p style={{ fontSize: '0.7rem', color: '#6B7280', lineHeight: 1.4 }}>
-              Hinweis: Diese App ist kein Medizinprodukt und dient nicht der Diagnose, Behandlung oder Vorbeugung von Krankheiten. Modus-Klar unterstützt freiwillige persönliche Ziele.
+              Freiwillige Lifestyle-App für persönliche Ziele. Dokumentiere deinen Fortschritt – ohne medizinische Bewertung.
             </p>
           </div>
           
           <div style={{ textAlign: 'left', marginBottom: '2rem' }}>
             <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', marginBottom: '1rem' }}>
               <CheckCircle />
-              <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>Eigenes Atemtest-Gerät für die Dokumentation</p>
+              <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>Tägliche Erinnerungen für dein Check-ins</p>
             </div>
             <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', marginBottom: '1rem' }}>
               <CheckCircle />
@@ -592,7 +592,7 @@ const loadProgress = async (userId) => {
             </div>
             <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', marginBottom: '1rem' }}>
               <CheckCircle />
-              <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>Manuelle Prüfung der eingereichten Videos</p>
+              <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>Videos werden auf Vollständigkeit geprüft</p>
             </div>
             <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem' }}>
               <CheckCircle />
@@ -780,10 +780,10 @@ const renderLoginScreen = () => {
               <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem' }}>
                 <AlertCircle />
                 <div>
-                  <p style={{ fontWeight: '600', marginBottom: '0.25rem' }}>Atemtest-Gerät empfohlen</p>
+                  <p style={{ fontWeight: '600', marginBottom: '0.25rem' }}>Video-Tagebuch</p>
                   <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>
-                    Für die Video-Dokumentation empfiehlt sich ein persönliches Atemtest-Gerät.
-                    Empfohlene Modelle findest du in der App.
+                    Für deine tägliche Dokumentation nimmst du kurze Videos auf.
+                    Tipps findest du direkt in der App.
                   </p>
                 </div>
               </div>
@@ -795,7 +795,7 @@ const renderLoginScreen = () => {
                 <div>
                   <p style={{ fontWeight: '600', marginBottom: '0.25rem' }}>Tägliche Benachrichtigungen</p>
                   <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>
-                    Erinnerungen für Ihre Messzeiten:<br/>
+                    Erinnerungen für Ihre Check-in-Zeiten:<br/>
                     Morgens: 9-12 Uhr<br/>
                     Abends: 20-23 Uhr
                   </p>
@@ -916,10 +916,10 @@ const renderLoginScreen = () => {
           <div style={{ backgroundColor: '#DBEAFE', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
             <h3 style={{ fontWeight: '600', marginBottom: '0.5rem' }}>Teilnahmebedingungen:</h3>
               <ul style={{ fontSize: '0.875rem', color: '#6B7280', paddingLeft: '1.5rem' }}>
-                <li>30 Tage tägliche Messungen</li>
+                <li>30 Tage tägliche Check-ins</li>
                 <li>2 Videos täglich in den Zeitfenstern</li>
-                <li>Messung innerhalb 1 Stunde nach Benachrichtigung</li>
-                <li>Zielwert 0,0 bei allen Tests</li>
+                <li>Video innerhalb 1 Stunde nach Erinnerung</li>
+                <li>Regelmäßige Teilnahme erforderlich</li>
                 <li>Verpasste/abgelehnte Videos = Neustart</li>
               </ul>
           </div>
@@ -954,7 +954,7 @@ const renderLoginScreen = () => {
                 style={{ marginTop: '0.25rem' }}
               />
               <span style={{ fontSize: '0.875rem', color: '#6B7280' }}>
-                Ich erlaube Push-Benachrichtigungen für Messzeiten
+                Ich erlaube Push-Benachrichtigungen für Check-in-Zeiten
               </span>
             </label>
           </div>
@@ -1003,7 +1003,7 @@ const renderLoginScreen = () => {
               <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem' }}>Teilnahmebedingungen</h3>
               <div style={{ fontSize: '0.875rem', color: '#6B7280' }}>
                 <p style={{ marginBottom: '0.75rem' }}><strong>1. Programmdauer:</strong> 30 aufeinanderfolgende Tage</p>
-                <p style={{ marginBottom: '0.75rem' }}><strong>2. Messzeiten:</strong></p>
+                <p style={{ marginBottom: '0.75rem' }}><strong>2. Check-in-Zeiten:</strong></p>
                 <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
                   <li>Morgens: 9:00 - 12:00 Uhr</li>
                   <li>Abends: 20:00 - 23:00 Uhr</li>
@@ -1011,19 +1011,18 @@ const renderLoginScreen = () => {
                 </ul>
                 <p style={{ marginBottom: '0.75rem' }}><strong>3. Anforderungen:</strong></p>
                 <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                  <li>Eigenes Atemtest-Gerät für die Dokumentation</li>
-                  <li>Deutlich sichtbare Durchführung im Video</li>
-                  <li>Zielwert: 0,0</li>
+                  <li>Video zeigt die vereinbarte Dokumentation deutlich</li>
+                  <li>Ergebnis am Display mindestens 5 Sekunden sichtbar</li>
                 </ul>
                 <p style={{ marginBottom: '0.75rem' }}><strong>4. Ablehnung erfolgt bei:</strong></p>
                 <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                  <li>Wert über 0,0</li>
-                  <li>Undeutlicher Aufnahme</li>
+                  <li>Unvollständiger oder undeutlicher Aufnahme</li>
+                  <li>Abweichung von den Challenge-Regeln</li>
                   <li>Manipulation</li>
-                  <li>Verpasster Messung</li>
+                  <li>Verpasstem Check-in</li>
                 </ul>
-                <p style={{ marginBottom: '0.75rem' }}><strong>5. Neustart:</strong> Bei Ablehnung oder verpasster Messung startet das Programm von Tag 1</p>
-                <p style={{ marginBottom: '0.75rem' }}><strong>6. Datenschutz:</strong> Videos werden nur zur Verifikation verwendet und nach Programmende gelöscht</p>
+                <p style={{ marginBottom: '0.75rem' }}><strong>5. Neustart:</strong> Bei Ablehnung oder verpasstem Check-in startet das Programm von Tag 1</p>
+                <p style={{ marginBottom: '0.75rem' }}><strong>6. Datenschutz:</strong> Videos werden nur zur internen Prüfung verwendet und nach Programmende gelöscht</p>
                 <p style={{ marginBottom: '0.75rem' }}><strong>7. Abschluss:</strong> Nach erfolgreichem Abschluss der Challenge erhältst du eine Bestätigung deiner Teilnahme</p>
               </div>
               <button
@@ -1119,16 +1118,16 @@ const renderLoginScreen = () => {
           }}>
             <Bell />
             <p style={{ fontSize: '0.875rem', fontWeight: '500', color: '#92400E' }}>
-              Messzeit aktiv! Sie haben noch 60 Minuten
+              Check-in-Zeit aktiv! Du hast noch 60 Minuten
             </p>
           </div>
         )}
         
         <div style={{ ...styles.card, marginBottom: '1rem' }}>
-          <h2 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '1rem' }}>Heutige Messungen</h2>
+          <h2 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '1rem' }}>Heutige Check-ins</h2>
           
           <div>
-            {/* Morgen-Messung */}
+            {/* Morgen-Check-in */}
             <div style={{
               display: 'flex',
               justifyContent: 'space-between',
@@ -1141,14 +1140,14 @@ const renderLoginScreen = () => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <Clock />
                 <div>
-                  <p style={{ fontWeight: '500' }}>Morgen-Messung</p>
+                  <p style={{ fontWeight: '500' }}>Morgen-Check-in</p>
                   <p style={{ fontSize: '0.75rem', color: '#9CA3AF' }}>9:00 - 12:00 Uhr</p>
                 </div>
               </div>
               {todayVideos.morning === 'verified' ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <CheckCircle />
-                  <span style={{ fontSize: '0.75rem', color: '#059669' }}>Verifiziert</span>
+                  <span style={{ fontSize: '0.75rem', color: '#059669' }}>Bestätigt</span>
                 </div>
               ) : todayVideos.morning === 'uploading' ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -1181,14 +1180,14 @@ const renderLoginScreen = () => {
                     touchAction: 'manipulation'
                   }}
                   disabled={!timeWindow.morning}
-                  aria-label={timeWindow.morning ? 'Morgen-Messung jetzt durchführen' : 'Morgen-Messung - Zeitfenster geschlossen'}
+                  aria-label={timeWindow.morning ? 'Morgen-Check-in jetzt durchführen' : 'Morgen-Check-in - Zeitfenster geschlossen'}
                 >
-                  {timeWindow.morning ? 'Jetzt messen' : 'Zeitfenster geschlossen'}
+                  {timeWindow.morning ? 'Video aufnehmen' : 'Zeitfenster geschlossen'}
                 </button>
               )}
             </div>
             
-            {/* Abend-Messung */}
+            {/* Abend-Check-in */}
             <div style={{
               display: 'flex',
               justifyContent: 'space-between',
@@ -1200,14 +1199,14 @@ const renderLoginScreen = () => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <Clock />
                 <div>
-                  <p style={{ fontWeight: '500' }}>Abend-Messung</p>
+                  <p style={{ fontWeight: '500' }}>Abend-Check-in</p>
                   <p style={{ fontSize: '0.75rem', color: '#9CA3AF' }}>20:00 - 23:00 Uhr</p>
                 </div>
               </div>
               {todayVideos.evening === 'verified' ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <CheckCircle />
-                  <span style={{ fontSize: '0.75rem', color: '#059669' }}>Verifiziert</span>
+                  <span style={{ fontSize: '0.75rem', color: '#059669' }}>Bestätigt</span>
                 </div>
               ) : todayVideos.evening === 'uploading' ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
@@ -1240,9 +1239,9 @@ const renderLoginScreen = () => {
                     touchAction: 'manipulation'
                   }}
                   disabled={!timeWindow.evening}
-                  aria-label={timeWindow.evening ? 'Abend-Messung jetzt durchführen' : 'Abend-Messung - Zeitfenster geschlossen'}
+                  aria-label={timeWindow.evening ? 'Abend-Check-in jetzt durchführen' : 'Abend-Check-in - Zeitfenster geschlossen'}
                 >
-                  {timeWindow.evening ? 'Jetzt messen' : 'Zeitfenster geschlossen'}
+                  {timeWindow.evening ? 'Video aufnehmen' : 'Zeitfenster geschlossen'}
                 </button>
               )}
             </div>
@@ -1340,7 +1339,7 @@ const renderLoginScreen = () => {
                 }}
                 title={
                   day.morning === 'verified' && day.evening === 'verified'
-                    ? `Tag ${day.day}: Beide Messungen verifiziert`
+                    ? `Tag ${day.day}: Beide Check-ins bestätigt`
                     : day.day === currentDay
                     ? `Tag ${day.day}: Aktueller Tag`
                     : day.day < currentDay
@@ -1483,7 +1482,7 @@ const renderLoginScreen = () => {
                 <strong>Warum Werbung?</strong>
               </p>
               <p style={{ marginBottom: '0.75rem' }}>
-                Die Modus-Klar App ist für Sie kostenlos. Um die Kosten für Server, Video-Speicher und Verifikation zu decken, zeigen wir vor jeder Videoaufnahme eine kurze Werbung.
+                Die Modus-Klar App ist für dich kostenlos. Um die Kosten für Server, Video-Speicher und Prüfung zu decken, zeigen wir vor jeder Videoaufnahme eine kurze Werbung.
               </p>
               <p style={{ marginBottom: '0.75rem' }}>
                 <strong>Ihre Vorteile:</strong>
@@ -1620,7 +1619,7 @@ const renderLoginScreen = () => {
             <ul style={{ paddingLeft: '1.5rem', marginBottom: '1rem' }}>
               <li>Server- und Hosting-Kosten für die App</li>
               <li>Video-Speicherplatz (jedes Video wird sicher gespeichert)</li>
-              <li>Verifikation durch geschultes Personal</li>
+              <li>Prüfung durch geschultes Personal</li>
               <li>Entwicklung und Wartung der App</li>
               <li>Support und Kundenservice</li>
             </ul>
@@ -1682,13 +1681,13 @@ const renderLoginScreen = () => {
               borderRadius: '0.5rem',
               padding: '1rem'
             }}>
-              <h3 style={{ fontWeight: '600', marginBottom: '0.5rem', fontSize: '1rem' }}>Anleitung für die Messung:</h3>
+              <h3 style={{ fontWeight: '600', marginBottom: '0.5rem', fontSize: '1rem' }}>Anleitung für dein Video:</h3>
               <ol style={{ fontSize: '0.875rem', color: '#4B5563', paddingLeft: '1.5rem', margin: 0 }}>
-                <li>Halten Sie Ihr Messgerät bereit</li>
-                <li>Starten Sie die Aufnahme</li>
-                <li>Zeigen Sie das Gerät deutlich (Marke/Modell sichtbar)</li>
-                <li>Führen Sie die Messung durch</li>
-                <li>Zeigen Sie das Ergebnis (0,0) mindestens 5 Sekunden</li>
+                <li>Halte dein Handy stabil</li>
+                <li>Starte die Aufnahme</li>
+                <li>Zeige deine Dokumentation deutlich</li>
+                <li>Führe den vereinbarten Ablauf durch</li>
+                <li>Zeige das Anzeige-Ergebnis mindestens 5 Sekunden</li>
                 <li>Gesamtdauer: ca. 30 Sekunden</li>
               </ol>
             </div>
@@ -2223,7 +2222,7 @@ const renderLoginScreen = () => {
             </p>
             <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
               <li>Name und E-Mail-Adresse (bei Registrierung)</li>
-              <li>Videodateien (zur Verifikation der Messungen)</li>
+              <li>Videodateien (zur Prüfung der Check-ins)</li>
               <li>Messdaten und Fortschrittsdaten</li>
               <li>Geräteinformationen (für Push-Benachrichtigungen)</li>
             </ul>
@@ -2445,7 +2444,7 @@ const renderLoginScreen = () => {
               Modus-Klar ist eine Lifestyle-App, die dich bei einer freiwilligen 30-Tage-Challenge unterstützt.
             </p>
             <p style={{ marginBottom: '1rem', fontSize: '0.75rem', color: '#6B7280' }}>
-              Diese App ist kein Medizinprodukt und dient nicht der Diagnose, Behandlung oder Vorbeugung von Krankheiten.
+              Freiwillige Lifestyle-App für persönliche Ziele – ohne medizinische Bewertung.
             </p>
             
             <div style={{ marginBottom: '1.5rem' }}>
@@ -2460,7 +2459,7 @@ const renderLoginScreen = () => {
                 <li><strong>Abends:</strong> Zwischen 20:00 und 23:00 Uhr</li>
               </ul>
               <p>
-                Sie erhalten Push-Benachrichtigungen, wenn es Zeit für eine Messung ist. Innerhalb von 60 Minuten nach der Benachrichtigung müssen Sie ein Video Ihrer Messung hochladen.
+                Du erhältst Push-Benachrichtigungen, wenn es Zeit für einen Check-in ist. Innerhalb von 60 Minuten lädst du ein kurzes Video hoch.
               </p>
             </div>
             
@@ -2476,26 +2475,25 @@ const renderLoginScreen = () => {
               </p>
               <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
                 <li>2 Videos täglich in den vorgegebenen Zeitfenstern</li>
-                <li>Messung innerhalb von 60 Minuten nach Benachrichtigung</li>
-                <li>Zielwert muss 0,0 zeigen</li>
-                <li>Eigenes Atemtest-Gerät für die Dokumentation</li>
+                <li>Video innerhalb von 60 Minuten nach Erinnerung</li>
+                <li>Regelmäßige Teilnahme erforderlich</li>
               </ul>
               <p>
-                <strong>Wichtig:</strong> Verpasste Messungen oder abgelehnte Videos führen zu einem Neustart der Challenge ab Tag 1.
+                <strong>Wichtig:</strong> Verpasste Check-ins oder abgelehnte Videos führen zu einem Neustart der Challenge ab Tag 1.
               </p>
             </div>
             
             <div style={{ marginBottom: '1.5rem' }}>
               <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.75rem', color: '#1F2937' }}>
-                ✅ Video-Verifikation
+                ✅ Video-Prüfung
               </h3>
               <p style={{ marginBottom: '0.75rem' }}>
-                Jedes hochgeladene Video wird von unserem Team überprüft. Das Video muss folgende Anforderungen erfüllen:
+                Jedes hochgeladene Video wird von unserem Team auf Vollständigkeit geprüft:
               </p>
               <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                <li>Das Messgerät muss deutlich sichtbar sein (Marke/Modell erkennbar)</li>
-                <li>Die Messung muss vollständig durchgeführt werden</li>
-                <li>Das Ergebnis (0,0) muss mindestens 5 Sekunden sichtbar sein</li>
+                <li>Dokumentation muss deutlich sichtbar sein</li>
+                <li>Der vereinbarte Ablauf muss vollständig gezeigt werden</li>
+                <li>Das Anzeige-Ergebnis muss mindestens 5 Sekunden sichtbar sein</li>
                 <li>Gesamtdauer des Videos: ca. 30 Sekunden</li>
               </ul>
             </div>
@@ -2509,7 +2507,7 @@ const renderLoginScreen = () => {
               </p>
               <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
                 <li>Aktuellen Tag der Challenge</li>
-                <li>Erfolgreiche Tage (beide Messungen verifiziert)</li>
+                <li>Erfolgreiche Tage (beide Check-ins bestätigt)</li>
                 <li>Ihren aktuellen Streak</li>
                 <li>Verbleibende Tage bis zum Ziel</li>
                 <li>Visuellen Fortschrittskalender</li>
@@ -2524,9 +2522,9 @@ const renderLoginScreen = () => {
                 Die App sendet Ihnen Push-Benachrichtigungen:
               </p>
               <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                <li>Wenn es Zeit für eine Messung ist</li>
-                <li>Erinnerungen, falls Sie eine Messung noch nicht durchgeführt haben</li>
-                <li>Status-Updates zu Ihren Videos (verifiziert/abgelehnt)</li>
+                <li>Wenn es Zeit für einen Check-in ist</li>
+                <li>Erinnerungen, falls du einen Check-in noch nicht gemacht hast</li>
+                <li>Status-Updates zu deinen Videos (bestätigt/abgelehnt)</li>
               </ul>
             </div>
             
@@ -2551,8 +2549,8 @@ const renderLoginScreen = () => {
                 Die Challenge startet automatisch neu, wenn:
               </p>
               <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                <li>Ein Video abgelehnt wird (z.B. Wert &gt; 0,0 oder undeutliche Aufnahme)</li>
-                <li>Eine Messung verpasst wird</li>
+                <li>Ein Video abgelehnt wird (z.B. undeutliche Aufnahme)</li>
+                <li>Ein Check-in verpasst wird</li>
                 <li>30 erfolgreiche Tage abgeschlossen wurden (automatischer Neustart für weitere 30 Tage)</li>
               </ul>
             </div>
