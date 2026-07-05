@@ -1,0 +1,15 @@
+Organisation,Ansprechpartner,Rolle,Prioritaet,Kontakt,Datum_Gesendet,Follow_up_am,Status,Antwort_Grund,Notizen,Naechster_Schritt
+Caritas Suchtberatung [STADT eintragen],,,P1,,,,Offen,,,
+Diakonie Suchtberatung [STADT],,,P1,,,,Offen,,,
+Vision Health Pioneers,,,P1,,,,Offen,,,
+5-HT Mannheim,,,P1,,,,Offen,,,
+TK Innovationsfonds,,,P2,,,,Offen,,,
+AOK Innovationsfonds [Region],,,P2,,,,Offen,,,
+BARMER Innovationsfonds,,,P2,,,,Offen,,,
+Arbeitgeber [NAME 500+ MA],,,P2,,,,Offen,,,
+DHS,,,P3,,,,Offen,,,
+Interner Test Nutzer 1,,,Test,,,,Offen,,,
+Interner Test Nutzer 2,,,Test,,,,Offen,,,
+
+Status-Werte: Offen | Gesendet | Follow-up | Gespraech | LOI | Pilot | Nein | Pause
+Prioritaet: P1 | P2 | P3 | Test

@@ -1,0 +1,137 @@
+MODUS-KLAR – GESPRÄCHSLEITFADEN & DEMO (20 Minuten)
+====================================================
+
+VORBEREITUNG (5 Min vor Call)
+----------------------------
+[ ] Demo-URL im Browser geöffnet (Inkognito = frischer Start)
+[ ] Admin-Tab vorbereitet (nur wenn gefragt – nicht proaktiv)
+[ ] 02-PITCH-ONE-PAGER als PDF griffbereit
+[ ] Notizblock für Einwände
+[ ] Kamera/Mikro testen
+
+AGENDA (an Teilnehmer senden)
+-----------------------------
+1. Problem & Idee (3 Min)
+2. Live-Demo (8 Min)
+3. Pilot-Vorschlag (5 Min)
+4. Datenschutz & Nächste Schritte (4 Min)
+
+────────────────────────────────────────────────────────────────────────
+TEIL 1 – PROBLEM & IDEE (3 Min)
+────────────────────────────────────────────────────────────────────────
+
+Script:
+„Vielen Dank für die Zeit. Kurz zu mir: Ich entwickle Modus-Klar – ein
+digitales Format für freiwillige 28-Tage-Challenges. Viele Menschen starten
+gut, verlieren ohne Struktur aber den Fokus. Modus-Klar gibt feste
+Check-in-Zeiten, Video-Tagebuch und sichtbaren Fortschritt.
+
+Wichtig vorweg: Das ist kein Medizinprodukt und keine Therapie. Es ist
+Struktur für freiwillige persönliche Ziele – als Ergänzung zu dem, was
+Sie ohnehin anbieten, nicht als Ersatz.“
+
+Frage stellen:
+„Passt so ein Begleitformat grundsätzlich zu Ihrer Zielgruppe?“
+
+────────────────────────────────────────────────────────────────────────
+TEIL 2 – LIVE-DEMO (8 Min)
+────────────────────────────────────────────────────────────────────────
+
+Schritt 1 – Startseite (1 Min)
+• Zeigen: „Persönliche Challenge“, Check-ins, kein medizinischer Jargon
+• Nicht: lange Disclaimer lesen
+
+Schritt 2 – Registrierung (1 Min)
+• Name, E-Mail, Zustimmung – schnell durchklicken (Testdaten)
+
+Schritt 3 – Dashboard (3 Min)
+• Morgen-/Abend-Check-in
+• Fortschrittskalender
+• Erinnerungs-Banner wenn Zeitfenster aktiv
+
+Schritt 4 – Video (2 Min)
+• „So sieht die Aufnahme aus – 30 Sekunden, Anleitung on-screen“
+• Optional kurz Kamera zeigen, nicht ganz hochladen
+
+Schritt 5 – Admin (1 Min, nur auf Nachfrage)
+• „Im Hintergrund prüft unser Team Videos auf Vollständigkeit – keine
+  Weitergabe an Dritte, nur aggregierte Statistiken an Partner.“
+
+────────────────────────────────────────────────────────────────────────
+TEIL 3 – PILOT-VORSCHLAG (5 Min)
+────────────────────────────────────────────────────────────────────────
+
+Script:
+„Mein Vorschlag für den Start:
+
+• 28 Tage, [30–100] freiwillige Teilnehmer von Ihrer Seite
+• Kostenlos für Sie und Teilnehmer
+• Sie werben intern – ich liefere Link und wöchentlichen Report
+• Nach 4 Wochen gemeinsame Auswertung: Check-in-Rate, Feedback, Go/No-go
+
+Interner Test: [DEINE ZAHLEN einfügen]“
+
+Frage:
+„Wäre so ein Umfang für Sie denkbar – und wer wäre intern Ansprechpartner?“
+
+────────────────────────────────────────────────────────────────────────
+TEIL 4 – DATENSCHUTZ & NÄCHSTE SCHRITTE (4 Min)
+────────────────────────────────────────────────────────────────────────
+
+Script:
+„Datenschutz: Videos in EU-Cloud, Löschung nach Pilot, AVV stellen wir
+gern bereit. Impressum und Datenschutzerklärung: [LINK – muss existieren!].
+
+Nächste Schritte wenn Interesse besteht:
+1. Ich schicke One-Pager + Pilot-Rahmen per E-Mail
+2. Sie prüfen intern (1–2 Wochen)
+3. Kick-off-Call mit Ansprechpartner + Starttermin“
+
+Abschluss:
+„Gibt es Bedenken, die ich adressieren sollte?“
+
+────────────────────────────────────────────────────────────────────────
+EINWANDBE HANDLING
+────────────────────────────────────────────────────────────────────────
+
+„Datenschutz zu heikel“
+→ AVV, EU-Hosting, keine Video-Weitergabe an Partner, Löschfrist 90 Tage.
+  Anonymisierte Reports only. Bei Bedarf Datenschutzbeauftragten des Partners einbinden.
+
+„Brauchen ZPP / Kostenerstattung“
+→ Aktuell nicht – bewusst Lifestyle-Pilot. ZPP wäre separates 6–12-Monats-Projekt.
+  Pilot erstmal ohne Erstattung, nur Wirksamkeit testen.
+
+„Keine Kapazität für Pilot“
+→ Kleiner starten: 15 Personen, 14 Tage. Oder: Feedback + Kontaktvermittlung.
+
+„App nicht im Play Store“
+→ Web-App funktioniert auf Android/iPhone (Link + „Zum Home-Bildschirm“).
+  Store ist Distribution, nicht Funktion.
+
+„Wir brauchen GmbH“
+→ Für kleinen Pilot oft nicht nötig. Bei schriftlicher Zusage und Budget: UG-Gründung in 4–6 Wochen.
+
+„Manuelle Video-Prüfung skaliert nicht“
+→ Ehrlich: Pilot max. 50–100 TN, danach Prozess/Team. Für Pilot ausreichend.
+
+„Wirkt noch nach Medizin“
+→ Texte wurden angepasst. Feedback willkommen – Anpassung in Tagen.
+
+────────────────────────────────────────────────────────────────────────
+NACH DEM GESPRÄCH (innerhalb 24 h)
+────────────────────────────────────────────────────────────────────────
+
+[ ] Dankes-Mail mit One-Pager + 07-PILOT-VEREINBARUNG
+[ ] Tracking aktualisieren
+[ ] Einwände in 06-PRODUKT-LUECKEN als neue Anforderungen notieren
+[ ] Follow-up-Termin vorschlagen wenn „wir überlegen“
+
+────────────────────────────────────────────────────────────────────────
+DEMO-NOTIZEN (während Gespräch ausfüllen)
+────────────────────────────────────────────────────────────────────────
+
+Partner: _______________  Ansprechpartner: _______________
+Interesse (1–10): ___     Größter Einwand: _______________
+Nächster Schritt: _______________
+Pilot möglich ab: _______________

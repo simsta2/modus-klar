@@ -1,0 +1,108 @@
+MODUS-KLAR – PILOT-VEREINBARUNG (Entwurf / Letter of Intent)
+==============================================================
+HINWEIS: Kein Ersatz für Anwaltsberatung. Für erste Piloten mit
+Beratungsstelle oder kleinem Arbeitgeber oft ausreichend.
+Bei Krankenkasse: deren Vertragsabteilung wird eigenes Template stellen.
+
+Ersetze [PLATZHALTER], beide Parteien unterschreiben oder E-Mail-Bestätigung.
+
+────────────────────────────────────────────────────────────────────────
+
+Letter of Intent – Pilotprojekt Modus-Klar
+
+Zwischen
+
+[DEIN VOLLSTÄNDIGER NAME]
+[DEINE ADRESSE]
+– nachfolgend „Anbieter“ –
+
+und
+
+[PARTNER-ORGANISATION]
+[ADRESSE]
+Vertreten durch: [NAME, FUNKTION]
+– nachfolgend „Partner“ –
+
+wird folgende Pilot-Zusammenarbeit vereinbart:
+
+§1 Gegenstand
+Der Anbieter stellt die App „Modus-Klar“ (Web/PWA) für eine freiwillige
+28-Tage-Lifestyle-Challenge zur Verfügung. Die App ist kein Medizinprodukt
+und ersetzt keine medizinische, psychologische oder suchttherapeutische
+Beratung.
+
+§2 Pilot-Zeitraum
+Beginn: [DATUM]
+Ende: [DATUM + 28 Tage]
+Optional Verlängerung: schriftlich 2 Wochen vor Ende.
+
+§3 Rollen
+Partner:
+• Wirbt freiwillige Teilnehmer (Ziel: [30–100] Personen)
+• Stellt ggf. 1 Ansprechpartner für Rückfragen bereit
+• Informiert Teilnehmer, dass Teilnahme freiwillig ist
+
+Anbieter:
+• Stellt technische Plattform und Zugangslink bereit
+• Prüft eingereichte Videos auf Plausibilität/Vollständigkeit
+• Sendet wöchentlichen aggregierten Fortschrittsreport (keine Einzelvideos an Partner)
+• E-Mail-Support an Teilnehmer: [E-MAIL], Reaktionszeit 48 h werktags
+
+§4 Vergütung
+Der Pilot ist für Partner und Teilnehmer kostenfrei.
+[Optional später: „Bei Verlängerung wird eine Vergütung separat verhandelt.“]
+
+§5 Datenschutz
+• Personenbezogene Daten und Videos werden in der EU (Supabase) verarbeitet.
+• Anbieter handelt als Verantwortlicher gegenüber Teilnehmern.
+• Partner erhält nur aggregierte Statistiken, keine Rohvideos.
+• Auf Wunsch schließen die Parteien eine AVV gem. Art. 28 DSGVO.
+• Videos werden spätestens [90] Tage nach Ende des Pilots gelöscht, sofern
+  keine gesetzlichen Aufbewahrungspflichten entgegenstehen.
+
+§6 Haftung
+Teilnahme erfolgt auf eigene Verantwortung. Der Anbieter haftet nicht für
+gesundheitliche Entscheidungen der Teilnehmer. Haftung bei Vorsatz und
+grober Fahrlässigkeit bleibt unberührt.
+
+§7 Beendigung
+Beide Parteien können den Pilot mit 14 Tagen Frist zum Monatsende kündigen.
+Teilnehmer können jederzeit die Nutzung einstellen.
+
+§8 Vertraulichkeit / Öffentlichkeit
+Ergebnisse des Pilots dürfen vom Anbieter anonymisiert für Pitch-Zwecke
+verwendet werden, sofern Partner nicht widerspricht.
+[ ] Partner erlaubt Nennung des Namens als Referenz
+[ ] Partner wünscht anonyme Nennung
+
+§9 Schlussbestimmungen
+Änderungen bedürfen der Schriftform. Es gilt deutsches Recht.
+Gerichtsstand: [DEIN ORT] – nur bei Partner mit Sitz in derselben Region.
+
+Ort, Datum: _______________________
+
+Anbieter: _________________________  Partner: _________________________
+(Unterschrift)                      (Unterschrift)
+
+────────────────────────────────────────────────────────────────────────
+
+ALTERNATIVE: E-MAIL-ZUSAGE (wenn Unterschrift zu schwer)
+
+Partner antwortet kopierbar:
+
+„Wir stimmen dem Pilot gemäß Ihrem Vorschlag vom [DATUM] zu:
+Start [DATUM], ca. [N] Teilnehmer, kostenfrei, wöchentlicher Report.
+Datenschutz besprechen wir im Kick-off.“
+
+Das reicht für Phase 1 – formellen Vertrag kann Partner später nachreichen.
+
+────────────────────────────────────────────────────────────────────────
+
+TEILNEHMER-EINWILLIGUNG (Kurztext für Partner zum Weiterleiten)
+
+„Die Teilnahme an Modus-Klar ist freiwillig. Sie dokumentieren täglich
+Ihren Fortschritt per kurzem Video. Die App ersetzt keine Beratung oder
+Behandlung. Ihre Videos werden zur Prüfung gespeichert und nach [90] Tagen
+gelöscht. Datenschutz: [LINK]. Bei Fragen: [E-MAIL].“
+
+Partner sollte das in ihre Einladungs-Mail an Teilnehmer einbauen.

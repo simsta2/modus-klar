@@ -1,0 +1,236 @@
+MODUS-KLAR – MASTERPLAN PARTNER-STRATEGIE (12 Wochen)
+======================================================
+
+1. STRATEGISCHE AUSGANGSLAGE (ehrlich)
+--------------------------------------
+
+STÄRKEN
+• Funktionierender MVP: Registrierung, Dashboard, Video-Check-ins, Admin-Prüfung
+• Web-App live (Vercel) – unabhängig vom Play Store
+• Klares Format: 28 Tage, 2 Check-ins/Tag, Fortschrittskalender
+• Du kannst schnell iterieren (Technik sitzt bei dir)
+
+SCHWÄCHEN (Partner sehen das sofort)
+• Keine juristische Person (kein Impressum/Vertragspartner)
+• Keine öffentliche Datenschutzerklärung / kein AVV-Prozess
+• Video-Prüfung manuell – skaliert nur mit klarem Prozess
+• Keine nachweisbaren Nutzerzahlen / keine Evaluation
+• Identitätsprüfung (Ausweis) in UI angedeutet, aber nicht produktionsreif
+• Play-Store-Status unklar → Partner wollen Risiko minimieren
+
+CHANCEN
+• Krankenkassen suchen digitale Präventionsformate (langwierig, aber lukrativ)
+• Suchtberatung braucht niederschwellige Begleitung zwischen Terminen
+• BGM / „Dry January“ / „Alkoholfreier Oktober“ – saisonale Hooks
+• Du brauchst keinen Play Store für einen B2B-Pilot (Web-Link reicht)
+
+RISIKEN
+• 6 Monate nur Mails schreiben ohne Pilot → Motivation weg
+• Zu frühe GmbH-Gründung ohne Vertrag → Kosten ohne Ertrag
+• Produkt wirkt medizinisch → wieder Policy-/Vertrauensprobleme
+• Supabase Free Tier bei 50+ Nutzern mit Videos → Kosten/limits
+
+KERNENTSCHEIDUNG
+----------------
+Option 3 = B2B2C-Pilot: Partner bringt Teilnehmer, du bringst Technik.
+Play Store ist Nice-to-have, kein Blocker für Phase 1–3.
+
+
+2. ZIELBILD NACH 12 WOCHEN
+--------------------------
+
+MINIMUM (Erfolg)
+• 1 schriftliche Pilot-Absicht (LOI oder E-Mail-Zusage)
+• 30–50 aktive Teilnehmer über Partner-Kanal
+• 4-wöchiger Abschlussbericht (Teilnahmequote, Check-in-Rate, Feedback)
+• Impressum + Datenschutz live
+
+OPTIMUM
+• 1 laufender Pilot mit Krankenkasse, Beratungsstelle oder Firma (BGM)
+• Gespräch über Verlängerung / Skalierung
+• Klare Entscheidung: UG gründen JA/NEIN (datenbasiert)
+
+MISSERFOLG (auch wertvoll)
+• 20 Ansprachen, dokumentiertes Feedback warum nein
+• Plan B: Community-Pilot über Web + 20 Freiwillige ohne Partner
+→ Dann erst über Organisation / andere Distribution nachdenken
+
+
+3. PHASEN IM DETAIL
+-------------------
+
+PHASE 0 – FUNDAMENT (Woche 1–2)
+Ziel: Partner können dich ernst nehmen.
+
+Aufgaben:
+• Impressum + Datenschutzerklärung auf modus-klar.vercel.app (BLOCKER)
+• Play Store: letzte saubere Einreichung (AAB 1.1.1, Stressmanagement, neue Screenshots)
+• Einfache Landing: Was ist Modus-Klar? Für wen? 3 Screenshots.
+• E-Mail: hallo@ oder kontakt@ (Proton/Google Workspace – wirkt professioneller)
+• 09-TRACKING-VORLAGE.csv anlegen
+
+Erfolgskriterium: Du kannst einen Link schicken, der legal und verständlich ist.
+
+---
+
+PHASE 1 – BEWEIS, DASS ES FUNKTIONIERT (Woche 3–4)
+Ziel: Erste Nutzungsdaten, nicht nur Demo.
+
+Aufgaben:
+• 10 Freiwillige (Freunde, Bekannte, lokale Gruppe) – 7 Tage Mini-Challenge
+• Täglich 15 Min Admin: Videos prüfen, Feedback notieren
+• 3 kurze Testimonials (Text, kein Name nötig)
+• Metriken sammeln:
+  - Registrierungen
+  - Check-ins pro Tag (%)
+  - Abbruchquote
+  - „Was war verwirrend?“
+
+Erfolgskriterium: 1 Absatz mit echten Zahlen für den Pitch.
+
+Beispiel:
+„Im internen Test mit 10 Personen über 7 Tage: 68 % Check-in-Rate,
+ größte Hürde: Erinnerungen auf iPhone. UX-Fix geplant.“
+
+---
+
+PHASE 2 – PARTNER-AKQUISE (Woche 5–8)
+Ziel: 3–5 Gespräche, 1 ernsthafte Pilot-Option.
+
+Kanal-Priorität (Reihenfolge einhalten):
+
+  PRIORITÄT 1 – Niedrige Hürde, schnelles Feedback
+  • Lokale Suchtberatung (Caritas/Diakonie/AWO)
+  • Health-Tech-Hub / Inkubator (Netzwerk, nicht Vertrag)
+
+  PRIORITÄT 2 – Mittelfristig, hoher Impact
+  • Krankenkassen-Innovationsfonds (TK, AOK, BARMER, DAK)
+  • Betriebliche Gesundheit (1 mittelgroßer Arbeitgeber über LinkedIn)
+
+  PRIORITÄT 3 – Langfristig
+  • ZPP-Präventionskurse (§ 20 SGB V) – NUR nach Anwalt + Zertifizierung
+
+Woche 5: 5 Mails Priorität 1 (Vorlage 03-EMAIL-VORLAGEN.txt #1 und #2)
+Woche 6: 5 Mails Priorität 2 (#3 Krankenkasse)
+Woche 7: Follow-ups (#7), 2 LinkedIn-Kontakte (#8)
+Woche 8: Gespräche führen (08-GESPRAECHSLEITFADEN-DEMO.txt)
+
+Regel: Max. 2 neue Ansprachen pro Tag, dafür Follow-up nach 7 Tagen.
+
+Erfolgskriterium: Mindestens 1 Partner sagt „Schicken Sie uns einen Pilot-Vorschlag.“
+
+---
+
+PHASE 3 – PILOT STARTEN (Woche 9–12)
+Ziel: 1 laufender Pilot, dokumentiert.
+
+Pilot-Design (Standard – in 07-PILOT-VEREINBARUNG-ENTWURF.txt):
+• Dauer: 28 Tage (+ 1 Woche Vorlauf)
+• Teilnehmer: 30–100 (Partner wirbt, du lieferst Link)
+• Deine Leistung: App, Support-E-Mail, wöchentlicher Kurzreport
+• Partner-Leistung: Teilnehmer rekrutieren, ggf. Ansprechpartner vor Ort
+• Kosten: Phase 1 kostenlos für Partner (explizit sagen – senkt Hürde)
+• Ausstieg: Beide Seiten können nach 4 Wochen mit 2 Wochen Frist beenden
+
+Erfolgskriterium:
+• Pilot-Startdatum fix
+• Wöchentlicher Report an Partner (Template in 05-CHECKLISTE)
+
+
+4. ENTSCHEIDUNGSBAUM: WANN WAS?
+-------------------------------
+
+Play Store genehmigt?
+  JA → Store als zusätzlicher Kanal, Pitch bleibt gleich
+  NEIN → Web/PWA + Partner-Link; Store später
+
+Partner sagt JA ohne Firma?
+  → Pilot mit LOI (07), Privatperson als Auftragnehmer, kleiner Umfang
+
+Partner sagt „Nur mit GmbH/UG“?
+  → UG gründen (nicht GmbH), wenn schriftliche Zusage für ≥6 Monate / Budget
+
+Partner sagt „Wir brauchen ZPP / §20“?
+  → STOP. Separates Projekt mit Anwalt + ZPP (6–12 Monate). Nicht parallel.
+
+3 Monate, 0 Gespräche?
+  → Message schärfen, Zielgruppe wechseln (lokal statt bundesweit)
+
+6 Monate, Pilot läuft, 50+ Nutzer?
+  → UG + AVV + ggf. Supabase Pro + 1 Teilzeit-Support
+
+
+5. WAS DU PARTNERN ANBIETEST (Paket „Pilot Standard“)
+-----------------------------------------------------
+
+KOSTENLOS in Phase 1 (bewusst – du kaufst dir Lernen und Referenz):
+
+  Enthalten:
+  • White-Label-light: Partner-Name im Willkommenstext (manuell)
+  • Eigener Registrierungs-Link (?ref=partnercode – optional später bauen)
+  • Admin-Zugang für 1 Partner-Ansprechpartner (read-only später)
+  • Wöchentlicher PDF/Excel-Report: Aktive Nutzer, Check-in-Rate, Abbrüche
+  • 1× Feedback-Runde mit Teilnehmern (30 Min Zoom)
+
+  Nicht enthalten (ehrlich kommunizieren):
+  • Medizinische Beratung / Therapie
+  • 24/7-Support
+  • ZPP-Zertifizierung / Kostenerstattung
+  • Rechtssichere Identitätsprüfung (bis gebaut)
+
+
+6. LANGFRISTIGE ROADMAP (nach erfolgreichem Pilot)
+-------------------------------------------------
+
+Monat 4–6:
+• AV-Vertrag (Auftragsverarbeitung) mit Partner
+• Partner-Dashboard (aggregierte Statistiken)
+• Automatisierte Video-Löschung nach 90 Tagen
+• UG-Gründung, wenn Vertrag > 10.000 € oder Krankenkasse es verlangt
+
+Monat 7–12:
+• 2. Partner, gleicher Tech-Stack
+• Evaluation mit Hochschule / Suchtforschung (DHS-Netzwerk)
+• Entscheidung: Lifestyle-only vs. medizinischer Pfad mit Organisation
+
+Jahr 2+:
+• Skalierung Video-Prüfung (Workflow, ggf. 2. Prüfer)
+• Play Store Organisationskonto nur wenn medizinischer Pfad gewünscht
+
+
+7. KPIs – DIE DU JETZT SCHON TRACKEN SOLLTEST
+---------------------------------------------
+
+| KPI | Ziel Woche 4 | Ziel Woche 12 |
+|-----|--------------|---------------|
+| Outreach-Mails gesendet | 0 | 20–25 |
+| Antwortrate | – | ≥15 % |
+| Gespräche geführt | 0 | 3–5 |
+| LOI / Zusage | 0 | 1 |
+| Aktive Pilot-Teilnehmer | 10 (Freunde) | 30–100 |
+| Tägliche Check-in-Rate | messen | ≥50 % |
+| Partner-Zufriedenheit | – | ≥7/10 |
+
+Tracke alles in 09-TRACKING-VORLAGE.csv
+
+
+8. HÄUFIGE FEHLER (vermeiden)
+-----------------------------
+
+✗ 50 generische Mails ohne Follow-up
+✗ Pitch mit Technik-Jargon (Supabase, React, Capacitor)
+✗ Versprechen von Krankenkassen-Bonus (historisch im Projekt – tabu!)
+✗ Pilot ohne schriftliche Absprache zu Datenschutz
+✗ GmbH gründen vor erstem „Ja“
+✗ Monatelang nur an Play Store hängen statt Nutzer zu gewinnen
+
+
+9. DEIN WÖCHENTLICHES RITUAL (30 Minuten, Montag)
+-------------------------------------------------
+
+1. Tracking-CSV öffnen: Follow-ups diese Woche?
+2. 2 neue Ansprachen ODER 1 Gespräch nachbereiten
+3. 1 Produkt-Verbesserung aus 06-PRODUKT-LUECKEN (kleinste offene BLOCKER)
+4. Metriken notieren (Nutzer, Check-ins, Antworten)
+
+Das hält Option 3 langfristig ohne Burnout am Laufen.

@@ -1,0 +1,49 @@
+MODUS-KLAR – TEILNEHMER-ONBOARDING (1 Seite für Partner zum Weiterleiten)
+==========================================================================
+
+Liebe Teilnehmerin, lieber Teilnehmer,
+
+[PARTNER-NAME] lädt Sie ein, an einer freiwilligen 4-Wochen-Challenge mit
+Modus-Klar teilzunehmen.
+
+WAS IST MODUS-KLAR?
+-------------------
+Eine App für Ihr persönliches Video-Tagebuch: 28 Tage lang dokumentieren Sie
+zweimal täglich kurz Ihren Fortschritt. Sie sehen Ihren Kalender, erhalten
+Erinnerungen und behalten Ihre Serie im Blick.
+
+WICHTIG
+-------
+• Teilnahme ist freiwillig – Sie können jederzeit aufhören
+• Modus-Klar ist keine medizinische Beratung und ersetzt keine Behandlung
+• Bei gesundheitlichen Fragen wenden Sie sich an [PARTNER-BERATUNG / HAUSARZT]
+
+SO STARTEN SIE
+--------------
+1. Link öffnen: https://modus-klar.vercel.app
+2. „Neue Registrierung starten“
+3. Voraussetzungen lesen → Registrierung ausfüllen
+4. Push-Benachrichtigungen erlauben (empfohlen)
+5. Zum Home-Bildschirm hinzufügen (Safari/Chrome: Teilen → Zum Home-Bildschirm)
+
+CHECK-IN-ZEITEN
+---------------
+• Morgens: 8:00–12:00 Uhr
+• Abends: 18:00–22:00 Uhr
+• Nach Erinnerung haben Sie 60 Minuten für Ihr Video
+
+REGeln IN KÜRZE
+---------------
+• 2 Videos pro Tag in den Zeitfenstern
+• Verpasster Check-in oder abgelehntes Video → Challenge startet von Tag 1
+• Videos werden zur Prüfung gespeichert und nach Ende des Programms gelöscht
+
+HILFE
+-----
+Fragen an: [DEINE SUPPORT-E-MAIL]
+Antwort in der Regel innerhalb von 48 Stunden (werktags)
+
+Datenschutz: [LINK ZUR DATENSCHUTZSEITE – eintragen]
+
+Viel Erfolg!
+[DEIN NAME] / [PARTNER-NAME]

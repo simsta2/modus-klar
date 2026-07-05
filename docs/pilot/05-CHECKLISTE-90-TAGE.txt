@@ -1,0 +1,142 @@
+MODUS-KLAR – 90-TAGE-CHECKLISTE
+================================
+[ ] = offen   [x] = erledigt   Datum eintragen wenn erledigt
+
+══════════════════════════════════════════════════════════════════════════
+PHASE 0 – FUNDAMENT (Tag 1–14)
+══════════════════════════════════════════════════════════════════════════
+
+RECHTLICH (BLOCKER – vor erster Partner-Mail)
+[ ] Impressum auf Website (Name, Adresse, Kontakt)
+[ ] Datenschutzerklärung (Videos, Supabase, Speicherdauer, Rechte)
+[ ] Kurzer Disclaimer in App sichtbar (kein Ersatz für Beratung)
+[ ] E-Mail-Adresse kontakt@… oder hallo@… eingerichtet
+[ ] Optional: e-recht24.de Generator oder Anwalt (1× ~200 €) – empfohlen
+
+PLAY STORE (parallel, kein Blocker für Partner)
+[ ] AAB 1.1.1 hochgeladen
+[ ] Stressmanagement-Häkchen gesetzt
+[ ] Neue Screenshots ohne medizinische Begriffe
+[ ] Store-Text aus PLAY-STORE-EINREICHUNG.txt
+
+PITCH-MATERIAL
+[ ] 02-PITCH-ONE-PAGER → PDF erstellt (Name, Zahlen eingetragen)
+[ ] LinkedIn-Profil aktualisiert
+[ ] 09-TRACKING-VORLAGE.csv in Excel geöffnet
+
+══════════════════════════════════════════════════════════════════════════
+PHASE 1 – INTERNE VALIDIERUNG (Tag 15–28)
+══════════════════════════════════════════════════════════════════════════
+
+REKRUTIERUNG 10 TESTER
+[ ] 10 Personen persönlich angesprochen (WhatsApp, Freunde, Kollegen)
+[ ] Kurze Anleitung geschickt (Link + „7 Tage testen“)
+[ ] Rückmeldekanal: WhatsApp-Gruppe oder Google Form (3 Fragen)
+
+ADMIN-PROZESS
+[ ] Täglich 15 Min: Videos prüfen (SimpleAdmin oder Admin-Dashboard)
+[ ] Ablehnungsgründe notieren (Top 3)
+[ ] Support-E-Mail überwacht
+
+METRIKEN (Ende Woche 4 eintragen)
+[ ] Registriert: ___
+[ ] Aktiv Tag 7: ___
+[ ] Check-in-Rate (%): ___
+[ ] Größtes UX-Problem: ___
+[ ] 1–2 Zitate für Pitch: ___
+
+PRODUKT QUICK WINS (siehe 06-PRODUKT-LUECKEN)
+[ ] Mind. 3 BLOCKER aus 06 abgearbeitet
+
+══════════════════════════════════════════════════════════════════════════
+PHASE 2 – OUTREACH (Tag 29–56)
+══════════════════════════════════════════════════════════════════════════
+
+WOCHE 5
+[ ] 5 Einträge in Tracking (lokale Beratung + 1 Hub)
+[ ] 3 Mails #1 verschickt
+[ ] 2 LinkedIn #8 verschickt
+
+WOCHE 6
+[ ] 3 Mails #3 (Kassen) verschickt
+[ ] Follow-up Woche 5 (Mail #7)
+[ ] 1 Telefonat Beratungsstelle
+
+WOCHE 7
+[ ] 2 Mails #4 (BGM) verschickt
+[ ] Follow-ups
+[ ] Pitch-PDF an Interessent nachgesendet
+
+WOCHE 8
+[ ] Mindestens 1 Demo-Gespräch geführt (08-GESPRAECHSLEITFADEN)
+[ ] Gesprächsnotizen in Tracking
+[ ] Entscheidung: ernsthafter Interessent JA/NEIN
+
+ZIELWERTE WOCHE 8
+[ ] Mails gesamt: ≥10
+[ ] Antworten: ≥2
+[ ] Gespräche: ≥1
+
+══════════════════════════════════════════════════════════════════════════
+PHASE 3 – PILOT (Tag 57–90)
+══════════════════════════════════════════════════════════════════════════
+
+VERTRAGLICH
+[ ] 07-PILOT-VEREINBARUNG an Partner geschickt
+[ ] Schriftliches OK (E-Mail reicht für Phase 1)
+[ ] AVV/Datenschutz mit Partner besprochen (mind. mündlich dokumentiert)
+
+TECHNIK
+[ ] Partner-Code oder dedizierter Link (?ref=partner)
+[ ] Supabase: Speicher/limits geprüft (Upgrade nötig?)
+[ ] Onboarding-Text für Teilnehmer (1 Seite PDF)
+
+PILOT-START
+[ ] Startdatum: ___
+[ ] Teilnehmer-Ziel: ___
+[ ] Partner-Ansprechpartner: Name, E-Mail
+
+WÖCHENTLICHER REPORT (jeden Montag an Partner)
+Vorlage:
+---
+Modus-Klar Pilot – Woche [N] ([DATUM])
+
+Registriert gesamt:     ___
+Aktiv diese Woche:      ___
+Check-ins (Mo–So):      ___ von ___ möglich (___ %)
+Abgeschlossen (Tag 28): ___
+Auffälligkeiten:        ___
+Nächste Woche:          ___
+---
+
+PILOT-ENDE (Tag 90)
+[ ] Abschlussreport an Partner (1–2 Seiten)
+[ ] 3 Learnings dokumentiert
+[ ] Entscheidung: Weiter / Stop / UG gründen / Play Store nochmal
+
+══════════════════════════════════════════════════════════════════════════
+WÖCHENTLICHES RITUAL (Montag, 30 Min)
+══════════════════════════════════════════════════════════════════════════
+
+[ ] Tracking: Follow-ups diese Woche?
+[ ] 2 neue Ansprachen ODER 1 Nachbereitung
+[ ] 1 kleine Produktverbesserung
+[ ] Metriken notieren
+
+══════════════════════════════════════════════════════════════════════════
+ENTSCHEIDUNGSMATRIX ENDE TAG 90
+══════════════════════════════════════════════════════════════════════════
+
+Pilot läuft mit ≥30 TN, Partner zufrieden
+  → UG prüfen, Vertrag verlängern, Supabase Pro
+
+Pilot läuft, Partner unsicher
+  → Evaluation nachreichen, 2. Pilot-Monat anbieten
+
+Kein Partner, aber 10+ Web-Nutzer
+  → Community-Pilot, Store optional
+
+Kein Partner, keine Nutzer
+  → Message/Product Review (06), ggf. Pause oder Pivot
+
+GmbH/UG nur wenn: schriftliches Budget ODER Vertrag > 10k €

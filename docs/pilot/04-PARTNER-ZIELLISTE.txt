@@ -1,0 +1,129 @@
+MODUS-KLAR – PARTNER-ZIELLISTE (konkret)
+=========================================
+So nutzen: Pro Woche 2–5 neue Einträge anschreiben. Status in 09-TRACKING.
+
+Legende Priorität: P1 = zuerst | P2 = danach | P3 = langfristig
+
+══════════════════════════════════════════════════════════════════════════
+P1 – LOKAL & NIEDRIGE HÜRDE (Woche 5–6)
+══════════════════════════════════════════════════════════════════════════
+
+1) SUCHTBERATUNG VOR ORT
+   Suche: „Suchtberatung [DEINE STADT] Caritas“ oder „… Diakonie …“
+   Ansprechpartner: Leitung der Beratungsstelle / Sozialarbeiter Digitalisierung
+   Einstieg: Telefon → „Gibt es jemanden für digitale Projekte?“
+   Mail: Vorlage #1
+   Tipp: Lieber 1 Stadt mit persönlichem Termin als 10 anonyme Mails
+
+2) CARITASVERBAND / DIAKONIE – REGIONAL
+   https://www.caritas.de
+   https://www.diakonie.de
+   → „Standortsuche“ → dein Dekanat / Kreisverband
+   Ansprechpartner: Fachbereich Sucht (nicht Pressestelle)
+
+3) AWO / PARITÄTISCHER / Rotes Kreuz – Suchthilfe
+   https://www.awo.org
+   Analog: lokale Suchtberatung über Standortsuche
+
+4) UNIVERSITÄT / HOCHSCHULE – Suchtforschung
+   Suche: „Suchtforschung [BUNDESLAND] Institut“
+   Ansprechpartner: Juniorprofessur, Studienprojekte
+   Ziel: Evaluation begleiten lassen (Studenten = günstige Evaluation)
+   Mail: Vorlage #5 angepasst („Studien-/Evaluationspartnerschaft“)
+
+5) HEALTH-TECH COMMUNITY (Netzwerk)
+   Vision Health Pioneers (Hamburg): https://visionhealthpioneers.com
+   5-HT (Mannheim): https://5-ht.com
+   Health Innovation Hub: https://hih-berlin.com
+   Mail: Vorlage #2
+   Oft: Slack/Events → persönlich statt kalt
+
+══════════════════════════════════════════════════════════════════════════
+P2 – KRANKENKASSEN & BGM (Woche 6–8)
+══════════════════════════════════════════════════════════════════════════
+
+6) TK-INNOVATIONSFONDS
+   https://innovationsfonds.tk.de
+   Kontakt über Portal / Antragsberatung
+   Ansprechpartner: Innovationsmanager, „Digital Health“
+   Mail: Vorlage #3
+   Realistisch: Entscheidung dauert Monate – früh starten, niedrige Erwartung
+
+7) AOK-INNOVATIONSFONDS
+   https://www.aok.de/forschung-und-lehre/innovationsfonds/
+   Bundesweit / regionale AOK (z.B. AOK NordWest, AOK Bayern)
+   Tipp: Regionale AOK oft persönlicher erreichbar
+
+8) BARMER INNOVATIONSFONDS
+   https://www.barmer.de/innovationsfonds
+
+9) DAK-Gesundheit – Innovation
+   https://www.dak.de/unternehmen/innovation-und-forschung
+
+10) IKK CLASSIC / hkk / HEK (regionale Kassen)
+    Wenn du in deren Region wohnst → lokale Innovationsteams
+
+11) BGM-DIENSTLEISTER (White-Label später)
+    Humanoo, Pluxee (früher Sodexo), GetAbstract BGM
+    Erst relevant NACH erstem Pilot mit Referenzzahlen
+    P2, aber eher Monat 4+
+
+12) EINZELNER ARBEITGEBER (500+ MA)
+    LinkedIn: „BGM“ OR „betriebliche Gesundheit“ + [DEINE STADT]
+    Oder: IHK-Veranstaltung BGM besuchen
+    Mail: Vorlage #4
+
+══════════════════════════════════════════════════════════════════════════
+P3 – LANGFRISTIG (erst nach Pilot oder Anwalt)
+══════════════════════════════════════════════════════════════════════════
+
+13) DEUTSCHE HAUPTSTELLE FÜR SUCHTFRAGEN (DHS)
+    https://www.dhs.de
+    Fachliche Positionierung, nicht schneller Pilot
+
+14) BZgA
+    https://www.bzga.de
+    Bundesweite Kampagnen – sehr langsam
+
+15) ZPP – ZENTRALE PRÜFSTELLE PRÄVENTION
+    https://www.zentrale-pruefstelle-praevention.de
+    NUR wenn Partner §20 SGB V will → Anwalt + 6–12 Monate Zertifizierung
+
+16) GEMATIK / DIGA-FAST-TRACK
+    Nur bei medizinischem Produkt – aktuell NICHT empfohlen
+
+══════════════════════════════════════════════════════════════════════════
+KONKRETE RECHERCHE-VORLAGE (15 Min pro Partner)
+══════════════════════════════════════════════════════════════════════════
+
+Für jeden Eintrag ausfüllen → in 09-TRACKING:
+
+Organisation:     _______________________
+Ansprechpartner:  _______________________
+Rolle:            _______________________
+E-Mail/LinkedIn:  _______________________
+Warum passt es:   _______________________
+Hook (saisonal):  z.B. „Dry January“, „Alkoholfreier Mai“, „Neujahrsvorsätze“
+Status:           Offen / Gesendet / Follow-up / Gespräch / Ja / Nein
+Nächstes Datum:   _______________________
+
+══════════════════════════════════════════════════════════════════════════
+SAISONALE HOOKS (Timing für Mails)
+══════════════════════════════════════════════════════════════════════════
+
+Januar     → Dry January / Neujahrsvorsätze (BGM, Kassen)
+Mai        → „Alkoholfreier Mai“ (Kampagnen, Beratung)
+September  → „Neustart nach Sommer“ (Beratung, BGM)
+Oktober    → Präventionswochen (Kassen)
+
+Plane Outreach 4–6 Wochen VOR diesen Monaten.
+
+══════════════════════════════════════════════════════════════════════════
+WEN NICHT ZUERST ANSCHREIBEN
+══════════════════════════════════════════════════════════════════════════
+
+✗ Google Play Support (löst Partnerproblem nicht)
+✗ Generische info@ ohne Recherche
+✗ Investoren / VC (ohne Traktion zu früh)
+✗ Große Pharma (zu spät, falsche Skala)
+✗ ZPP direkt (ohne Anwalt und medizinisches Konzept)

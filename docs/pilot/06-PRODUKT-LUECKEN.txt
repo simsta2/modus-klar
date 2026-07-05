@@ -1,0 +1,123 @@
+MODUS-KLAR – PRODUKT-LÜCKEN (selbstkritisch)
+==============================================
+Stand: Entwicklung MVP. Partner sehen das bei Due Diligence.
+
+Priorität:
+  BLOCKER  = vor erster Partner-Mail / Demo
+  WICHTIG  = vor Pilot-Start (Tag 57)
+  NICE     = während oder nach Pilot
+
+══════════════════════════════════════════════════════════════════════════
+BLOCKER – MUSS VOR OUTREACH
+══════════════════════════════════════════════════════════════════════════
+
+1) IMPRESSUM + DATENSCHUTZERKLÄRUNG (Website)
+   Status: FEHLT auf modus-klar.vercel.app
+   Warum kritisch: Jede Kasse/Beratung fragt sofort danach
+   Aufwand: 2–4 h (Generator) oder 1 Anwaltstermin
+   Aktion: Seite /impressum und /datenschutz anlegen, Footer-Link
+
+2) KONTAKT-E-MAIL
+   Status: vermutlich privat oder unklar
+   Aktion: hallo@modus-klar.de oder kontakt@… (Domain ~12 €/Jahr)
+
+3) PITCH-ZAHLEN
+   Status: „Interner Test“ ohne Zahlen wirkt hohl
+   Aktion: Phase-1-Test mit 10 Personen (05-CHECKLISTE)
+
+4) MEDIZINISCHE TEXTE (Restcheck)
+   Status: größtenteils bereinigt
+   Aktion: Startseite + Screenshots manuell prüfen (kein Atemtest, kein 0,0)
+
+══════════════════════════════════════════════════════════════════════════
+WICHTIG – VOR PILOT-START
+══════════════════════════════════════════════════════════════════════════
+
+5) AUFTRAGSVERARBEITUNG (AVV) SUPABASE
+   Status: Supabase bietet DPA – muss aktiv accepted werden
+   Aktion: Supabase Dashboard → Settings → DPA; für Partner kopierbar halten
+
+6) VIDEO-LÖSCHKONzept
+   Status: in Texten versprochen, technisch nicht automatisiert
+   Risiko: DSGVO, Partner-Vertrauen
+   Aufwand: 1–2 Tage Dev (Cron: Videos älter als X Tage löschen)
+   Minimum: Manuelle Lösch-Checkliste wöchentlich + dokumentieren
+
+7) IDENTITÄTSPRÜFUNG (AUSWEIS)
+   Status: UI vorhanden, Flow unklar/inaktiv
+   Risiko: Partner wollen ggf. Alters-/Ident-Check
+   Empfehlung: Für Pilot DEAKTIVIEREN oder klar „optional, nicht produktiv“
+   kommunizieren – nicht vorführen als fertiges Feature
+
+8) SKALIERBARE VIDEO-PRÜFUNG
+   Status: 1 Person (du) prüft manuell
+   Kapazität: ca. 20–30 aktive Nutzer × 2 Videos = 40–60/Tag (Grenze!)
+   Aktion: Prüf-Checkliste (30 Sek), max. 50 Pilot-Teilnehmer in Phase 1
+   Später: 2. Prüfer, Schichtplan, oder Stichproben statt 100 %
+
+9) PARTNER-REF-CODE / TRACKING
+   Status: FEHLT (?ref=partner in URL, in DB speichern)
+   Aufwand: ~4 h Dev
+   Aktion: Bei Registrierung partner_code speichern → Report pro Partner
+
+10) PASSWORT-AUTH KONSISTENZ
+    Status: GitHub/Vercel mit Passwort, lokal evtl. ohne
+    Aktion: Eine Version als „Pilot-Version“ festlegen (Vercel = Wahrheit)
+
+11) SUPPORT-PROZESS
+    Status: FEHLT
+    Minimum: E-Mail + Antwort innerhalb 48 h werktags
+    FAQ-Seite: 5 Fragen (Registrierung, Kamera, Check-in-Zeiten, Neustart, Datenschutz)
+
+12) TEILNEHMER-ONBOARDING (1 Seite)
+    Status: FEHLT als separates PDF
+    Aktion: Kurzanleitung aus App-Texte exportieren (Screenshots)
+
+══════════════════════════════════════════════════════════════════════════
+NICE-TO-HAVE – NACH / WÄHREND PILOT
+══════════════════════════════════════════════════════════════════════════
+
+13) Partner-Dashboard (read-only Statistiken)
+14) Automatische Push auf iOS (PWA-Limitationen beachten)
+15) Export CSV für Partner (wöchentlich per E-Mail reicht erstmal)
+16) Mehrsprachigkeit
+17) Barrierefreiheit (WCAG – öffentliche Träger könnten fragen)
+18) Penetrationstest / Security Audit
+19) AdSense echte IDs (aktuell Platzhalter – für Pilot irrelevant)
+20) App Store Organisationskonto
+
+══════════════════════════════════════════════════════════════════════════
+TECHNISCHE RISIKEN (ehrlich)
+══════════════════════════════════════════════════════════════════════════
+
+| Risiko | Auswirkung | Mitigation |
+|--------|------------|------------|
+| Supabase Free Tier voll | Upload bricht ab | Pro ~25 $/Monat ab 30 Nutzer |
+| Video-Speicher teuer | Kostenexplosion | Max. Videolänge 30s, Kompression |
+| PWA keine iOS-Push | Geringere Check-in-Rate | E-Mail-Erinnerung als Backup |
+| Admin nur per URL | Unprofessionell | Für Demo OK, für Kasse Login härten |
+| Kein Backup-Konzept | Datenverlust | Supabase Backups prüfen |
+
+══════════════════════════════════════════════════════════════════════════
+WAS DU IN DER DEMO NICHT ZEIGEN SOLLTEST
+══════════════════════════════════════════════════════════════════════════
+
+✗ Ausweis-Verifizierung (wenn nicht fertig)
+✗ AdSense-Platzhalter
+✗ Admin ohne Erklärung der Datenschutz-Rolle
+✗ „Krankenkassen-Bonus“ (historisch – nie wieder erwähnen)
+✗ Versprechen von Therapiewirkung
+
+══════════════════════════════════════════════════════════════════════════
+EMPFOHLENE REIHENFOLGE BAUEN (Dev-Stunden)
+══════════════════════════════════════════════════════════════════════════
+
+Woche 1: Impressum + Datenschutz-Seiten (4 h)
+Woche 2: partner_code + FAQ (6 h)
+Woche 3: Video-Löschung manuell dokumentieren + DPA Supabase (2 h)
+Woche 4: Onboarding-PDF + Weekly-Report-Template (2 h)
+
+Gesamt vor Pilot: ~14 h – machbar nebenberuflich in 4 Wochen
+
+Wenn du willst, kann im nächsten Schritt die Impressum/Datenschutz-Seite
+in der App implementiert werden (separater Auftrag).

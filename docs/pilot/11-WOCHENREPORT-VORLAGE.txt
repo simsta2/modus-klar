@@ -1,0 +1,49 @@
+MODUS-KLAR – WÖCHENTLICHER PILOT-REPORT (Vorlage für Partner)
+==============================================================
+
+An: [PARTNER-ANSPRECHPARTNER]
+Von: [DEIN NAME]
+Betreff: Modus-Klar Pilot – Wochenreport [KW / DATUM]
+
+────────────────────────────────────────────────────────────────────────
+
+Zusammenfassung Woche [N]
+
+Registriert (gesamt):           [___]
+Neu diese Woche:                [___]
+Aktiv (mind. 1 Check-in):       [___]
+Durchschnittliche Check-in-Rate:[___] %  (Mo–So, 2 pro Tag möglich)
+
+Fortschritt
+• Teilnehmer auf Tag 1–7:   [___]
+• Teilnehmer auf Tag 8–14:  [___]
+• Teilnehmer auf Tag 15–21: [___]
+• Teilnehmer auf Tag 22–28: [___]
+• Challenge abgeschlossen:  [___]
+
+Auffälligkeiten
+• [z.B. „3 Abbrüche wegen Kamera-Berechtigung iPhone“]
+• [z.B. „Check-in-Rate abends niedriger als morgens“]
+
+Maßnahmen diese Woche
+• [z.B. FAQ-Link an alle geschickt]
+• [z.B. Erinnerungs-Mail am Mittwoch]
+
+Feedback (Auswahl, anonym)
+• „[Zitat 1]“
+• „[Zitat 2]“
+
+Plan nächste Woche
+• [___]
+
+Fragen an Partner
+• [___]
+
+────────────────────────────────────────────────────────────────────────
+
+Anhang optional: CSV mit aggregierten Tageszahlen (keine personenbezogenen Videos)
+
+Datenquelle: Admin-Dashboard / manuelle Auswertung Supabase
+
+HINWEIS FÜR DICH: Bis Partner-Dashboard existiert, Report manuell aus
+AdminDashboard befüllen – 20 Min/Woche einplanen.

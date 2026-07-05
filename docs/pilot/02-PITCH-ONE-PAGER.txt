@@ -1,0 +1,72 @@
+MODUS-KLAR – PITCH ONE-PAGER
+============================
+(Kopiere alles zwischen den Linien in Word/Google Docs → PDF exportieren)
+(Ersetze [PLATZHALTER] vor dem Versand)
+
+────────────────────────────────────────────────────────────────────────
+
+MODUS-KLAR
+Persönliche 28-Tage-Challenge mit Video-Tagebuch
+
+────────────────────────────────────────────────────────────────────────
+
+DAS PROBLEM
+-----------
+Viele Menschen starten ein persönliches Ziel (z. B. 4 Wochen bewusster
+Lebensstil) – verlieren aber ohne Struktur und leichte Kontrolle den Fokus.
+Klassische Apps bieten Tracking ohne Verbindlichkeit. Beratung ist wertvoll,
+aber nicht 24/7 verfügbar.
+
+DIE LÖSUNG
+----------
+Modus-Klar ist eine freiwillige Lifestyle-Challenge-App:
+• 28 Tage, 2 kurze Video-Check-ins pro Tag (feste Zeitfenster)
+• Fortschrittskalender und Erinnerungen
+• Manuelle Plausibilitätsprüfung der Videos durch unser Team
+• Klare Regeln: Verpasster Check-in = Neustart (Motivation durch Struktur)
+
+WICHTIG: Modus-Klar ist kein Medizinprodukt und ersetzt keine Beratung oder
+Therapie. Es unterstützt freiwillige persönliche Ziele.
+
+STATUS (Stand: [DATUM])
+-----------------------
+• MVP live: https://modus-klar.vercel.app
+• Android-App technisch fertig (Web-App sofort nutzbar)
+• Interner Test: [X] Personen, [Y] % Check-in-Rate über [Z] Tage
+• Entwickler: [DEIN NAME], [DEIN ORT]
+
+WAS WIR SUCHEN
+--------------
+Einen Pilot-Partner für 30–100 Teilnehmer über 28 Tage:
+• Sie: Teilnehmer rekrutieren (Mitarbeitende, Klienten, Versicherte)
+• Wir: Technik, Onboarding-Link, wöchentlicher Fortschrittsreport, Support
+
+Pilot kostenlos – Ziel ist gemeinsames Lernen und messbare Ergebnisse.
+
+PILOT-RAHMEN (Vorschlag)
+------------------------
+• Dauer: 28 Tage + 1 Woche Vorlauf
+• Start: [MONAT/JAHR] – flexibel
+• Erfolgsmessung: Teilnahmequote, Check-in-Rate, Abschlussquote, Feedback
+• Datenschutz: AVV nach Bedarf, Videos nur zur Prüfung, Löschung nach Pilot
+
+FÜR WEN PASST ES?
+-----------------
+✓ Suchtberatung / soziale Träger (Begleitung zwischen Terminen)
+✓ Betriebliche Gesundheit ( saisonale Challenge, z. B. „4 Wochen bewusst leben“)
+✓ Krankenkassen-Innovation (digitales Präventionsformat testen)
+✓ Health-Hubs / Forschung (Evaluation digitaler Gewohnheitsintervention)
+
+KONTAKT
+-------
+[DEIN NAME]
+[E-MAIL]
+[TELEFON optional]
+Demo: https://modus-klar.vercel.app
+
+────────────────────────────────────────────────────────────────────────
+
+EIN-SATZ-PITCH (Elevator)
+„Modus-Klar ist ein 28-Tage-Video-Tagebuch für freiwillige Lifestyle-
+Challenges – wir suchen einen Partner für einen kostenlosen Pilot mit
+30–100 Teilnehmern.“

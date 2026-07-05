@@ -1,0 +1,187 @@
+MODUS-KLAR – E-MAIL-VORLAGEN
+=============================
+Regeln für alle Mails:
+• Betreffzeile nie länger als 60 Zeichen
+• Max. 150 Wörter im Body (Partner lesen auf dem Handy)
+• Kein Play-Store-Problem erwähnen
+• Immer Demo-Link + konkrete Bitte (20-Min-Call)
+• [PLATZHALTER] ersetzen, dann senden
+
+────────────────────────────────────────────────────────────────────────
+#1 LOKALE SUCHTBERATUNG (Caritas / Diakonie / AWO)
+────────────────────────────────────────────────────────────────────────
+
+Betreff: Pilot-Idee: 28-Tage-Challenge-App für Klienten?
+
+Sehr geehrte/r [NAME / Team Suchtberatung],
+
+ich entwickle Modus-Klar – eine freiwillige 28-Tage-Challenge mit täglichen
+Video-Check-ins und Fortschrittsübersicht. Die App ersetzt keine Beratung,
+könnte aber als strukturierte Begleitung zwischen Ihren Terminen dienen.
+
+Der MVP läuft unter https://modus-klar.vercel.app
+
+Ich suche eine Beratungsstelle für einen kostenlosen Pilot (ca. 30 Teilnehmer,
+4 Wochen). Sie rekrutieren freiwillige Interessenten, ich stelle Technik und
+wöchentliche Auswertung.
+
+Hätten Sie 20 Minuten für ein unverbindliches Gespräch?
+
+Mit freundlichen Grüßen
+[DEIN NAME]
+[E-MAIL] | [TELEFON optional]
+
+────────────────────────────────────────────────────────────────────────
+#2 HEALTH-TECH-HUB / INKUBATOR (Netzwerk, Feedback)
+────────────────────────────────────────────────────────────────────────
+
+Betreff: Feedback gesucht: MVP Lifestyle-Challenge-App
+
+Hallo [NAME / Team],
+
+ich bin Solo-Entwickler von Modus-Klar (28-Tage-Challenge, Video-Tagebuch,
+Fortschritts-Tracking). MVP: https://modus-klar.vercel.app
+
+Ich suche kein Investment, sondern:
+1) Feedback zur Partner-Tauglichkeit (Kasse / BGM / Beratung)
+2) ggf. 1–2 Kontakte aus Ihrem Netzwerk
+
+Hätten Sie 15 Minuten oder einen Tipp, wen ich ansprechen sollte?
+
+Beste Grüße
+[DEIN NAME]
+[LinkedIn-URL]
+
+────────────────────────────────────────────────────────────────────────
+#3 KRANKENKASSE – INNOVATIONSFONDS (TK / AOK / BARMER / DAK)
+────────────────────────────────────────────────────────────────────────
+
+Betreff: Pilot-Anfrage: Digitale 28-Tage-Challenge (MVP)
+
+Sehr geehrte Damen und Herren,
+
+über [Innovationsfonds / Digital Health / Ihr Portal] wende ich mich an Sie.
+
+Modus-Klar ist ein digitaler Begleiter für freiwillige 28-Tage-Lifestyle-
+Challenges: tägliche Video-Check-ins, Erinnerungen, Fortschrittskalender.
+Live-Demo: https://modus-klar.vercel.app
+
+Ich suche einen Pilot-Partner (30–100 Versicherte, 4 Wochen, kostenfrei).
+Ziel: Teilnahme- und Check-in-Raten messen und gemeinsam evaluieren, ob das
+Format für Ihre Versicherten relevant ist.
+
+Interner Test: [KURZ: z.B. „10 Tester, 68 % Check-in-Rate über 7 Tage“]
+
+Gerne sende ich ein einseitiges Konzept (PDF) und schlage einen Termin vor.
+
+Mit freundlichen Grüßen
+[DEIN NAME]
+[E-MAIL]
+
+Anlagen: 02-PITCH-ONE-PAGER.pdf (selbst erstellt)
+
+────────────────────────────────────────────────────────────────────────
+#4 BETRIEBLICHE GESUNDHEIT (HR / BGM-Verantwortliche)
+────────────────────────────────────────────────────────────────────────
+
+Betreff: Pilot-Idee: 4-Wochen-Challenge für Mitarbeitende
+
+Guten Tag [NAME],
+
+für [FIRMA] könnte Modus-Klar ein format für eine freiwillige 4-Wochen-
+Challenge sein – z. B. als Ergänzung zu Ihrem BGM-Programm oder saisonal
+(„4 Wochen bewusst leben“).
+
+Teilnehmende dokumentieren täglich kurz per Video ihren Fortschritt; Sie
+erhalten aggregierte Auswertungen (Teilnahme, Abschluss). Demo:
+https://modus-klar.vercel.app
+
+Pilot-Vorschlag: 30–50 freiwillige Mitarbeitende, 28 Tage, kostenlos.
+
+Darf ich Ihnen den Ein-Pager zusenden und 20 Minuten Termin vorschlagen?
+
+Freundliche Grüße
+[DEIN NAME]
+
+────────────────────────────────────────────────────────────────────────
+#5 DHS / FACHVERBAND (Fachlichkeit, nicht direkt Pilot)
+────────────────────────────────────────────────────────────────────────
+
+Betreff: Digitales Begleitformat – Feedback von Fachseite?
+
+Sehr geehrte Damen und Herren,
+
+ich entwickle Modus-Klar, ein digitales Format für freiwillige 28-Tage-
+Challenges mit Video-Check-ins. Die App ersetzt keine Behandlung.
+
+Bevor ich einen Pilot mit einer lokalen Beratungsstelle starte, würde ich
+gern 15 Minuten fachliches Feedback einholen: Gibt es offensichtliche
+Bedenken oder sinnvolle Anpassungen?
+
+Demo: https://modus-klar.vercel.app
+
+Vielen Dank für eine kurze Rückmeldung oder Weiterleitung an eine passende
+Ansprechperson.
+
+Mit freundlichen Grüßen
+[DEIN NAME]
+
+────────────────────────────────────────────────────────────────────────
+#6 NACH GESPRÄCH – PILOT-VORSCHLAG SENDEN
+────────────────────────────────────────────────────────────────────────
+
+Betreff: Modus-Klar – Pilot-Vorschlag wie besprochen
+
+Hallo [NAME],
+
+vielen Dank für das Gespräch am [DATUM]. Anbei wie besprochen:
+• One-Pager Modus-Klar
+• Pilot-Rahmen (07-PILOT-VEREINBARUNG-ENTWURF.txt als PDF)
+
+Kernpunkte:
+• Start: [DATUM], Dauer 28 Tage
+• Umfang: ca. [30–100] freiwillige Teilnehmer
+• Ihre Seite: Rekrutierung, ggf. 1 Ansprechpartner
+• Meine Seite: App, Link, wöchentlicher Report, E-Mail-Support
+
+Nächster Schritt: Kurzes OK per E-Mail, dann schicke ich Onboarding-Infos
+für Teilnehmer.
+
+Beste Grüße
+[DEIN NAME]
+
+────────────────────────────────────────────────────────────────────────
+#7 FOLLOW-UP (7 Tage nach Mail #1–#5, keine Antwort)
+────────────────────────────────────────────────────────────────────────
+
+Betreff: Kurze Nachfrage – Modus-Klar Pilot
+
+Hallo [NAME],
+
+ich melde mich kurz zu meiner Mail vom [DATUM] (28-Tage-Challenge-App,
+Pilot-Idee). Falls gerade keine Kapazität besteht, reicht mir eine kurze
+Absage – dann halte ich Sie nicht weiter auf.
+
+Demo: https://modus-klar.vercel.app
+
+Beste Grüße
+[DEIN NAME]
+
+────────────────────────────────────────────────────────────────────────
+#8 LINKEDIN-NACHRICHT (max. 300 Zeichen)
+────────────────────────────────────────────────────────────────────────
+
+Hallo [NAME], ich entwickle Modus-Klar (28-Tage-Lifestyle-Challenge, Video-
+Check-ins). Suche Pilot-Partner aus [Kasse/BGM/Beratung]. MVP live:
+modus-klar.vercel.app – hätten Sie 15 Min. für Feedback oder Weiterleitung?
+
+────────────────────────────────────────────────────────────────────────
+#9 ABSAGE VERARBEITEN (intern – nach „Nein“)
+────────────────────────────────────────────────────────────────────────
+
+In 09-TRACKING eintragen:
+• Grund: [Kein Budget / Kein digitaler Fokus / Datenschutz / Timing / Sonstiges]
+• Nächster Schritt: [Follow-up in 6 Monaten / Kontakt empfohlen: X / Streichen]
+
+Bei „Datenschutz“ → 06-PRODUKT-LUECKEN BLOCKER priorisieren
+Bei „Kein Format“ → Pitch anpassen, nicht mehr an gleiche Zielgruppe

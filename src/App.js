@@ -624,6 +624,11 @@ const loadProgress = async (userId) => {
           >
             Bereits registriert? Anmelden
           </button>
+          <p style={{ marginTop: '1.5rem', fontSize: '0.65rem', color: '#9CA3AF' }}>
+            <a href="/impressum.html" style={{ color: '#9CA3AF' }}>Impressum</a>
+            {' · '}
+            <a href="/datenschutz.html" style={{ color: '#9CA3AF' }}>Datenschutz</a>
+          </p>
         </div>
       </div>
     </div>

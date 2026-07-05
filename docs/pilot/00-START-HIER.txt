@@ -1,0 +1,46 @@
+MODUS-KLAR – PARTNER-STRATEGIE (Option 3)
+==========================================
+Lies diese Datei zuerst. Alles Weitere liegt im Ordner docs/pilot/
+
+ZIEL
+----
+Einen Pilot-Partner finden (30–100 Teilnehmer), der Distribution oder
+Glaubwürdigkeit mitbringt – OHNE vorher GmbH/UG zu gründen.
+
+ZEITRAHMEN
+----------
+Phase 0 (Woche 1–2):   Rechtliches Minimum + Play-Store-Letztversuch
+Phase 1 (Woche 3–4):   Erste 10 Testnutzer + Demo polieren
+Phase 2 (Woche 5–8):   15–20 Partner-Ansprachen, 3–5 Gespräche
+Phase 3 (Woche 9–12):  1 Pilot starten oder Plan B (Web-only Community)
+
+DATEIEN IN DIESEM ORDNER
+------------------------
+00-START-HIER.txt              ← Du bist hier
+01-MASTERPLAN.txt              ← Gesamtplan, Phasen, Entscheidungslogik
+02-PITCH-ONE-PAGER.txt         ← 1-Seiten-Pitch (copy-paste für E-Mails/PDF)
+03-EMAIL-VORLAGEN.txt          ← 8 fertige Mails + Follow-ups
+04-PARTNER-ZIELLISTE.txt       ← Konkrete Ansprechpartner + Links
+05-CHECKLISTE-90-TAGE.txt      ← Woche für Woche abhakbar
+06-PRODUKT-LUECKEN.txt         ← Was du noch bauen/muss (selbstkritisch)
+07-PILOT-VEREINBARUNG-ENTWURF.txt  ← Letter of Intent / Pilot-Rahmen
+08-GESPRAECHSLEITFADEN-DEMO.txt    ← 20-Min-Demo-Script
+09-TRACKING-VORLAGE.csv        ← Excel: Kontakte, Status, Follow-up
+
+DEINE SOFORT-AKTIONEN (heute / morgen)
+--------------------------------------
+[ ] 06-PRODUKT-LUECKEN.txt → Abschnitt „BLOCKER“ abarbeiten
+[ ] 02-PITCH-ONE-PAGER.txt → Name + E-Mail + Link eintragen
+[ ] LinkedIn-Profil: 1 Satz „Entwickler Modus-Klar – Lifestyle-Challenge-App“
+[ ] 04-PARTNER-ZIELLISTE.txt → 5 Einträge mit deiner Region markieren
+[ ] 09-TRACKING-VORLAGE.csv in Excel öffnen, erste Zeilen vorbereiten
+
+WICHTIG (selbstkritisch)
+------------------------
+• Partner wollen KEIN Technik-Experiment, sondern klaren Pilot mit Ansprechpartner.
+• Ohne Impressum + Datenschutzerklärung auf der Website: keine seriöse Anfrage.
+• „Google hat abgelehnt“ nie in der ersten Mail erwähnen.
+• Gründe erst, wenn jemand schriftlich sagt: „Ja, aber nur mit Firma.“
+
+Demo-Link:  https://modus-klar.vercel.app
+Admin-Demo: https://modus-klar.vercel.app?admin=true  (nur intern zeigen)
