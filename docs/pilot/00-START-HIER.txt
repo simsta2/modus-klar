@@ -29,6 +29,7 @@ DATEIEN IN DIESEM ORDNER
 
 DEINE SOFORT-AKTIONEN (heute / morgen)
 --------------------------------------
+[ ] public/impressum.html + datenschutz.html → [PLATZHALTER] ausfüllen (BLOCKER!)
 [ ] 06-PRODUKT-LUECKEN.txt → Abschnitt „BLOCKER“ abarbeiten
 [ ] 02-PITCH-ONE-PAGER.txt → Name + E-Mail + Link eintragen
 [ ] LinkedIn-Profil: 1 Satz „Entwickler Modus-Klar – Lifestyle-Challenge-App“
