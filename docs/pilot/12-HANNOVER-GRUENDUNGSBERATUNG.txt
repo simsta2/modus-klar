@@ -1,0 +1,210 @@
+MODUS-KLAR – HANNOVER GRÜNDUNGSBERATUNG (Galina Bauer / hannoverimpuls)
+========================================================================
+
+KONTAKT
+-------
+Galina Bauer – Projektassistentin Gründung & Entrepreneurship
+hannoverimpuls GmbH (Wirtschaftsförderung Hannover)
+E-Mail: Galina.Bauer@hannoverimpuls.de  (alternativ: gruendung@hannoverimpuls.de)
+Telefon: +49 511 9357703
+
+Gründungssprechzeit (ohne Anmeldung):
+  Jeden Dienstag 14:00–15:00 Uhr
+  Haus der Wirtschaftsförderung, Vahrenwalder Str. 7, 30165 Hannover
+  Oder online via Zoom (Link auf der Veranstaltungsseite)
+
+Individueller Termin: gruendung@hannoverimpuls.de
+
+────────────────────────────────────────────────────────────────────────
+EINSCHÄTZUNG: LOHNT SICH DAS?
+────────────────────────────────────────────────────────────────────────
+
+JA – aus mehreren Gründen:
+
+1. Richtige Adresse für DEINE Frage
+   Du willst wissen: „Ist das realistisch und lohnenswert?“ – genau das ist
+   Gründungsberatung, nicht Endkunden-Akquise.
+
+2. Kostenlos, niederschwellig, regional
+   Hannoverimpuls kennt Förderprogramme, Netzwerk, Rechtsform – ohne dass du
+   sofort UG/GmbH gründest.
+
+3. Galina Bauer / Team Gründung
+   Projektassistentin = oft erste Anlaufstelle, vermittelt weiter zu
+   Spezialisten (Finanzierung, Businessplan, IP).
+
+4. Erwartung richtig setzen
+   Sie bewertet nicht primär deine App-UI, sondern:
+   • Gibt es ein Geschäftsmodell?
+   • Wer zahlt (B2B Partner vs. Endnutzer)?
+   • Tragfähigkeit, Förderfähigkeit, nächste Schritte
+
+   Google Play ist für dieses Gespräch NEbensache – erwähne es kurz als
+   Vertriebskanal-Problem, nicht als Hauptthema.
+
+WAS DU NICHT ERWARTEN SOLLTEST:
+• Keine Garantie für Krankenkassen-Kontakte
+• Keine App-Entwicklungshilfe
+• Keine Rechtsberatung im Detail (nur Orientierung)
+
+────────────────────────────────────────────────────────────────────────
+E-MAIL-VORLAGE (copy-paste, Platzhalter ersetzen)
+────────────────────────────────────────────────────────────────────────
+
+An: Galina.Bauer@hannoverimpuls.de
+    (Cc optional: gruendung@hannoverimpuls.de)
+
+Betreff: Beratungsanfrage – Digital-Gründungsvorhaben Modus-Klar (Hannover)
+
+Sehr geehrte Frau Bauer,
+
+über die Wirtschaftsförderung Hannover / hannoverimpuls bin ich auf Ihr
+Angebot zur Gründungsberatung aufmerksam geworden. Ich wohne in Hannover und
+entwickle ein digitales Gründungsvorhaben, bei dem ich um eine erste
+fachliche Einschätzung bitte.
+
+Modus-Klar ist eine Web-App für strukturierte 28-Tage-Challenges: Nutzer
+ dokumentieren ihren Fortschritt zweimal täglich per kurzem Video, erhalten
+ Erinnerungen und sehen ihren Fortschritt im Dashboard. Ein MVP ist live:
+ https://modus-klar.vercel.app
+
+Ich befinde mich in der Phase zwischen Prototyp und Pilot: Technisch funktioniert
+ die Anwendung, ich suche Orientierung zu Tragfähigkeit, Geschäftsmodell
+ (B2B-Pilot mit Partnern vs. direkter Vertrieb) und sinnvollen nächsten
+ Schritten in Hannover – inklusive Förder- und Netzwerkoptionen.
+
+Könnten wir einen Termin für ein Erstgespräch vereinbaren (ca. 30 Minuten)?
+Alternativ würde ich gerne an der Gründungssprechzeit teilnehmen und das
+Vorhaben dort kurz vorstellen.
+
+Vielen Dank im Voraus.
+
+Mit freundlichen Grüßen
+[DEIN VOLLSTÄNDIGER NAME]
+[DEINE TELEFONNUMMER]
+[DEINE E-MAIL]
+
+────────────────────────────────────────────────────────────────────────
+VARIANTE KURZ (Gründungssprechstunde – wenn du nur Dienstag kommst)
+────────────────────────────────────────────────────────────────────────
+
+Keine Mail nötig – aber optional Vorab-Mail:
+
+Betreff: Gründungssprechzeit [DATUM] – kurze Vorstellung Modus-Klar
+
+Sehr geehrte Frau Bauer,
+
+am [DATUM] nehme ich an der Gründungssprechzeit teil (gerne vor Ort / online).
+Ich möchte kurz mein Vorhaben Modus-Klar vorstellen (28-Tage-Challenge-App,
+MVP: modus-klar.vercel.app) und erste Fragen zu Tragfähigkeit und nächsten
+Schritten besprechen.
+
+Mit freundlichen Grüßen
+[NAME]
+
+────────────────────────────────────────────────────────────────────────
+DEMO-LEITFADEN (15 Min – für Beratungsgespräch)
+────────────────────────────────────────────────────────────────────────
+
+VORBEREITUNG (10 Min vor Termin)
+--------------------------------
+[ ] Laptop + Handy geladen, Internet getestet
+[ ] URL in Browser: https://modus-klar.vercel.app (Chrome, Inkognito)
+[ ] Zweites Fenster: Impressum/Datenschutz – PLATZHALTER ausgefüllt? (BLOCKER!)
+[ ] Demo-Account angelegt (siehe unten) ODER frische Registrierung vorbereitet
+[ ] Admin NICHT zeigen, es sei denn, sie fragt nach „Backend“
+[ ] Play Store / Google-Ablehnung: max. 1 Satz, nicht Hauptthema
+
+DEMO-ACCOUNT (empfohlen – vor Termin anlegen)
+---------------------------------------------
+Registriere einmal selbst:
+  Name: Demo Nutzer
+  E-Mail: demo+[deinname]@gmail.com (oder Test-Mail)
+  Passwort: mind. 6 Zeichen (notieren!)
+  Teilnehmer-ID: DEMO-2026
+  Häkchen: AGB + Benachrichtigungen
+
+Optional: 1–2 Test-Videos schon hochladen → Dashboard wirkt „lebendig“
+
+GERÄT
+-----
+• Am besten: Handy im Vordergrund (zeigt echte Nutzung)
+• Laptop für Zoom/Bildschirm teilen als Backup
+• Chrome → F12 → iPhone-Ansicht (390px) wenn nur Laptop
+
+ABLAUF (15 Min Demo + 15 Min Diskussion)
+----------------------------------------
+
+MINUTE 0–2 | Kontext ( ohne Technik)
+„Modus-Klar ist eine App für strukturierte 28-Tage-Challenges. Zielgruppe:
+ Menschen, die ein persönliches Ziel – z. B. bewusster leben – nicht allein
+ schaffen. Die App gibt Zeitfenster, Video-Check-ins und sichtbaren Fortschritt.
+ Geschäftsidee: B2B-Pilot mit Partnern (Beratung, BGM, Kassen), nicht erst
+ Endkunden über App Store.“
+
+MINUTE 2–4 | Startseite
+• Logo, Headline, 4 Bullet Points
+• Zeigen: Impressum/Datenschutz-Link unten (Seriosität!)
+• Nicht: lange Disclaimer vorlesen
+
+MINUTE 4–6 | Registrierung (kurz)
+• „Neue Registrierung“ → Voraussetzungen → Registrierung
+• Bei Beratung: „Nutzer müssen AGB akzeptieren, Passwort, Erinnerungen“
+• Einloggen mit Demo-Account (schneller als live registrieren)
+
+MINUTE 6–10 | Dashboard (Kern!)
+• Tag X von 28, Fortschrittskalender
+• Morgen-/Abend-Check-in
+• Erklären: „Zeitfenster morgens/abends, 60 Minuten nach Erinnerung“
+• Optional: Video-Aufnahme-Screen 10 Sekunden zeigen (Kamera kurz)
+• Fortschrittskalender: grün = beide Check-ins bestätigt
+
+MINUTE 10–12 | Hilfe / Über die App (falls vorhanden)
+• Zeigt Durchdachtheit, nicht nur MVP
+• Kurz: Regeln, Neustart-Logik, Datenschutz-Hinweis
+
+MINUTE 12–15 | Geschäftsmodell (wichtig für Beraterin!)
+• „Aktuell: Solo-Entwickler, MVP live, suche ersten Pilot-Partner“
+• „Offene Fragen: UG ja/nein, Förderung, Netzwerk Gesundheit/BGM Hannover“
+• „Play Store ist Vertriebskanal – technisch gelöst, Policy-Thema separat“
+
+FRAGEN AN SIE VORBEREITEN
+-------------------------
+1. Ist das Modell B2B-Pilot grundsätzlich tragfähig?
+2. Kennen Sie Programme/Förderung für Digital-Health-/Lifestyle-Gründungen?
+3. Soll ich vor Pilot eine UG gründen oder reicht Einzelperson?
+4. Gibt es Netzwerkpartner in Hannover (Medizinische Hochschule, BGM, Sozialträger)?
+5. Lohnt Weiterarbeit – oder eher Pivot/Stop nach objektiven Kriterien?
+
+WAS DU NICHT ZEIGEN SOLLTEST
+----------------------------
+✗ Admin-Dashboard (wirkt unfertig ohne Erklärung)
+✗ Ausweis-Verifizierung (nicht produktionsreif)
+✗ AdSense-Platzhalter
+✗ Google-Play-Ablehnungs-Mail
+✗ Krankenkassen-Bonus / alte Texte
+
+WAS BEWUSST OK IST
+------------------
+• „Check-in“ statt „Messung“ – professionell, nicht Play-Store-gehackt
+• Web-App statt Store: „Für Pilot reicht Link + Home-Bildschirm“
+• Manuelle Video-Prüfung: „In Pilot machbar, später skalieren“
+
+────────────────────────────────────────────────────────────────────────
+WAS DU VOR DEM TERMIN NOCH TUN MUSST (BLOCKER)
+────────────────────────────────────────────────────────────────────────
+
+1. impressum.html + datenschutz.html – [PLATZHALTER] ausfüllen
+2. Demo-Account anlegen und 1× einloggen testen
+3. Optional: 2 Test-Check-ins im Dashboard (wirkt lebendiger)
+
+Web-App wurde für Gründer-Demo angepasst (professioneller Ton, kein
+Play-Store-Defensive-Text auf Startseite). Technisch unverändert funktionsfähig.
+
+────────────────────────────────────────────────────────────────────────
+NACH DEM GESPRÄCH
+────────────────────────────────────────────────────────────────────────
+
+[ ] Notizen: Tragfähig ja/nein? Nächste Schritte?
+[ ] Follow-up-Mail innerhalb 24 h (Dank + 3 Stichpunkte)
+[ ] In 09-TRACKING-VORLAGE.csv eintragen: hannoverimpuls | Gespräch | …
