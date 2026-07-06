@@ -1,5 +1,5 @@
 // Service Worker – Cache-Version bei jedem Deployment erhöhen
-const CACHE_NAME = 'modus-klar-v5';
+const CACHE_NAME = 'modus-klar-v6';
 
 self.addEventListener('install', (event) => {
   self.skipWaiting();

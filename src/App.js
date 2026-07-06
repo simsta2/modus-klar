@@ -556,7 +556,7 @@ const loadProgress = async (userId) => {
   const renderWelcomeScreen = () => (
     <div style={{ ...styles.minHeight, ...styles.gradient, padding: '1rem' }}>
       <div style={styles.container}>
-        <div style={{ ...styles.card, textAlign: 'center' }}>
+        <div style={{ ...styles.card, textAlign: 'center', maxHeight: 'calc(100vh - 2rem)', overflowY: 'auto' }}>
           <div style={{ 
             width: '5rem', 
             height: '5rem', 
@@ -570,40 +570,55 @@ const loadProgress = async (userId) => {
           }}>
             <Shield />
           </div>
-          <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '1rem' }}>Modus-Klar</h1>
-          <p style={{ color: '#6B7280', marginBottom: '1rem' }}>
-            30 Tage persönliche Challenge – bleib am Ball
+          <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '0.75rem' }}>Modus-Klar</h1>
+          <p style={{ color: '#374151', fontWeight: '600', marginBottom: '0.5rem', fontSize: '1.05rem' }}>
+            30 Tage alkoholfrei – dokumentiert und kontrolliert
+          </p>
+          <p style={{ color: '#6B7280', marginBottom: '1.25rem', fontSize: '0.875rem', lineHeight: 1.5 }}>
+            Modus-Klar begleitet dich bei deinem Alkoholentzug: 30 aufeinanderfolgende Tage ohne Alkohol,
+            nachweisbar durch zweimal tägliche Video-Messungen mit deinem eigenen Gerät.
           </p>
 
-          <div style={{ backgroundColor: '#F3F4F6', padding: '0.75rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
-            <p style={{ fontSize: '0.7rem', color: '#6B7280', lineHeight: 1.4 }}>
-              Freiwillige Lifestyle-App für persönliche Ziele. Dokumentiere deinen Fortschritt – ohne medizinische Bewertung.
+          <div style={{ textAlign: 'left', marginBottom: '1rem' }}>
+            <p style={{ fontSize: '0.8rem', fontWeight: '700', color: '#1F2937', marginBottom: '0.5rem' }}>So funktioniert die App</p>
+            <ol style={{ fontSize: '0.8rem', color: '#4B5563', paddingLeft: '1.25rem', margin: 0, lineHeight: 1.55 }}>
+              <li style={{ marginBottom: '0.35rem' }}>Du registrierst dich und startest die 30-Tage-Challenge.</li>
+              <li style={{ marginBottom: '0.35rem' }}>Morgens und abends erhältst du eine Push-Erinnerung.</li>
+              <li style={{ marginBottom: '0.35rem' }}>Innerhalb von 60 Minuten nimmst du ein Video auf: Messung mit deinem Atemtest-Gerät, Ergebnis 0,0 muss sichtbar sein.</li>
+              <li>Dein Video wird geprüft. Beide Messungen bestanden = Tag zählt. Sonst Neustart ab Tag 1.</li>
+            </ol>
+          </div>
+
+          <div style={{ backgroundColor: '#FEF3C7', border: '1px solid #FCD34D', padding: '0.75rem', borderRadius: '0.5rem', marginBottom: '1rem', textAlign: 'left' }}>
+            <p style={{ fontSize: '0.8rem', fontWeight: '700', color: '#92400E', marginBottom: '0.5rem' }}>Das erwartet dich bei Beitritt</p>
+            <ul style={{ fontSize: '0.75rem', color: '#78350F', paddingLeft: '1.25rem', margin: 0, lineHeight: 1.5 }}>
+              <li>Pflicht: 2 Video-Messungen pro Tag in festen Zeitfenstern</li>
+              <li>Eigenes Atemtest-Gerät (Marke/Modell im Video erkennbar)</li>
+              <li>Zielwert bei jeder Messung: 0,0</li>
+              <li>Verpasste oder abgelehnte Videos → Challenge startet von vorn</li>
+            </ul>
+          </div>
+
+          <div style={{ backgroundColor: '#F3F4F6', padding: '0.65rem', borderRadius: '0.5rem', marginBottom: '1.25rem', textAlign: 'left' }}>
+            <p style={{ fontSize: '0.65rem', color: '#6B7280', lineHeight: 1.45, margin: 0 }}>
+              Freiwillige Teilnahme. Modus-Klar ersetzt keine ärztliche Beratung oder Entzugsbehandlung.
+              Bei starker körperlicher Abhängigkeit bitte vorher medizinisch abklären.
             </p>
           </div>
           
-          <div style={{ textAlign: 'left', marginBottom: '2rem' }}>
-            <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', marginBottom: '1rem' }}>
+          <div style={{ textAlign: 'left', marginBottom: '1.25rem' }}>
+            <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', marginBottom: '0.65rem' }}>
               <CheckCircle />
-              <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>Tägliche Erinnerungen für dein Check-ins</p>
+              <p style={{ fontSize: '0.8rem', color: '#6B7280', margin: 0 }}>Fortschrittskalender über 30 Tage</p>
             </div>
-            <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', marginBottom: '1rem' }}>
+            <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', marginBottom: '0.65rem' }}>
               <CheckCircle />
-              <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>2x täglich Fortschritt per Video festhalten</p>
-            </div>
-            <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem', marginBottom: '1rem' }}>
-              <CheckCircle />
-              <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>Videos werden auf Vollständigkeit geprüft</p>
+              <p style={{ fontSize: '0.8rem', color: '#6B7280', margin: 0 }}>Manuelle Prüfung jedes Videos</p>
             </div>
             <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem' }}>
               <CheckCircle />
-              <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>Bestätigung bei erfolgreichem Abschluss der Challenge</p>
+              <p style={{ fontSize: '0.8rem', color: '#6B7280', margin: 0 }}>Bestätigung nach erfolgreichem Abschluss</p>
             </div>
-          </div>
-          
-          <div style={{ backgroundColor: '#DBEAFE', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
-            <p style={{ fontSize: '0.75rem', color: '#6B7280' }}>
-              Modus-Klar hilft dir, ein persönliches Ziel strukturiert umzusetzen – freiwillig und in deinem Tempo.
-            </p>
           </div>
           
           <button
