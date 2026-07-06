@@ -1,12 +1,17 @@
-// Push-Benachrichtigungen für Modus-Klar
+// Push-/Erinnerungslogik – nutzt täglichen Messplan aus dailySchedule.js
 
-// Service Worker registrieren
+import {
+  getOrCreateDailySchedule,
+  getScheduleForNotifications,
+  formatTime
+} from './dailySchedule';
+
+const notificationTimeouts = { morning: null, evening: null };
+
 export async function registerServiceWorker() {
   if ('serviceWorker' in navigator) {
     try {
-      const registration = await navigator.serviceWorker.register('/service-worker.js');
-      console.log('Service Worker registriert:', registration);
-      return registration;
+      return await navigator.serviceWorker.register('/service-worker.js');
     } catch (error) {
       console.error('Service Worker Registrierung fehlgeschlagen:', error);
       return null;
@@ -15,196 +20,105 @@ export async function registerServiceWorker() {
   return null;
 }
 
-// Benachrichtigungsberechtigung anfordern
 export async function requestNotificationPermission() {
-  if (!('Notification' in window)) {
-    console.log('Dieser Browser unterstützt keine Benachrichtigungen');
-    return false;
-  }
-
-  if (Notification.permission === 'granted') {
-    return true;
-  }
-
+  if (!('Notification' in window)) return false;
+  if (Notification.permission === 'granted') return true;
   if (Notification.permission !== 'denied') {
-    const permission = await Notification.requestPermission();
-    return permission === 'granted';
+    return (await Notification.requestPermission()) === 'granted';
   }
-
   return false;
 }
 
-// Zufällige Zeit zwischen minHour und maxHour generieren
-function getRandomTimeInWindow(minHour, maxHour) {
-  const hour = Math.floor(Math.random() * (maxHour - minHour)) + minHour;
-  const minute = Math.floor(Math.random() * 60);
-  return { hour, minute };
-}
-
-// Nächste Benachrichtigungszeiten berechnen
-export function calculateNextNotificationTimes() {
-  const now = new Date();
-  const currentHour = now.getHours();
-  
-  let morningTime = null;
-  let eveningTime = null;
-  
-  // Morgen-Zeitfenster: 9-12 Uhr
-  if (currentHour < 9) {
-    // Noch nicht im Morgen-Fenster, berechne für heute
-    morningTime = getRandomTimeInWindow(9, 12);
-  } else if (currentHour < 12) {
-    // Im Morgen-Fenster, benachrichtige in nächsten Minuten (mindestens 1 Minute später)
-    const minHour = currentHour;
-    const maxHour = 12;
-    morningTime = getRandomTimeInWindow(minHour, maxHour);
-    // Stelle sicher, dass es nicht in der Vergangenheit liegt
-    const testTime = new Date();
-    testTime.setHours(morningTime.hour, morningTime.minute, 0, 0);
-    if (testTime <= now) {
-      // Wenn Zeit bereits vorbei, nimm nächste Stunde oder morgen
-      if (currentHour < 11) {
-        morningTime = getRandomTimeInWindow(currentHour + 1, 12);
-      } else {
-        // Morgen
-        morningTime = getRandomTimeInWindow(9, 12);
-      }
-    }
-  } else {
-    // Morgen-Fenster vorbei, berechne für morgen
-    morningTime = getRandomTimeInWindow(9, 12);
-  }
-  
-  // Abend-Zeitfenster: 20-23 Uhr
-  if (currentHour < 20) {
-    // Noch nicht im Abend-Fenster, berechne für heute
-    eveningTime = getRandomTimeInWindow(20, 23);
-  } else if (currentHour < 23) {
-    // Im Abend-Fenster, benachrichtige in nächsten Minuten
-    const minHour = currentHour;
-    const maxHour = 23;
-    eveningTime = getRandomTimeInWindow(minHour, maxHour);
-    // Stelle sicher, dass es nicht in der Vergangenheit liegt
-    const testTime = new Date();
-    testTime.setHours(eveningTime.hour, eveningTime.minute, 0, 0);
-    if (testTime <= now) {
-      // Wenn Zeit bereits vorbei, nimm nächste Stunde oder morgen
-      if (currentHour < 22) {
-        eveningTime = getRandomTimeInWindow(currentHour + 1, 23);
-      } else {
-        // Morgen
-        eveningTime = getRandomTimeInWindow(20, 23);
-      }
-    }
-  } else {
-    // Abend-Fenster vorbei, berechne für morgen
-    eveningTime = getRandomTimeInWindow(20, 23);
-  }
-  
-  return { morningTime, eveningTime };
-}
-
-// Timeout-IDs speichern für spätere Bereinigung
-const notificationTimeouts = {
-  morning: null,
-  evening: null
-};
-
-// Benachrichtigung planen
-export function scheduleNotification(time, type, userId) {
-  // Alten Timeout löschen falls vorhanden
+function clearScheduled(type) {
   if (notificationTimeouts[type]) {
     clearTimeout(notificationTimeouts[type]);
+    notificationTimeouts[type] = null;
   }
-  
+}
+
+function scheduleAt(time, type, userId, onFire) {
+  clearScheduled(type);
+
   const now = new Date();
-  const notificationTime = new Date();
-  notificationTime.setHours(time.hour, time.minute, 0, 0);
-  
-  // Wenn die Zeit bereits vorbei ist, auf morgen verschieben
-  if (notificationTime <= now) {
-    notificationTime.setDate(notificationTime.getDate() + 1);
+  const fireAt = new Date();
+  fireAt.setHours(time.hour, time.minute, 0, 0);
+
+  if (fireAt <= now) {
+    fireAt.setDate(fireAt.getDate() + 1);
   }
-  
-  const delay = notificationTime.getTime() - now.getTime();
-  
-  const timeoutId = setTimeout(() => {
-    const title = type === 'morning' ? '🌅 Morgen-Check-in' : '🌙 Abend-Check-in';
-    const body = type === 'morning' 
-      ? 'Zeit für deinen morgendlichen Check-in! Öffne die App für die Videoaufnahme.'
-      : 'Zeit für deinen abendlichen Check-in! Öffne die App für die Videoaufnahme.';
-    
-    // Prüfe ob Benutzer noch eingeloggt ist
+
+  const delay = fireAt.getTime() - now.getTime();
+
+  notificationTimeouts[type] = setTimeout(() => {
     const savedUserId = localStorage.getItem('userId');
     if (savedUserId === userId) {
-      showNotification(title, body);
-      
-      // Nächste Benachrichtigung planen (für morgen)
-      const nextTimes = calculateNextNotificationTimes();
-      if (type === 'morning') {
-        scheduleNotification(nextTimes.morningTime, 'morning', userId);
-      } else {
-        scheduleNotification(nextTimes.eveningTime, 'evening', userId);
+      onFire(type);
+      const nextSchedule = getOrCreateDailySchedule(userId);
+      const nextTimes = getScheduleForNotifications(nextSchedule);
+      if (nextTimes) {
+        const t = type === 'morning' ? nextTimes.morningTime : nextTimes.eveningTime;
+        scheduleAt(t, type, userId, onFire);
       }
     }
     notificationTimeouts[type] = null;
   }, delay);
-  
-  notificationTimeouts[type] = timeoutId;
-  console.log(`${type} Benachrichtigung geplant für:`, notificationTime);
+
+  console.log(`${type}-Erinnerung geplant:`, formatTime(time.hour, time.minute));
 }
 
-// Benachrichtigung anzeigen
 async function showNotification(title, body) {
-  if (Notification.permission === 'granted') {
+  if (Notification.permission !== 'granted') return;
+  try {
     const registration = await navigator.serviceWorker.ready;
     await registration.showNotification(title, {
-      body: body,
+      body,
       icon: '/icon-192x192.png',
       badge: '/icon-192x192.png',
       vibrate: [200, 100, 200],
-      tag: 'modus-klar-notification',
-      requireInteraction: false,
-      data: {
-        url: window.location.origin
-      }
+      tag: `modus-klar-${title}`,
+      data: { url: window.location.origin }
     });
+  } catch {
+    new Notification(title, { body, icon: '/icon-192x192.png' });
   }
 }
 
-// Benachrichtigungen initialisieren
+function fireNotification(type) {
+  const isMorning = type === 'morning';
+  showNotification(
+    isMorning ? '🌅 Zeit für deine Morgen-Messung' : '🌙 Zeit für deine Abend-Messung',
+    isMorning
+      ? 'Du hast 60 Minuten für dein Video mit Atemtest-Gerät (Ergebnis 0,0).'
+      : 'Du hast 60 Minuten für dein Video mit Atemtest-Gerät (Ergebnis 0,0).'
+  );
+}
+
+/** Plant Erinnerungen zur zufälligen Tageszeit aus dailySchedule */
 export async function initializeNotifications(userId) {
-  // Service Worker registrieren
+  if (!userId) return false;
+
   await registerServiceWorker();
-  
-  // Berechtigung anfordern
   const hasPermission = await requestNotificationPermission();
-  
-  if (!hasPermission) {
-    console.log('Benachrichtigungsberechtigung nicht erteilt');
-    return false;
-  }
-  
-  // Nächste Zeiten berechnen
-  const times = calculateNextNotificationTimes();
-  
-  // Benachrichtigungen planen
-  scheduleNotification(times.morningTime, 'morning', userId);
-  scheduleNotification(times.eveningTime, 'evening', userId);
-  
+  if (!hasPermission) return false;
+
+  const schedule = getOrCreateDailySchedule(userId);
+  const times = getScheduleForNotifications(schedule);
+  if (!times) return false;
+
+  scheduleAt(times.morningTime, 'morning', userId, fireNotification);
+  scheduleAt(times.eveningTime, 'evening', userId, fireNotification);
+
   return true;
 }
 
-// Benachrichtigungen stoppen
 export function stopNotifications() {
-  if (notificationTimeouts.morning) {
-    clearTimeout(notificationTimeouts.morning);
-    notificationTimeouts.morning = null;
-  }
-  if (notificationTimeouts.evening) {
-    clearTimeout(notificationTimeouts.evening);
-    notificationTimeouts.evening = null;
-  }
-  console.log('Benachrichtigungen gestoppt');
+  clearScheduled('morning');
+  clearScheduled('evening');
 }
 
+/** Beim App-Start / Fokus erneut planen (Tab war geschlossen) */
+export async function refreshNotifications(userId) {
+  if (!userId || Notification.permission !== 'granted') return;
+  stopNotifications();
+  await initializeNotifications(userId);
+}

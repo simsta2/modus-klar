@@ -483,14 +483,12 @@ export async function updateVideoStatus(videoId, status, rejectionReason = null)
           
         console.log('Challenge reset for user:', data.user_id, '- Reason: Video rejected');
       } else if (status === 'verified') {
-        // Normales Update für verified
-        await supabase
-          .from('daily_progress')
-          .update({
-            [`${data.video_type}_status`]: status
-          })
-          .eq('user_id', data.user_id)
-          .eq('day_number', data.day_number);
+        await updateDailyProgress(
+          data.user_id,
+          data.day_number,
+          data.video_type,
+          'verified'
+        );
         
         // Prüfe ob Tag 30 vollständig abgeschlossen wurde
         const { data: dayProgress } = await supabase
@@ -584,7 +582,7 @@ export async function getUserStats(userId) {
         totalDays: progress.length,
         completedDays: completedDays,
         currentStreak: currentStreak,
-        successRate: progress.length > 0 ? (completedDays / progress.length * 100).toFixed(1) : 0
+        successRate: progress.length > 0 ? Math.min(100, (completedDays / 30 * 100)).toFixed(1) : 0
       }
     };
   } catch (error) {

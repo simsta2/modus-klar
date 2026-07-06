@@ -3,7 +3,15 @@ import { registerUser, saveVideoRecord, loadUserProgress, loginUser, uploadVideo
 import AdminDashboard from './AdminDashboard';
 // Ganz oben in App.js, nach den imports
 import { supabase } from './supabaseClient';
-import { initializeNotifications, requestNotificationPermission } from './notifications';
+import { initializeNotifications, requestNotificationPermission, refreshNotifications, stopNotifications } from './notifications';
+import {
+  getOrCreateDailySchedule,
+  getWindowStatus,
+  formatTime,
+  getMinutesRemaining,
+  MORNING_WINDOW,
+  EVENING_WINDOW
+} from './dailySchedule';
 import InstallPrompt from './components/InstallPrompt';
 import { ToastContext } from './components/Toast';
 import LoadingSpinner from './components/LoadingSpinner';
@@ -41,6 +49,7 @@ const ModusKlarApp = () => {
   // Prüfe ob Admin-Modus über URL-Parameter
   const urlParams = new URLSearchParams(window.location.search);
   const isAdminMode = urlParams.get('admin') === 'true';
+  const demoMode = urlParams.get('demo') === 'true';
   
   if (isAdminMode) {
     return <AdminDashboard />;
@@ -90,6 +99,8 @@ if (urlParams.get('simple-admin') === 'true') {
   });
   const [loginPassword, setLoginPassword] = useState('');
   const [timeWindow, setTimeWindow] = useState({ morning: false, evening: false });
+  const [dailySchedule, setDailySchedule] = useState(null);
+  const [progressRecords, setProgressRecords] = useState([]);
   const [isOnline, setIsOnline] = useState(navigator.onLine);
   const [adWatched, setAdWatched] = useState(false);
   const [adContainerId] = useState(`ad-container-${Date.now()}`);
@@ -163,26 +174,21 @@ if (urlParams.get('simple-admin') === 'true') {
     };
   }, [toast]);
 
-  // Offline-Erkennung
-  useEffect(() => {
-    const handleOnline = () => setIsOnline(true);
-    const handleOffline = () => {
-      setIsOnline(false);
-      if (toast) {
-        toast.warning('Keine Internetverbindung. Bitte überprüfen Sie Ihre Verbindung.');
+  const buildMonthProgress = (records, day, today) => {
+    return Array(30).fill(null).map((_, i) => {
+      const dayNum = i + 1;
+      const dbDay = records.find(p => p.day_number === dayNum);
+      if (dbDay) {
+        return { day: dayNum, morning: dbDay.morning_status, evening: dbDay.evening_status };
       }
-    };
-    
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-    
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, [toast]);
+      if (dayNum === day) {
+        return { day: dayNum, morning: today.morning, evening: today.evening };
+      }
+      return { day: dayNum, morning: null, evening: null };
+    });
+  };
 
-  // Initial Load - Check für bestehenden User und Email-Verifizierung
+  // Initial Load
 useEffect(() => {
   const checkExistingUser = async () => {
     // Prüfe URL-Parameter für direkten Zugriff auf Seiten (z.B. Datenschutz, Impressum)
@@ -231,44 +237,55 @@ useEffect(() => {
       // Lade Fortschritt
       await loadProgress(savedUserId);
       
-      // Benachrichtigungen initialisieren
-      await requestNotificationPermission();
-      await initializeNotifications(savedUserId);
+      const { data: userRow } = await supabase
+        .from('users')
+        .select('notifications_enabled')
+        .eq('id', savedUserId)
+        .single();
+      if (userRow?.notifications_enabled) {
+        await refreshNotifications(savedUserId);
+      }
     }
   };
   
   checkExistingUser();
 }, []);
 
-  // Zeitfenster-Check
 useEffect(() => {
-  const checkTimeWindows = () => {
-    const now = new Date();
-    const hour = now.getHours();
-    
-    setTimeWindow({
-      morning: hour >= 9 && hour < 12,
-      evening: hour >= 20 && hour < 23
-    });
+  const onAppFocus = () => {
+    const uid = localStorage.getItem('userId');
+    if (uid) {
+      refreshNotifications(uid);
+      loadProgress(uid);
+    }
   };
-  
-  checkTimeWindows();
-  const interval = setInterval(checkTimeWindows, 60000); // Jede Minute prüfen
-  return () => clearInterval(interval);
+  window.addEventListener('focus', onAppFocus);
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible') onAppFocus();
+  });
+  return () => {
+    window.removeEventListener('focus', onAppFocus);
+  };
 }, []);
 
-// Fortschritts-Array generieren
+  // Messzeitfenster
 useEffect(() => {
-  const progress = Array(30).fill(null).map((_, i) => {
-    if (i < currentDay - 1) {
-      return { day: i + 1, morning: 'verified', evening: 'verified' };
-    } else if (i === currentDay - 1) {
-      return { day: currentDay, morning: todayVideos.morning, evening: todayVideos.evening };
-    }
-    return { day: i + 1, morning: null, evening: null };
-  });
-  setMonthProgress(progress);
-}, [currentDay, todayVideos]);
+  const updateWindows = () => {
+    const uid = userId || localStorage.getItem('userId');
+    if (!uid) return;
+    const schedule = getOrCreateDailySchedule(uid);
+    setDailySchedule(schedule);
+    setTimeWindow(getWindowStatus(schedule, demoMode));
+  };
+
+  updateWindows();
+  const interval = setInterval(updateWindows, 30000);
+  return () => clearInterval(interval);
+}, [userId, demoMode]);
+
+useEffect(() => {
+  setMonthProgress(buildMonthProgress(progressRecords, currentDay, todayVideos));
+}, [progressRecords, currentDay, todayVideos]);
 
 // Auto-Refresh Statistik alle 30 Sekunden wenn auf Dashboard
 useEffect(() => {
@@ -281,7 +298,7 @@ useEffect(() => {
       if (userId) {
         loadProgress(userId);
       }
-    }, 30000); // 30 Sekunden
+    }, 15000);
     
     return () => clearInterval(interval);
   }
@@ -320,8 +337,8 @@ const loadProgress = async (userId) => {
       // Verwende die berechnete Streak und aktuellen Tag
       setCurrentDay(result.currentDay || 1);
       setCurrentStreak(result.currentStreak || 0);
+      setProgressRecords(result.progress || []);
       
-      // Berechne erfolgreiche Tage
       const successful = result.progress.filter(p => 
         p.morning_status === 'verified' && p.evening_status === 'verified'
       ).length;
@@ -409,6 +426,7 @@ const loadProgress = async (userId) => {
 
   // Logout Handler
   const handleLogout = () => {
+    stopNotifications();
     localStorage.removeItem('userId');
     localStorage.removeItem('userName');
     setUserId(null);
@@ -583,8 +601,8 @@ const loadProgress = async (userId) => {
             <p style={{ fontSize: '0.8rem', fontWeight: '700', color: '#1F2937', marginBottom: '0.5rem' }}>So funktioniert die App</p>
             <ol style={{ fontSize: '0.8rem', color: '#4B5563', paddingLeft: '1.25rem', margin: 0, lineHeight: 1.55 }}>
               <li style={{ marginBottom: '0.35rem' }}>Du registrierst dich und startest die 30-Tage-Challenge.</li>
-              <li style={{ marginBottom: '0.35rem' }}>Morgens und abends erhältst du eine Push-Erinnerung.</li>
-              <li style={{ marginBottom: '0.35rem' }}>Innerhalb von 60 Minuten nimmst du ein Video auf: Messung mit deinem Atemtest-Gerät, Ergebnis 0,0 muss sichtbar sein.</li>
+              <li style={{ marginBottom: '0.35rem' }}>Morgens und abends erhältst du eine Erinnerung zu einer <strong>zufälligen Zeit</strong> (9–12 Uhr / 20–23 Uhr).</li>
+              <li style={{ marginBottom: '0.35rem' }}>Innerhalb von 60 Minuten nimmst du ein Video auf: Atemtest-Gerät im Bild, Ergebnis 0,0 mindestens 5 Sekunden sichtbar.</li>
               <li>Dein Video wird geprüft. Beide Messungen bestanden = Tag zählt. Sonst Neustart ab Tag 1.</li>
             </ol>
           </div>
@@ -592,7 +610,7 @@ const loadProgress = async (userId) => {
           <div style={{ backgroundColor: '#FEF3C7', border: '1px solid #FCD34D', padding: '0.75rem', borderRadius: '0.5rem', marginBottom: '1rem', textAlign: 'left' }}>
             <p style={{ fontSize: '0.8rem', fontWeight: '700', color: '#92400E', marginBottom: '0.5rem' }}>Das erwartet dich bei Beitritt</p>
             <ul style={{ fontSize: '0.75rem', color: '#78350F', paddingLeft: '1.25rem', margin: 0, lineHeight: 1.5 }}>
-              <li>Pflicht: 2 Video-Messungen pro Tag in festen Zeitfenstern</li>
+              <li>Pflicht: 2 Video-Messungen pro Tag zu zufälligen Zeiten (morgens 9–12, abends 20–23 Uhr)</li>
               <li>Eigenes Atemtest-Gerät (Marke/Modell im Video erkennbar)</li>
               <li>Zielwert bei jeder Messung: 0,0</li>
               <li>Verpasste oder abgelehnte Videos → Challenge startet von vorn</li>
@@ -800,10 +818,10 @@ const renderLoginScreen = () => {
               <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem' }}>
                 <AlertCircle />
                 <div>
-                  <p style={{ fontWeight: '600', marginBottom: '0.25rem' }}>Video-Tagebuch</p>
+                  <p style={{ fontWeight: '600', marginBottom: '0.25rem' }}>Eigenes Atemtest-Gerät</p>
                   <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>
-                    Für deine tägliche Dokumentation nimmst du kurze Videos auf.
-                    Tipps findest du direkt in der App.
+                    Du brauchst ein persönliches Atemtest-Gerät. Im Video muss Marke/Modell und
+                    das Ergebnis 0,0 mindestens 5 Sekunden sichtbar sein.
                   </p>
                 </div>
               </div>
@@ -813,11 +831,14 @@ const renderLoginScreen = () => {
               <div style={{ display: 'flex', alignItems: 'start', gap: '0.75rem' }}>
                 <Bell />
                 <div>
-                  <p style={{ fontWeight: '600', marginBottom: '0.25rem' }}>Tägliche Benachrichtigungen</p>
+                  <p style={{ fontWeight: '600', marginBottom: '0.25rem' }}>Zufällige Messzeiten</p>
                   <p style={{ fontSize: '0.875rem', color: '#6B7280' }}>
-                    Erinnerungen für Ihre Check-in-Zeiten:<br/>
-                    Morgens: 9-12 Uhr<br/>
-                    Abends: 20-23 Uhr
+                    Zweimal täglich erhältst du eine Push-Erinnerung zu einer <strong>zufälligen Zeit</strong>
+                    im Fenster morgens ({MORNING_WINDOW.start}:00–{MORNING_WINDOW.end}:00) und abends
+                    ({EVENING_WINDOW.start}:00–{EVENING_WINDOW.end}:00). Danach hast du 60 Minuten für dein Video.
+                  </p>
+                  <p style={{ fontSize: '0.75rem', color: '#6B7280', marginTop: '0.5rem' }}>
+                    Tipp: App zum Home-Bildschirm hinzufügen (PWA) für zuverlässigere Erinnerungen auf dem Handy.
                   </p>
                 </div>
               </div>
@@ -936,8 +957,8 @@ const renderLoginScreen = () => {
           <div style={{ backgroundColor: '#DBEAFE', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1.5rem' }}>
             <h3 style={{ fontWeight: '600', marginBottom: '0.5rem' }}>Teilnahmebedingungen:</h3>
               <ul style={{ fontSize: '0.875rem', color: '#6B7280', paddingLeft: '1.5rem' }}>
-                <li>30 Tage tägliche Check-ins</li>
-                <li>2 Videos täglich in den Zeitfenstern</li>
+                <li>30 Tage alkoholfrei, täglich 2 Video-Messungen</li>
+                <li>Zufällige Erinnerungszeiten morgens (9–12) und abends (20–23 Uhr)</li>
                 <li>Video innerhalb 1 Stunde nach Erinnerung</li>
                 <li>Regelmäßige Teilnahme erforderlich</li>
                 <li>Verpasste/abgelehnte Videos = Neustart</li>
@@ -974,7 +995,7 @@ const renderLoginScreen = () => {
                 style={{ marginTop: '0.25rem' }}
               />
               <span style={{ fontSize: '0.875rem', color: '#6B7280' }}>
-                Ich erlaube Push-Benachrichtigungen für Check-in-Zeiten
+                Ich erlaube Erinnerungen zu meinen Messzeiten (Push im Browser/PWA; am zuverlässigsten als App auf dem Home-Bildschirm)
               </span>
             </label>
           </div>
@@ -1023,25 +1044,26 @@ const renderLoginScreen = () => {
               <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem' }}>Teilnahmebedingungen</h3>
               <div style={{ fontSize: '0.875rem', color: '#6B7280' }}>
                 <p style={{ marginBottom: '0.75rem' }}><strong>1. Programmdauer:</strong> 30 aufeinanderfolgende Tage</p>
-                <p style={{ marginBottom: '0.75rem' }}><strong>2. Check-in-Zeiten:</strong></p>
+                <p style={{ marginBottom: '0.75rem' }}><strong>2. Messzeiten:</strong></p>
                 <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                  <li>Morgens: 9:00 - 12:00 Uhr</li>
-                  <li>Abends: 20:00 - 23:00 Uhr</li>
-                  <li>Video innerhalb 60 Minuten nach Benachrichtigung</li>
+                  <li>Morgens: zufällige Zeit zwischen 9:00 und 12:00 Uhr</li>
+                  <li>Abends: zufällige Zeit zwischen 20:00 und 23:00 Uhr</li>
+                  <li>Video innerhalb 60 Minuten nach Erinnerung</li>
                 </ul>
                 <p style={{ marginBottom: '0.75rem' }}><strong>3. Anforderungen:</strong></p>
                 <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                  <li>Video zeigt die vereinbarte Dokumentation deutlich</li>
-                  <li>Ergebnis am Display mindestens 5 Sekunden sichtbar</li>
+                  <li>Eigenes Atemtest-Gerät, Marke/Modell erkennbar</li>
+                  <li>Ergebnis 0,0 am Display mindestens 5 Sekunden sichtbar</li>
+                  <li>Gesamtdauer des Videos ca. 30 Sekunden</li>
                 </ul>
                 <p style={{ marginBottom: '0.75rem' }}><strong>4. Ablehnung erfolgt bei:</strong></p>
                 <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                  <li>Unvollständiger oder undeutlicher Aufnahme</li>
-                  <li>Abweichung von den Challenge-Regeln</li>
-                  <li>Manipulation</li>
-                  <li>Verpasstem Check-in</li>
+                  <li>Ergebnis nicht 0,0 Promille</li>
+                  <li>Video gefälscht oder manipuliert</li>
+                  <li>Messgerät nicht erkennbar oder Messung undeutlich</li>
+                  <li>Verpasster Messzeit (60-Minuten-Fenster)</li>
                 </ul>
-                <p style={{ marginBottom: '0.75rem' }}><strong>5. Neustart:</strong> Bei Ablehnung oder verpasstem Check-in startet das Programm von Tag 1</p>
+                <p style={{ marginBottom: '0.75rem' }}><strong>5. Neustart:</strong> Bei Ablehnung oder verpasster Messung startet die Challenge von Tag 1</p>
                 <p style={{ marginBottom: '0.75rem' }}><strong>6. Datenschutz:</strong> Videos werden nur zur internen Prüfung verwendet und nach Programmende gelöscht</p>
                 <p style={{ marginBottom: '0.75rem' }}><strong>7. Abschluss:</strong> Nach erfolgreichem Abschluss der Challenge erhältst du eine Bestätigung deiner Teilnahme</p>
               </div>
@@ -1108,6 +1130,11 @@ const renderLoginScreen = () => {
       </div>
       
       <div style={styles.container}>
+        {demoMode && (
+          <div style={{ backgroundColor: '#DBEAFE', border: '1px solid #93C5FD', borderRadius: '0.5rem', padding: '0.75rem', marginBottom: '1rem', fontSize: '0.75rem', color: '#1E40AF' }}>
+            Demo-Modus: Messfenster immer geöffnet (?demo=true). Für Präsentation bei hannoverimpuls.
+          </div>
+        )}
         {!isOnline && (
           <div style={{
             backgroundColor: '#FEE2E2',
@@ -1138,13 +1165,21 @@ const renderLoginScreen = () => {
           }}>
             <Bell />
             <p style={{ fontSize: '0.875rem', fontWeight: '500', color: '#92400E' }}>
-              Check-in-Zeit aktiv! Du hast noch 60 Minuten
+              {timeWindow.morning && !timeWindow.evening && `Morgen-Messung aktiv! Noch ${getMinutesRemaining('morning', dailySchedule)} Min.`}
+              {timeWindow.evening && !timeWindow.morning && `Abend-Messung aktiv! Noch ${getMinutesRemaining('evening', dailySchedule)} Min.`}
+              {timeWindow.morning && timeWindow.evening && 'Messzeit aktiv – Video jetzt aufnehmen'}
             </p>
           </div>
         )}
         
         <div style={{ ...styles.card, marginBottom: '1rem' }}>
-          <h2 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '1rem' }}>Heutige Check-ins</h2>
+          <h2 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.5rem' }}>Heutige Messungen</h2>
+          {dailySchedule && (
+            <p style={{ fontSize: '0.75rem', color: '#6B7280', marginBottom: '1rem' }}>
+              Deine heutigen Erinnerungszeiten: Morgen {formatTime(dailySchedule.morning.hour, dailySchedule.morning.minute)} ·
+              Abend {formatTime(dailySchedule.evening.hour, dailySchedule.evening.minute)} (zufällig, täglich neu)
+            </p>
+          )}
           
           <div>
             {/* Morgen-Check-in */}
@@ -1160,8 +1195,12 @@ const renderLoginScreen = () => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <Clock />
                 <div>
-                  <p style={{ fontWeight: '500' }}>Morgen-Check-in</p>
-                  <p style={{ fontSize: '0.75rem', color: '#9CA3AF' }}>9:00 - 12:00 Uhr</p>
+                  <p style={{ fontWeight: '500' }}>Morgen-Messung</p>
+                  <p style={{ fontSize: '0.75rem', color: '#9CA3AF' }}>
+                    {dailySchedule
+                      ? `Heute ca. ${formatTime(dailySchedule.morning.hour, dailySchedule.morning.minute)} (+ 60 Min.)`
+                      : `${MORNING_WINDOW.start}:00–${MORNING_WINDOW.end}:00`}
+                  </p>
                 </div>
               </div>
               {todayVideos.morning === 'verified' ? (
@@ -1174,6 +1213,11 @@ const renderLoginScreen = () => {
                   <LoadingSpinner size="small" text="" />
                   <span style={{ fontSize: '0.75rem', color: '#3B82F6' }}>Wird hochgeladen...</span>
                 </div>
+              ) : todayVideos.morning === 'rejected' ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <XCircle />
+                  <span style={{ fontSize: '0.75rem', color: '#DC2626' }}>Abgelehnt</span>
+                </div>
               ) : todayVideos.morning === 'pending' ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <div style={{ width: '0.5rem', height: '0.5rem', borderRadius: '50%', backgroundColor: '#F59E0B', animation: 'pulse 2s ease-in-out infinite' }} />
@@ -1184,8 +1228,8 @@ const renderLoginScreen = () => {
                   onClick={() => {
                     if (timeWindow.morning) {
                       setCurrentVideoType('morning');
-                      setAdWatched(false);
-                      setCurrentScreen('ad');
+                      setAdWatched(demoMode);
+                      setCurrentScreen(demoMode ? 'recording' : 'ad');
                     }
                   }}
                   style={{
@@ -1219,8 +1263,12 @@ const renderLoginScreen = () => {
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                 <Clock />
                 <div>
-                  <p style={{ fontWeight: '500' }}>Abend-Check-in</p>
-                  <p style={{ fontSize: '0.75rem', color: '#9CA3AF' }}>20:00 - 23:00 Uhr</p>
+                  <p style={{ fontWeight: '500' }}>Abend-Messung</p>
+                  <p style={{ fontSize: '0.75rem', color: '#9CA3AF' }}>
+                    {dailySchedule
+                      ? `Heute ca. ${formatTime(dailySchedule.evening.hour, dailySchedule.evening.minute)} (+ 60 Min.)`
+                      : `${EVENING_WINDOW.start}:00–${EVENING_WINDOW.end}:00`}
+                  </p>
                 </div>
               </div>
               {todayVideos.evening === 'verified' ? (
@@ -1233,6 +1281,11 @@ const renderLoginScreen = () => {
                   <LoadingSpinner size="small" text="" />
                   <span style={{ fontSize: '0.75rem', color: '#3B82F6' }}>Wird hochgeladen...</span>
                 </div>
+              ) : todayVideos.evening === 'rejected' ? (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <XCircle />
+                  <span style={{ fontSize: '0.75rem', color: '#DC2626' }}>Abgelehnt</span>
+                </div>
               ) : todayVideos.evening === 'pending' ? (
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                   <div style={{ width: '0.5rem', height: '0.5rem', borderRadius: '50%', backgroundColor: '#F59E0B', animation: 'pulse 2s ease-in-out infinite' }} />
@@ -1243,8 +1296,8 @@ const renderLoginScreen = () => {
                   onClick={() => {
                     if (timeWindow.evening) {
                       setCurrentVideoType('evening');
-                      setAdWatched(false);
-                      setCurrentScreen('ad');
+                      setAdWatched(demoMode);
+                      setCurrentScreen(demoMode ? 'recording' : 'ad');
                     }
                   }}
                   style={{
@@ -1329,7 +1382,19 @@ const renderLoginScreen = () => {
             gridTemplateColumns: 'repeat(7, 1fr)',
             gap: '0.5rem'
           }}>
-            {monthProgress.map((day) => (
+            {monthProgress.map((day) => {
+              const bothOk = day.morning === 'verified' && day.evening === 'verified';
+              const anyReject = day.morning === 'rejected' || day.evening === 'rejected';
+              const partial = (day.morning === 'verified' || day.evening === 'verified') && !bothOk;
+              const isCurrent = day.day === currentDay;
+              let bg = '#E5E7EB';
+              let fg = '#6B7280';
+              if (bothOk) { bg = '#10B981'; fg = 'white'; }
+              else if (anyReject) { bg = '#EF4444'; fg = 'white'; }
+              else if (partial) { bg = '#F59E0B'; fg = 'white'; }
+              else if (isCurrent) { bg = '#3B82F6'; fg = 'white'; }
+              else if (day.day < currentDay && (day.morning || day.evening)) { bg = '#FCA5A5'; fg = 'white'; }
+              return (
               <div
                 key={day.day}
                 style={{
@@ -1340,36 +1405,18 @@ const renderLoginScreen = () => {
                   justifyContent: 'center',
                   fontSize: '0.75rem',
                   fontWeight: '500',
-                  backgroundColor: 
-                    day.morning === 'verified' && day.evening === 'verified'
-                      ? '#10B981'
-                      : day.day === currentDay
-                      ? '#3B82F6'
-                      : day.day < currentDay
-                      ? '#EF4444'
-                      : '#E5E7EB',
-                  color: 
-                    day.morning === 'verified' && day.evening === 'verified'
-                      ? 'white'
-                      : day.day === currentDay
-                      ? 'white'
-                      : day.day < currentDay
-                      ? 'white'
-                      : '#6B7280'
+                  backgroundColor: bg,
+                  color: fg
                 }}
                 title={
-                  day.morning === 'verified' && day.evening === 'verified'
-                    ? `Tag ${day.day}: Beide Check-ins bestätigt`
-                    : day.day === currentDay
-                    ? `Tag ${day.day}: Aktueller Tag`
-                    : day.day < currentDay
-                    ? `Tag ${day.day}: Nicht vollständig`
-                    : `Tag ${day.day}: Noch nicht erreicht`
+                  bothOk ? `Tag ${day.day}: Beide Messungen OK` :
+                  anyReject ? `Tag ${day.day}: Abgelehnt` :
+                  isCurrent ? `Tag ${day.day}: Heute` : `Tag ${day.day}`
                 }
               >
                 {day.day}
               </div>
-            ))}
+            );})}
           </div>
           <div style={{ marginTop: '1rem', textAlign: 'center' }}>
             <div style={{
@@ -1705,9 +1752,9 @@ const renderLoginScreen = () => {
               <ol style={{ fontSize: '0.875rem', color: '#4B5563', paddingLeft: '1.5rem', margin: 0 }}>
                 <li>Halte dein Handy stabil</li>
                 <li>Starte die Aufnahme</li>
-                <li>Zeige deine Dokumentation deutlich</li>
-                <li>Führe den vereinbarten Ablauf durch</li>
-                <li>Zeige das Anzeige-Ergebnis mindestens 5 Sekunden</li>
+                <li>Zeige dein Atemtest-Gerät (Marke/Modell sichtbar)</li>
+                <li>Führe die Messung durch</li>
+                <li>Zeige Ergebnis 0,0 mindestens 5 Sekunden am Display</li>
                 <li>Gesamtdauer: ca. 30 Sekunden</li>
               </ol>
             </div>
@@ -2461,117 +2508,95 @@ const renderLoginScreen = () => {
           
           <div style={{ fontSize: '0.875rem', color: '#4B5563', lineHeight: '1.6' }}>
             <p style={{ marginBottom: '1rem', fontSize: '1rem', fontWeight: '600' }}>
-              Modus-Klar ist eine Lifestyle-App, die dich bei einer freiwilligen 30-Tage-Challenge unterstützt.
+              Modus-Klar begleitet dich bei 30 Tagen Alkoholentzug – dokumentiert per Video und manuell geprüft.
             </p>
             <p style={{ marginBottom: '1rem', fontSize: '0.75rem', color: '#6B7280' }}>
-              Freiwillige Lifestyle-App für persönliche Ziele – ohne medizinische Bewertung.
+              Freiwillige Teilnahme. Ersetzt keine ärztliche Beratung oder Entzugsbehandlung.
             </p>
             
             <div style={{ marginBottom: '1.5rem' }}>
               <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.75rem', color: '#1F2937' }}>
-                📱 Wie funktioniert die App?
+                Wie funktioniert die App?
               </h3>
               <p style={{ marginBottom: '0.75rem' }}>
-                Die App begleitet dich durch eine 30-tägige Challenge mit zwei täglichen Video-Check-ins:
+                Zweimal täglich nimmst du ein kurzes Video mit deinem Atemtest-Gerät auf (Ergebnis 0,0).
+                Die genauen Erinnerungszeiten sind <strong>pro Tag zufällig</strong>:
               </p>
               <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                <li><strong>Morgens:</strong> Zwischen 9:00 und 12:00 Uhr</li>
-                <li><strong>Abends:</strong> Zwischen 20:00 und 23:00 Uhr</li>
+                <li><strong>Morgens:</strong> Zufällige Zeit zwischen 9:00 und 12:00 Uhr</li>
+                <li><strong>Abends:</strong> Zufällige Zeit zwischen 20:00 und 23:00 Uhr</li>
               </ul>
               <p>
-                Du erhältst Push-Benachrichtigungen, wenn es Zeit für einen Check-in ist. Innerhalb von 60 Minuten lädst du ein kurzes Video hoch.
+                Nach der Erinnerung hast du 60 Minuten für dein Video. Dein Fortschritt (Streak) wird
+                serverseitig gespeichert – auch wenn du die App schließt und später wieder öffnest.
               </p>
             </div>
             
             <div style={{ marginBottom: '1.5rem' }}>
               <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.75rem', color: '#1F2937' }}>
-                🎯 Die Challenge
+                Die Challenge
               </h3>
               <p style={{ marginBottom: '0.75rem' }}>
-                <strong>Dauer:</strong> 30 aufeinanderfolgende Tage
-              </p>
-              <p style={{ marginBottom: '0.75rem' }}>
-                <strong>Anforderungen:</strong>
+                <strong>Dauer:</strong> 30 aufeinanderfolgende alkoholfreie Tage
               </p>
               <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                <li>2 Videos täglich in den vorgegebenen Zeitfenstern</li>
+                <li>Beide Messungen pro Tag müssen bestätigt werden</li>
                 <li>Video innerhalb von 60 Minuten nach Erinnerung</li>
-                <li>Regelmäßige Teilnahme erforderlich</li>
+                <li>Eigenes Atemtest-Gerät erforderlich</li>
               </ul>
               <p>
-                <strong>Wichtig:</strong> Verpasste Check-ins oder abgelehnte Videos führen zu einem Neustart der Challenge ab Tag 1.
+                <strong>Wichtig:</strong> Abgelehnte oder verpasste Messungen → Neustart ab Tag 1.
               </p>
             </div>
             
             <div style={{ marginBottom: '1.5rem' }}>
               <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.75rem', color: '#1F2937' }}>
-                ✅ Video-Prüfung
+                Video-Prüfung (Admin)
               </h3>
               <p style={{ marginBottom: '0.75rem' }}>
-                Jedes hochgeladene Video wird von unserem Team auf Vollständigkeit geprüft:
+                Jedes Video wird manuell geprüft. Bestätigt wird nur, wenn:
               </p>
               <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                <li>Dokumentation muss deutlich sichtbar sein</li>
-                <li>Der vereinbarte Ablauf muss vollständig gezeigt werden</li>
-                <li>Das Anzeige-Ergebnis muss mindestens 5 Sekunden sichtbar sein</li>
-                <li>Gesamtdauer des Videos: ca. 30 Sekunden</li>
+                <li>Atemtest-Gerät erkennbar ist</li>
+                <li>Ergebnis 0,0 mindestens 5 Sekunden sichtbar ist</li>
+                <li>Keine Manipulation erkennbar ist</li>
               </ul>
             </div>
             
             <div style={{ marginBottom: '1.5rem' }}>
               <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.75rem', color: '#1F2937' }}>
-                📊 Fortschritts-Tracking
+                Fortschritt & Streak
               </h3>
-              <p style={{ marginBottom: '0.75rem' }}>
-                Die App zeigt Ihnen jederzeit:
-              </p>
               <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                <li>Aktuellen Tag der Challenge</li>
-                <li>Erfolgreiche Tage (beide Check-ins bestätigt)</li>
-                <li>Ihren aktuellen Streak</li>
-                <li>Verbleibende Tage bis zum Ziel</li>
-                <li>Visuellen Fortschrittskalender</li>
+                <li>Streak = Anzahl aufeinanderfolgender Tage mit beiden bestätigten Messungen</li>
+                <li>Gespeichert in deinem Konto (Supabase), nicht nur im Browser</li>
+                <li>Fortschrittskalender im Dashboard zeigt grün/gelb/rot pro Tag</li>
               </ul>
             </div>
             
             <div style={{ marginBottom: '1.5rem' }}>
               <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.75rem', color: '#1F2937' }}>
-                🔔 Benachrichtigungen
+                Benachrichtigungen (Web-App)
               </h3>
               <p style={{ marginBottom: '0.75rem' }}>
-                Die App sendet Ihnen Push-Benachrichtigungen:
+                Erinnerungen laufen über Browser-Benachrichtigungen und einen Service Worker.
+                Auf dem Handy funktionieren sie am zuverlässigsten, wenn du Modus-Klar
+                <strong> zum Home-Bildschirm hinzufügst (PWA)</strong> und Benachrichtigungen erlaubst.
               </p>
-              <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                <li>Wenn es Zeit für einen Check-in ist</li>
-                <li>Erinnerungen, falls du einen Check-in noch nicht gemacht hast</li>
-                <li>Status-Updates zu deinen Videos (bestätigt/abgelehnt)</li>
-              </ul>
+              <p style={{ fontSize: '0.8rem', color: '#6B7280' }}>
+                Hinweis: Wenn der Browser komplett beendet ist, können Erinnerungen je nach Gerät
+                verzögert ausbleiben. Die Messzeiten und dein Fortschritt bleiben trotzdem gespeichert.
+              </p>
             </div>
             
             <div style={{ marginBottom: '1.5rem' }}>
               <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.75rem', color: '#1F2937' }}>
-                🏆 Belohnungen
+                Neustart-Mechanismus
               </h3>
-              <p style={{ marginBottom: '0.75rem' }}>
-                Bei erfolgreichem Abschluss der 30-tägigen Challenge erhalten Sie:
-              </p>
               <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                <li><strong>Challenge geschafft:</strong> Bestätigung deiner erfolgreichen Teilnahme</li>
-                <li><strong>Persönlicher Erfolg:</strong> Du hast dein freiwilliges Ziel erreicht</li>
-              </ul>
-            </div>
-            
-            <div style={{ marginBottom: '1.5rem' }}>
-              <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.75rem', color: '#1F2937' }}>
-                🔄 Neustart-Mechanismus
-              </h3>
-              <p style={{ marginBottom: '0.75rem' }}>
-                Die Challenge startet automatisch neu, wenn:
-              </p>
-              <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                <li>Ein Video abgelehnt wird (z.B. undeutliche Aufnahme)</li>
-                <li>Ein Check-in verpasst wird</li>
-                <li>30 erfolgreiche Tage abgeschlossen wurden (automatischer Neustart für weitere 30 Tage)</li>
+                <li>Video abgelehnt (z. B. nicht 0,0 oder gefälscht)</li>
+                <li>Messzeit verpasst (60-Minuten-Fenster)</li>
+                <li>30 Tage erfolgreich abgeschlossen → automatischer Neustart</li>
               </ul>
             </div>
             
@@ -2582,7 +2607,7 @@ const renderLoginScreen = () => {
               marginTop: '1.5rem' 
             }}>
               <p style={{ margin: 0, fontWeight: '600', color: '#1E40AF' }}>
-                💡 Tipp: Installieren Sie die App als Progressive Web App (PWA) für eine noch bessere Erfahrung!
+                Tipp: Für die Demo bei Beratungsterminen nutze ?demo=true in der URL – Messfenster sind dann immer geöffnet.
               </p>
             </div>
           </div>

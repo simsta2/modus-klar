@@ -19,6 +19,13 @@ const Shield = (props) => <Icon {...props}>🛡️</Icon>;
 const LogOut = (props) => <Icon {...props}>🚪</Icon>;
 const Refresh = (props) => <Icon {...props}>🔄</Icon>;
 
+const REJECTION_PRESETS = [
+  'Ergebnis nicht 0,0 Promille',
+  'Video gefälscht / Manipulation',
+  'Messgerät nicht erkennbar',
+  'Messung unvollständig oder undeutlich'
+];
+
 const AdminDashboard = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [adminEmail, setAdminEmail] = useState('');
@@ -35,6 +42,7 @@ const AdminDashboard = () => {
   const [showRejectionModal, setShowRejectionModal] = useState(null);
   const [selectedVideo, setSelectedVideo] = useState(null);
   const [videoFilter, setVideoFilter] = useState('pending'); // 'pending' oder 'all'
+  const [actionMessage, setActionMessage] = useState(null);
 
   // Check if already logged in
   useEffect(() => {
@@ -108,7 +116,13 @@ const AdminDashboard = () => {
     );
     
     if (result.success) {
-      loadData(); // Reload all data
+      if (action === 'approve') {
+        setActionMessage('Video bestätigt – Streak wird fortgesetzt, sobald beide Messungen des Tages OK sind.');
+      } else {
+        setActionMessage('Video abgelehnt – Challenge des Nutzers wurde auf Tag 1 zurückgesetzt.');
+      }
+      setTimeout(() => setActionMessage(null), 8000);
+      loadData();
       setRejectionReason('');
       setShowRejectionModal(null);
     }
@@ -270,6 +284,19 @@ const AdminDashboard = () => {
 
       {/* Navigation Tabs */}
       <div style={{ maxWidth: '1200px', margin: '2rem auto', padding: '0 1rem' }}>
+        {actionMessage && (
+          <div style={{
+            backgroundColor: '#DBEAFE',
+            border: '1px solid #93C5FD',
+            color: '#1E40AF',
+            padding: '0.75rem 1rem',
+            borderRadius: '0.5rem',
+            marginBottom: '1rem',
+            fontSize: '0.875rem'
+          }}>
+            {actionMessage}
+          </div>
+        )}
         <div style={{ display: 'flex', gap: '1rem', marginBottom: '2rem' }}>
           <button
             onClick={() => setSelectedTab('users')}
@@ -610,11 +637,31 @@ const AdminDashboard = () => {
               width: '100%'
             }}>
               <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem' }}>
-                Ablehnungsgrund
+                Video ablehnen – Grund wählen
               </h3>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', marginBottom: '1rem' }}>
+                {REJECTION_PRESETS.map((preset) => (
+                  <button
+                    key={preset}
+                    type="button"
+                    onClick={() => setRejectionReason(preset)}
+                    style={{
+                      ...styles.button,
+                      backgroundColor: rejectionReason === preset ? '#fee2e2' : '#f9fafb',
+                      color: '#374151',
+                      border: rejectionReason === preset ? '2px solid #ef4444' : '1px solid #d1d5db',
+                      textAlign: 'left',
+                      fontSize: '0.875rem'
+                    }}
+                  >
+                    {preset}
+                  </button>
+                ))}
+              </div>
               
               <textarea
-                placeholder="Bitte geben Sie einen Grund für die Ablehnung an..."
+                placeholder="Optional: eigener Grund…"
                 value={rejectionReason}
                 onChange={(e) => setRejectionReason(e.target.value)}
                 style={{
