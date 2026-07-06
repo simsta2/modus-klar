@@ -1,7 +1,7 @@
-// Täglicher Messplan: zufällige Zeiten innerhalb der Fenster (morgens 9–12, abends 20–23)
+// Täglicher Messplan: zufällige Zeiten innerhalb der Fenster (morgens 7–12, abends 18–23)
 
-const MORNING_WINDOW = { start: 9, end: 12 };
-const EVENING_WINDOW = { start: 20, end: 23 };
+const MORNING_WINDOW = { start: 7, end: 12 };
+const EVENING_WINDOW = { start: 18, end: 23 };
 const UPLOAD_MINUTES = 60;
 
 function todayKey() {

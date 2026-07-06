@@ -601,7 +601,7 @@ const loadProgress = async (userId) => {
             <p style={{ fontSize: '0.8rem', fontWeight: '700', color: '#1F2937', marginBottom: '0.5rem' }}>So funktioniert die App</p>
             <ol style={{ fontSize: '0.8rem', color: '#4B5563', paddingLeft: '1.25rem', margin: 0, lineHeight: 1.55 }}>
               <li style={{ marginBottom: '0.35rem' }}>Du registrierst dich und startest die 30-Tage-Challenge.</li>
-              <li style={{ marginBottom: '0.35rem' }}>Morgens und abends erhältst du eine Erinnerung zu einer <strong>zufälligen Zeit</strong> (9–12 Uhr / 20–23 Uhr).</li>
+              <li style={{ marginBottom: '0.35rem' }}>Morgens und abends erhältst du eine Erinnerung zu einer <strong>zufälligen Zeit</strong> (7–12 Uhr / 18–23 Uhr).</li>
               <li style={{ marginBottom: '0.35rem' }}>Innerhalb von 60 Minuten nimmst du ein Video auf: Atemtest-Gerät im Bild, Ergebnis 0,0 mindestens 5 Sekunden sichtbar.</li>
               <li>Dein Video wird geprüft. Beide Messungen bestanden = Tag zählt. Sonst Neustart ab Tag 1.</li>
             </ol>
@@ -610,7 +610,7 @@ const loadProgress = async (userId) => {
           <div style={{ backgroundColor: '#FEF3C7', border: '1px solid #FCD34D', padding: '0.75rem', borderRadius: '0.5rem', marginBottom: '1rem', textAlign: 'left' }}>
             <p style={{ fontSize: '0.8rem', fontWeight: '700', color: '#92400E', marginBottom: '0.5rem' }}>Das erwartet dich bei Beitritt</p>
             <ul style={{ fontSize: '0.75rem', color: '#78350F', paddingLeft: '1.25rem', margin: 0, lineHeight: 1.5 }}>
-              <li>Pflicht: 2 Video-Messungen pro Tag zu zufälligen Zeiten (morgens 9–12, abends 20–23 Uhr)</li>
+              <li>Pflicht: 2 Video-Messungen pro Tag zu zufälligen Zeiten (morgens 7–12, abends 18–23 Uhr)</li>
               <li>Eigenes Atemtest-Gerät (Marke/Modell im Video erkennbar)</li>
               <li>Zielwert bei jeder Messung: 0,0</li>
               <li>Verpasste oder abgelehnte Videos → Challenge startet von vorn</li>
@@ -958,7 +958,7 @@ const renderLoginScreen = () => {
             <h3 style={{ fontWeight: '600', marginBottom: '0.5rem' }}>Teilnahmebedingungen:</h3>
               <ul style={{ fontSize: '0.875rem', color: '#6B7280', paddingLeft: '1.5rem' }}>
                 <li>30 Tage alkoholfrei, täglich 2 Video-Messungen</li>
-                <li>Zufällige Erinnerungszeiten morgens (9–12) und abends (20–23 Uhr)</li>
+                <li>Zufällige Erinnerungszeiten morgens (7–12) und abends (18–23 Uhr)</li>
                 <li>Video innerhalb 1 Stunde nach Erinnerung</li>
                 <li>Regelmäßige Teilnahme erforderlich</li>
                 <li>Verpasste/abgelehnte Videos = Neustart</li>
@@ -1046,8 +1046,8 @@ const renderLoginScreen = () => {
                 <p style={{ marginBottom: '0.75rem' }}><strong>1. Programmdauer:</strong> 30 aufeinanderfolgende Tage</p>
                 <p style={{ marginBottom: '0.75rem' }}><strong>2. Messzeiten:</strong></p>
                 <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                  <li>Morgens: zufällige Zeit zwischen 9:00 und 12:00 Uhr</li>
-                  <li>Abends: zufällige Zeit zwischen 20:00 und 23:00 Uhr</li>
+                  <li>Morgens: zufällige Zeit zwischen 7:00 und 12:00 Uhr</li>
+                  <li>Abends: zufällige Zeit zwischen 18:00 und 23:00 Uhr</li>
                   <li>Video innerhalb 60 Minuten nach Erinnerung</li>
                 </ul>
                 <p style={{ marginBottom: '0.75rem' }}><strong>3. Anforderungen:</strong></p>
@@ -2523,8 +2523,8 @@ const renderLoginScreen = () => {
                 Die genauen Erinnerungszeiten sind <strong>pro Tag zufällig</strong>:
               </p>
               <ul style={{ paddingLeft: '1.5rem', marginBottom: '0.75rem' }}>
-                <li><strong>Morgens:</strong> Zufällige Zeit zwischen 9:00 und 12:00 Uhr</li>
-                <li><strong>Abends:</strong> Zufällige Zeit zwischen 20:00 und 23:00 Uhr</li>
+                <li><strong>Morgens:</strong> Zufällige Zeit zwischen 7:00 und 12:00 Uhr</li>
+                <li><strong>Abends:</strong> Zufällige Zeit zwischen 18:00 und 23:00 Uhr</li>
               </ul>
               <p>
                 Nach der Erinnerung hast du 60 Minuten für dein Video. Dein Fortschritt (Streak) wird
